@@ -1,0 +1,7 @@
+responses:
+  404:
+    description: the resource could not be found
+    body:
+      application/json:
+        schema: !include ../schemas/_common/standard-error-response.json
+        example: !include ../examples/_common/not-found-response.json

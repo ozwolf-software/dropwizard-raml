@@ -1,0 +1,83 @@
+{
+  "$schema" : "http://json-schema.org/draft-04/schema#",
+  "title" : "Test Result",
+  "type" : "object",
+  "additionalProperties" : false,
+  "description" : "a test result object",
+  "properties" : {
+    "self" : {
+      "type" : "string",
+      "description" : "the reference to this resource"
+    },
+    "id" : {
+      "type" : "integer",
+      "description" : "the test iD"
+    },
+    "name" : {
+      "type" : "string",
+      "description" : "the test name"
+    },
+    "children" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/TestChild"
+      },
+      "description" : "the child objects"
+    }
+  },
+  "required" : [ "self", "id", "name", "children" ],
+  "definitions" : {
+    "TestChild" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "description" : "a test child",
+      "properties" : {
+        "href" : {
+          "type" : "string",
+          "description" : "the reference to the child resource"
+        },
+        "id" : {
+          "type" : "integer",
+          "description" : "the child ID"
+        },
+        "name" : {
+          "type" : "string",
+          "description" : "the child name"
+        },
+        "address" : {
+          "$ref" : "#/definitions/TestAddress",
+          "description" : "the child address"
+        }
+      },
+      "required" : [ "href", "id", "name", "address" ]
+    },
+    "TestAddress" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "description" : "a test address",
+      "properties" : {
+        "unit" : {
+          "type" : "string",
+          "description" : "the address unit number"
+        },
+        "street" : {
+          "type" : "string",
+          "description" : "the street address"
+        },
+        "suburb" : {
+          "type" : "string",
+          "description" : "the suburb"
+        },
+        "postCode" : {
+          "type" : "string",
+          "description" : "the post code"
+        },
+        "state" : {
+          "type" : "string",
+          "description" : "the state"
+        }
+      },
+      "required" : [ "street", "suburb", "postCode", "state" ]
+    }
+  }
+}

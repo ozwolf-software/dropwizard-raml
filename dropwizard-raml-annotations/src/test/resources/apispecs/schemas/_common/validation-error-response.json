@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Validation Error Response",
+  "type": "object",
+  "properties": {
+    "reference": { "type": "string", "description": "the error reference" },
+    "serviceName": { "type": "string", "description": "the name of the service" },
+    "message": { "type": "string", "description": "the error message" },
+    "errors": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z]+(-[a-zA-Z]+)*$": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "reference",
+    "serviceName",
+    "message",
+    "errors"
+  ]
+}

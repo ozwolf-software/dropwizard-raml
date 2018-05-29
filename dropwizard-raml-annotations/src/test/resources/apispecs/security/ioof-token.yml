@@ -1,0 +1,29 @@
+description: IOOF token security
+type: x-ioof-token
+describedBy:
+  headers:
+    Authorization:
+      description: IOOF token authorization token
+      type: string
+      pattern: ioof-token .+
+      example: |
+        ioof-token eyJhbGciOiJSUzI1NiIsImN0eSI6ImFwcGxpY2F0aW9uXC9qc29uIn0
+  responses:
+    401:
+      description: token was missing, invalid or expired
+      body:
+        application/json:
+          schema: !include ../schemas/_common/standard-error-response.json
+          example: !include ../examples/_common/unauthorized-response.json
+    403:
+      description: user is forbidden from accessing the resource
+      body:
+        application/json:
+          schema: !include ../schemas/_common/standard-error-response.json
+          example: !include ../examples/_common/forbidden-response.json
+    503:
+      description: secure requests are temporarily unavailable due to a technical outage
+      body:
+        application/json:
+          schema: !include ../schemas/_common/standard-error-response.json
+          example: !include ../examples/_common/security-unavailable-response.json

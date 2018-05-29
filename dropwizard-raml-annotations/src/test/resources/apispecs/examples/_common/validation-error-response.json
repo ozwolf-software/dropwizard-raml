@@ -1,0 +1,10 @@
+{
+  "reference": "abcakj1b4197fahb1",
+  "serviceName": "test-service",
+  "message": "Request failed validation",
+  "errors": {
+    "property": "must be provided",
+    "object.subProperty": "must be provided",
+    "object.collection[1].code": "must be provided"
+  }
+}

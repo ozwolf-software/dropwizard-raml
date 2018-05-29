@@ -1,0 +1,19 @@
+{
+  "self": "/test/1",
+  "id": 1,
+  "name": "Test Person",
+  "children": [
+    {
+      "href": "/test/1/child/2",
+      "id": 2,
+      "name": "Test Child 1",
+      "address": {
+        "unit": null,
+        "street": "123 Main Street",
+        "suburb": "Hobart",
+        "postCode": "7000",
+        "state": "Tasmania"
+      }
+    }
+  ]
+}
