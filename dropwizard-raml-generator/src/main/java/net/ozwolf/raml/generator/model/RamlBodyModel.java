@@ -17,6 +17,14 @@ public class RamlBodyModel {
         this.schemaAndExample = SupportedMediaType.getSchemaAndExample(annotation);
     }
 
+    public RamlBodyModel(){
+        this.schemaAndExample = SchemaAndExample.NONE;
+    }
+
+    public RamlBodyModel(String contentType, Class<?> type){
+        this.schemaAndExample = SupportedMediaType.getSchemaAndExample(contentType, type);
+    }
+
     @JsonProperty("schema")
     public String getSchema() {
         return schemaAndExample.getSchema().orElse(null);

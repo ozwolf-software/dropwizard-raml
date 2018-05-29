@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Validation Error Response",
+  "title": "Simple Response",
   "type": "object",
   "properties": {
     "random": { "type": "string", "description": "a random string value" }

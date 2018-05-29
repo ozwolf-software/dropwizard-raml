@@ -4,56 +4,61 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import net.ozwolf.raml.annotations.RamlBody;
 import net.ozwolf.raml.annotations.RamlExample;
 import net.ozwolf.raml.generator.RamlGenerator;
+import net.ozwolf.raml.generator.media.SchemaAndExampleGenerator;
 import net.ozwolf.raml.generator.model.SchemaAndExample;
 import net.ozwolf.raml.generator.util.JacksonUtils;
 import net.ozwolf.raml.generator.util.ResourceUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Optional;
-import java.util.function.Function;
 
-public class JsonSchemaAndExample implements Function<RamlBody, SchemaAndExample> {
+public class JsonSchemaAndExample implements SchemaAndExampleGenerator {
     @Override
-    public SchemaAndExample apply(RamlBody annotation) {
+    public SchemaAndExample generate(RamlBody annotation) {
         String schema = ResourceUtils.getResourceAsString(annotation.schema());
         String example = ResourceUtils.getResourceAsString(annotation.example());
 
         if (annotation.returnType() != RamlBody.NotDefinedReturnType.class) {
             return new SchemaAndExample(
                     JacksonUtils.toJsonSchema(annotation.returnType()),
-                    Optional.ofNullable(fromMethod(annotation)).orElse(example)
+                    Optional.ofNullable(fromMethod(annotation.returnType())).orElse(example)
             );
         } else {
             return new SchemaAndExample(schema, example);
         }
     }
 
-    private String fromMethod(RamlBody annotation) {
-        Class<?> type = annotation.returnType();
+    @Override
+    public SchemaAndExample generate(Class<?> type) {
+        return new SchemaAndExample(
+                JacksonUtils.toJsonSchema(type),
+                Optional.ofNullable(fromMethod(type)).orElse(null)
+        );
+    }
 
-        RamlExample exampleAnnotation = type.getAnnotation(RamlExample.class);
-        if (exampleAnnotation == null) return null;
+    private String fromMethod(Class<?> type) {
+        Method method = Arrays.stream(type.getMethods())
+                .filter(m -> m.isAnnotationPresent(RamlExample.class))
+                .findFirst()
+                .orElse(null);
 
-        String methodName = exampleAnnotation.methodName();
-        if (StringUtils.isBlank(methodName)) return null;
+        if (method == null)
+            return null;
+
+        if (!Modifier.isStatic(method.getModifiers()))
+            throw new IllegalArgumentException("Method [ " + method.getName() + " ] on [ " + type.getName() + " ] is not static.");
 
         try {
-            Method method = type.getMethod(methodName);
-            if (!Modifier.isStatic(method.getModifiers()))
-                throw new IllegalArgumentException("Method [ " + methodName + " ] on [ " + type.getName() + " ] is not static.");
-
             Object example = method.invoke(type);
 
             return RamlGenerator.MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(example);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new IllegalStateException("Unable to invoke method [ " + type.getName() + "#" + methodName + " ]", e);
+            throw new IllegalStateException("Unable to invoke method [ " + type.getName() + "#" + method.getName() + " ]", e);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Example of [ " + type.getName() + " ] could not be serialized to JSON.", e);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException("Zero argument static method [ " + methodName + " ] could not be found on [ " + type.getName() + " ] class.");
         }
     }
 }

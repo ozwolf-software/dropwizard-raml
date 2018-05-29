@@ -2,26 +2,30 @@ package net.ozwolf.raml.generator.media;
 
 import net.ozwolf.raml.annotations.RamlBody;
 import net.ozwolf.raml.generator.media.schemaexample.JsonSchemaAndExample;
+import net.ozwolf.raml.generator.media.schemaexample.OtherSchemaAndExample;
 import net.ozwolf.raml.generator.model.SchemaAndExample;
 
 import javax.ws.rs.core.MediaType;
 import java.util.Arrays;
-import java.util.function.Function;
 
 public enum SupportedMediaType {
     JSON(MediaType.APPLICATION_JSON_TYPE, new JsonSchemaAndExample()),
-    OTHER(MediaType.WILDCARD_TYPE, v -> SchemaAndExample.NONE);
+    OTHER(MediaType.WILDCARD_TYPE, new OtherSchemaAndExample());
 
     private final MediaType media;
-    private final Function<RamlBody, SchemaAndExample> schemaAndExample;
+    private final SchemaAndExampleGenerator schemaAndExample;
 
-    SupportedMediaType(MediaType media, Function<RamlBody, SchemaAndExample> schemaAndExample) {
+    SupportedMediaType(MediaType media, SchemaAndExampleGenerator schemaAndExample) {
         this.media = media;
         this.schemaAndExample = schemaAndExample;
     }
 
     public static SchemaAndExample getSchemaAndExample(RamlBody annotation) {
-        return find(annotation.contentType()).schemaAndExample.apply(annotation);
+        return find(annotation.contentType()).schemaAndExample.generate(annotation);
+    }
+
+    public static SchemaAndExample getSchemaAndExample(String contentType, Class<?> type) {
+        return find(contentType).schemaAndExample.generate(type);
     }
 
     public static SupportedMediaType find(String contentType) {

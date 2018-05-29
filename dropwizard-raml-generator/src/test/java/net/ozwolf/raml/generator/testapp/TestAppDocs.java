@@ -58,6 +58,19 @@ import javax.ws.rs.core.MediaType;
                                                         )}
                                         )}
                         )
+                ),
+                @RamlSecurity(
+                        key = "group-token",
+                        type = "x-group-token",
+                        describedBy = @RamlDescriptor(
+                                queryParameters = @RamlParameter(
+                                        name = "token",
+                                        description = "one or multiple group tokens",
+                                        type = "string",
+                                        example = "token-1234",
+                                        multiple = true
+                                )
+                        )
                 )
         },
         traits = {

@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import net.ozwolf.raml.annotations.RamlBody;
 import net.ozwolf.raml.annotations.RamlResponse;
 import net.ozwolf.raml.generator.util.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 
-import static com.google.common.collect.Maps.newHashMap;
+import static java.util.stream.Collectors.toMap;
 
 @JsonSerialize
 @JsonPropertyOrder({"description", "body"})
@@ -21,9 +23,17 @@ public class RamlResponseModel {
 
     public RamlResponseModel(RamlResponse annotation) {
         this.description = annotation.description();
-        this.body = newHashMap();
-        Arrays.stream(annotation.bodies())
-                .forEach(a -> body.put(a.contentType(), new RamlBodyModel(a)));
+        this.body = Arrays.stream(annotation.bodies()).collect(toMap(RamlBody::contentType, RamlBodyModel::new));
+    }
+
+    public RamlResponseModel(Set<String> contentTypes) {
+        this.description = "auto generated responses";
+        this.body = contentTypes.stream().collect(toMap(v -> v, v -> new RamlBodyModel()));
+    }
+
+    public RamlResponseModel(Set<String> contentTypes, Class<?> type) {
+        this.description = "auto generated responses";
+        this.body = contentTypes.stream().collect(toMap(v -> v, v -> new RamlBodyModel(v, type)));
     }
 
     @JsonProperty("description")

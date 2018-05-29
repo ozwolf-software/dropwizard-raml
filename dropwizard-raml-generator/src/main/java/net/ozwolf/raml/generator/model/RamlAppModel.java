@@ -1,14 +1,18 @@
 package net.ozwolf.raml.generator.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.ozwolf.raml.annotations.RamlApp;
+import net.ozwolf.raml.annotations.RamlIgnore;
 import net.ozwolf.raml.annotations.RamlSecurity;
 import net.ozwolf.raml.annotations.RamlTrait;
 import org.reflections.Reflections;
 
+import javax.ws.rs.Path;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +37,8 @@ public class RamlAppModel {
     private final Map<String, RamlSecurityModel> securitySchemes;
     private final Map<String, RamlDescribedByModel> traits;
 
+    private final Map<String, RamlResourceModel> resources;
+
     public RamlAppModel(String version,
                         RamlApp annotation,
                         Reflections reflections) {
@@ -44,6 +50,8 @@ public class RamlAppModel {
         this.documentation = Arrays.stream(annotation.documentation()).map(RamlDocumentationModel::new).collect(toList());
         this.securitySchemes = Arrays.stream(annotation.security()).collect(toMap(RamlSecurity::key, RamlSecurityModel::new));
         this.traits = Arrays.stream(annotation.traits()).collect(toMap(RamlTrait::key, a -> new RamlDescribedByModel(a.describedBy())));
+
+        this.resources = reflections.getTypesAnnotatedWith(Path.class).stream().filter(t -> !t.isAnnotationPresent(RamlIgnore.class)).map(RamlResourceModel::new).collect(toMap(RamlResourceModel::getPath, v -> v));
     }
 
     @JsonProperty("title")
@@ -84,5 +92,19 @@ public class RamlAppModel {
     @JsonProperty("traits")
     public Map<String, RamlDescribedByModel> getTraits() {
         return nullIfEmpty(traits);
+    }
+
+    @JsonAnyGetter
+    public Map<String, RamlResourceModel> getResources() {
+        return resources;
+    }
+
+    public static class ResourcesSerializer extends JsonSerializer<Map<String, RamlResourceModel>> {
+        @Override
+        public void serialize(Map<String, RamlResourceModel> resources, JsonGenerator generator, SerializerProvider provider) throws IOException {
+            for (Map.Entry<String, RamlResourceModel> resource : resources.entrySet()) {
+                generator.writeObjectField(resource.getKey(), resource.getValue());
+            }
+        }
     }
 }
