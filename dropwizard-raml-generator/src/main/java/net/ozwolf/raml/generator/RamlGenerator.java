@@ -1,26 +1,39 @@
 package net.ozwolf.raml.generator;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import net.ozwolf.raml.annotations.RamlApp;
+import net.ozwolf.raml.annotations.RamlIgnore;
+import net.ozwolf.raml.generator.exception.RamlGenerationError;
 import net.ozwolf.raml.generator.exception.RamlGenerationException;
+import net.ozwolf.raml.generator.exception.RamlGenerationUnhandledException;
+import net.ozwolf.raml.generator.factory.ResourceFactory;
 import net.ozwolf.raml.generator.model.RamlAppModel;
 import org.reflections.Reflections;
 import org.reflections.scanners.*;
 
+import javax.ws.rs.Path;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 public class RamlGenerator {
     private final String version;
     private final Reflections reflections;
 
-    public final static ObjectMapper MAPPER = new ObjectMapper();
-    public final static ObjectMapper YAML_MAPPER = new YAMLMapper();
+    public final static ObjectMapper MAPPER = new ObjectMapper().registerModule(new JodaModule()).registerModule(new JavaTimeModule());
+    private final static ObjectMapper YAML_MAPPER = new YAMLMapper();
 
     private final static String HEADER = "#%RAML 1.0";
 
-    public RamlGenerator(String basePackage, String version){
+    public RamlGenerator(String basePackage, String version) {
         this.version = version;
         this.reflections = new Reflections(
                 basePackage,
@@ -32,23 +45,59 @@ public class RamlGenerator {
         );
     }
 
-    public String generate(){
+    public void registerModule(Module module) {
+        MAPPER.registerModule(module);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void registerModule(String className) {
         try {
-            Set<Class<?>> apps = reflections.getTypesAnnotatedWith(RamlApp.class);
+            Class<?> module = Class.forName(className);
+            if (!Module.class.isAssignableFrom(module))
+                throw new IllegalArgumentException("Class [ " + className + " ] does not implement [ " + Module.class.getName() + " ]");
 
-            if (apps.isEmpty())
-                throw new IllegalStateException("No class found annotated with [ @" + RamlApp.class.getSimpleName() + " ] annotation.");
+            Constructor<? extends Module> constructor = ((Class<? extends Module>) module).getConstructor();
 
-            if (apps.size() > 1)
-                throw new IllegalStateException("Multiple classes found with [ @" + RamlApp.class.getSimpleName() + " ] annotation.");
+            Module instance = constructor.newInstance();
+            MAPPER.registerModule(instance);
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException("Module [ " + className + " ] does not have a default constructor.", e);
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            throw new IllegalStateException("Could not instantiate instance of [ " + className + " ] module.", e);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("Module [ " + className + " ] could not be found.", e);
+        }
+    }
 
-            RamlApp annotation = apps.iterator().next().getAnnotation(RamlApp.class);
+    public String generate() throws RamlGenerationException {
+        Set<Class<?>> apps = reflections.getTypesAnnotatedWith(RamlApp.class);
 
-            RamlAppModel model = new RamlAppModel(version, annotation, reflections);
+        if (apps.isEmpty())
+            throw new IllegalStateException("No class found annotated with [ @" + RamlApp.class.getSimpleName() + " ] annotation.");
 
+        if (apps.size() > 1)
+            throw new IllegalStateException("Multiple classes found with [ @" + RamlApp.class.getSimpleName() + " ] annotation.");
+
+        RamlApp annotation = apps.iterator().next().getAnnotation(RamlApp.class);
+
+        List<RamlGenerationError> errors = newArrayList();
+
+        Consumer<RamlGenerationError> onError = errors::add;
+
+        RamlAppModel model = new RamlAppModel(version, annotation);
+
+        reflections.getTypesAnnotatedWith(Path.class)
+                .stream()
+                .filter(r -> !r.isAnnotationPresent(RamlIgnore.class))
+                .forEach(r -> ResourceFactory.apply(r, model::addResource, onError));
+
+        if (!errors.isEmpty())
+            throw new RamlGenerationException(errors);
+
+        try {
             return HEADER + "\n" + YAML_MAPPER.writeValueAsString(model);
         } catch (Exception e) {
-            throw new RamlGenerationException(e);
+            throw new RamlGenerationUnhandledException(e);
         }
     }
 }

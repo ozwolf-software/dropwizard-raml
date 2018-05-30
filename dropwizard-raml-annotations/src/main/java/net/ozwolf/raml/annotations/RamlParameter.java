@@ -12,8 +12,12 @@ public @interface RamlParameter {
     boolean required() default true;
     boolean multiple() default false;
     String[] allowedValues() default {};
+    Class<? extends Enum> allowedValuesEnum() default NoEnum.class;
     String example() default "";
     String pattern() default "";
-    int minimum() default Integer.MIN_VALUE;
-    int maximum() default Integer.MIN_VALUE;
+    String defaultValue() default "";
+    long minimum() default Long.MIN_VALUE;
+    long maximum() default Long.MIN_VALUE;
+
+    enum NoEnum{}
 }

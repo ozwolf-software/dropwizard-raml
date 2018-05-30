@@ -1,23 +1,22 @@
 package net.ozwolf.raml.generator.model;
 
-import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.ozwolf.raml.annotations.RamlApp;
-import net.ozwolf.raml.annotations.RamlIgnore;
 import net.ozwolf.raml.annotations.RamlSecurity;
 import net.ozwolf.raml.annotations.RamlTrait;
-import org.reflections.Reflections;
+import net.ozwolf.raml.generator.exception.RamlGenerationError;
 
-import javax.ws.rs.Path;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -39,9 +38,10 @@ public class RamlAppModel {
 
     private final Map<String, RamlResourceModel> resources;
 
+    private final List<RamlGenerationError> errors;
+
     public RamlAppModel(String version,
-                        RamlApp annotation,
-                        Reflections reflections) {
+                        RamlApp annotation) {
         this.title = annotation.title();
         this.description = annotation.description();
         this.version = version;
@@ -51,7 +51,9 @@ public class RamlAppModel {
         this.securitySchemes = Arrays.stream(annotation.security()).collect(toMap(RamlSecurity::key, RamlSecurityModel::new));
         this.traits = Arrays.stream(annotation.traits()).collect(toMap(RamlTrait::key, a -> new RamlDescribedByModel(a.describedBy())));
 
-        this.resources = reflections.getTypesAnnotatedWith(Path.class).stream().filter(t -> !t.isAnnotationPresent(RamlIgnore.class)).map(RamlResourceModel::new).collect(toMap(RamlResourceModel::getPath, v -> v));
+        this.resources = newHashMap();
+
+        this.errors = newArrayList();
     }
 
     @JsonProperty("title")
@@ -99,12 +101,7 @@ public class RamlAppModel {
         return resources;
     }
 
-    public static class ResourcesSerializer extends JsonSerializer<Map<String, RamlResourceModel>> {
-        @Override
-        public void serialize(Map<String, RamlResourceModel> resources, JsonGenerator generator, SerializerProvider provider) throws IOException {
-            for (Map.Entry<String, RamlResourceModel> resource : resources.entrySet()) {
-                generator.writeObjectField(resource.getKey(), resource.getValue());
-            }
-        }
+    public void addResource(RamlResourceModel model){
+        this.resources.put(model.getPath(), model);
     }
 }

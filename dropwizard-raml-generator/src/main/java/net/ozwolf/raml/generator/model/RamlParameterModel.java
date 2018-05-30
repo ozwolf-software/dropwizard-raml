@@ -1,50 +1,80 @@
 package net.ozwolf.raml.generator.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import net.ozwolf.raml.annotations.RamlDescription;
+import net.ozwolf.raml.annotations.RamlExample;
 import net.ozwolf.raml.annotations.RamlParameter;
 import net.ozwolf.raml.generator.util.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+import net.ozwolf.raml.generator.util.ParameterUtils;
 
-import java.io.IOException;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.ws.rs.DefaultValue;
+import java.lang.reflect.Parameter;
+import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 @JsonSerialize
-@JsonPropertyOrder({"displayName", "description", "type", "required", "items", "allowedValues", "example", "pattern", "minimum", "maximum"})
+@JsonPropertyOrder({"displayName", "description", "type", "required", "items", "default", "enum", "example", "pattern", "minimum", "maximum"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RamlParameterModel {
+    private final String name;
     private final String displayName;
     private final String description;
     private final String type;
     private final boolean required;
-    private final boolean multiple;
     private final ArrayItemsModel items;
+    private final String defaultValue;
     private final Set<String> allowedValues;
     private final String example;
     private final String pattern;
-    private final Integer minimum;
-    private final Integer maximum;
+    private final Long minimum;
+    private final Long maximum;
 
-    public RamlParameterModel(RamlParameter annotation){
+    public RamlParameterModel(RamlParameter annotation) {
+        this.name = annotation.name();
         this.displayName = annotation.displayName();
         this.description = annotation.description();
         this.type = annotation.multiple() ? "array" : annotation.type();
         this.required = annotation.required();
-        this.multiple = annotation.multiple();
         this.items = annotation.multiple() ? new ArrayItemsModel(annotation) : null;
+        this.defaultValue = annotation.multiple() ? null : annotation.defaultValue();
         this.allowedValues = annotation.multiple() ? null : newHashSet(annotation.allowedValues());
         this.example = annotation.multiple() ? null : annotation.example();
         this.pattern = annotation.multiple() ? null : annotation.pattern();
         this.minimum = annotation.multiple() ? null : annotation.minimum();
         this.maximum = annotation.multiple() ? null : annotation.maximum();
+    }
+
+    public RamlParameterModel(String name, Parameter parameter) {
+        boolean multiple = parameter.getType().isArray() || Collection.class.isAssignableFrom(parameter.getType());
+        this.name = name;
+        this.displayName = null;
+        this.description = Optional.ofNullable(parameter.getAnnotation(RamlDescription.class)).map(RamlDescription::value).orElse(null);
+        this.type = multiple ? "array" : ParameterUtils.getTypeOf(parameter);
+        this.required = parameter.isAnnotationPresent(NotNull.class);
+        this.items = multiple ? new ArrayItemsModel(parameter) : null;
+        this.defaultValue = multiple ? null : Optional.ofNullable(parameter.getAnnotation(DefaultValue.class)).map(DefaultValue::value).orElse(null);
+        this.allowedValues = multiple ? null : ParameterUtils.getAllowedValues(parameter);
+        this.example = multiple ? null : Optional.ofNullable(parameter.getAnnotation(RamlExample.class)).map(v -> trimToNull(v.value())).orElse(null);
+        this.pattern = multiple ? null : Optional.ofNullable(parameter.getAnnotation(Pattern.class)).map(Pattern::regexp).orElse(null);
+        this.minimum = multiple ? null : Optional.ofNullable(parameter.getAnnotation(Min.class)).map(Min::value).orElse(null);
+        this.maximum = multiple ? null : Optional.ofNullable(parameter.getAnnotation(Max.class)).map(Max::value).orElse(null);
+    }
+
+    @JsonIgnore
+    public String getName() {
+        return name;
     }
 
     @JsonProperty("displayName")
@@ -68,11 +98,16 @@ public class RamlParameterModel {
     }
 
     @JsonProperty("items")
-    public ArrayItemsModel getItems(){
+    public ArrayItemsModel getItems() {
         return items;
     }
 
-    @JsonProperty("allowedValues")
+    @JsonProperty("default")
+    public String getDefaultValue() {
+        return trimToNull(defaultValue);
+    }
+
+    @JsonProperty("enum")
     public Set<String> getAllowedValues() {
         return CollectionUtils.nullIfEmpty(allowedValues);
     }
@@ -88,27 +123,27 @@ public class RamlParameterModel {
     }
 
     @JsonProperty("minimum")
-    public Integer getMinimum() {
-        return minimum == null || minimum == Integer.MIN_VALUE ? null : minimum;
+    public Long getMinimum() {
+        return minimum == null || minimum == Long.MIN_VALUE ? null : minimum;
     }
 
     @JsonProperty("maximum")
-    public Integer getMaximum() {
-        return maximum == null || maximum == Integer.MIN_VALUE ? null : maximum;
+    public Long getMaximum() {
+        return maximum == null || maximum == Long.MIN_VALUE ? null : maximum;
     }
 
     @JsonSerialize
-    @JsonPropertyOrder({"type", "allowedValues","example", "pattern", "minimum", "maximum"})
+    @JsonPropertyOrder({"type", "enum", "example", "pattern", "minimum", "maximum"})
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class ArrayItemsModel {
         private final String type;
         private final Set<String> allowedValues;
         private final String example;
         private final String pattern;
-        private final int minimum;
-        private final int maximum;
+        private final Long minimum;
+        private final Long maximum;
 
-        private ArrayItemsModel(RamlParameter annotation){
+        private ArrayItemsModel(RamlParameter annotation) {
             this.type = annotation.type();
             this.allowedValues = newHashSet(annotation.allowedValues());
             this.example = annotation.example();
@@ -117,12 +152,21 @@ public class RamlParameterModel {
             this.maximum = annotation.maximum();
         }
 
+        private ArrayItemsModel(Parameter parameter) {
+            this.type = ParameterUtils.getTypeOf(parameter);
+            this.allowedValues = ParameterUtils.getAllowedValues(parameter);
+            this.example = Optional.ofNullable(parameter.getAnnotation(RamlExample.class)).map(v -> trimToNull(v.value())).orElse(null);
+            this.pattern = Optional.ofNullable(parameter.getAnnotation(Pattern.class)).map(Pattern::regexp).orElse(null);
+            this.minimum = Optional.ofNullable(parameter.getAnnotation(Min.class)).map(Min::value).orElse(null);
+            this.maximum = Optional.ofNullable(parameter.getAnnotation(Max.class)).map(Max::value).orElse(null);
+        }
+
         @JsonProperty("type")
         public String getType() {
             return type;
         }
 
-        @JsonProperty("allowedValues")
+        @JsonProperty("enum")
         public Set<String> getAllowedValues() {
             return CollectionUtils.nullIfEmpty(allowedValues);
         }
@@ -138,13 +182,13 @@ public class RamlParameterModel {
         }
 
         @JsonProperty("minimum")
-        public Integer getMinimum() {
-            return minimum == Integer.MIN_VALUE ? null : minimum;
+        public Long getMinimum() {
+            return minimum == null || minimum == Long.MIN_VALUE ? null : minimum;
         }
 
         @JsonProperty("maximum")
-        public Integer getMaximum() {
-            return maximum == Integer.MIN_VALUE ? null : maximum;
+        public Long getMaximum() {
+            return maximum == null || maximum == Long.MIN_VALUE ? null : maximum;
         }
     }
 }

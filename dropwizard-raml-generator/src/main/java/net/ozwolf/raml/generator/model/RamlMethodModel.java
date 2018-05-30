@@ -5,38 +5,47 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import net.ozwolf.raml.annotations.*;
+import net.ozwolf.raml.annotations.RamlDescription;
+import net.ozwolf.raml.annotations.RamlParameter;
+import net.ozwolf.raml.annotations.RamlSecuredBy;
+import net.ozwolf.raml.annotations.RamlTraits;
+import net.ozwolf.raml.generator.factory.ResponseFactory;
 
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
-import static java.util.stream.Collectors.toMap;
 import static net.ozwolf.raml.generator.util.CollectionUtils.nullIfEmpty;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 @JsonSerialize
-@JsonPropertyOrder({"description", "securedBy", "is", "responses"})
+@JsonPropertyOrder({"description", "securedBy", "is", "headers", "queryParameters", "responses"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RamlMethodModel {
     private final String action;
     private final String description;
     private final Set<String> securedBy;
     private final Set<String> traits;
+    private final Map<String, RamlParameterModel> queryParameters;
+    private final Map<String, RamlParameterModel> headers;
     private final Map<Integer, RamlResponseModel> responses;
 
-    public RamlMethodModel(String action, Method method) {
+    public RamlMethodModel(String action,
+                           String description,
+                           Set<String> securedBy,
+                           Set<String> traits,
+                           Map<String, RamlParameterModel> queryParameters,
+                           Map<String, RamlParameterModel> headers,
+                           Map<Integer, RamlResponseModel> responses) {
         this.action = action;
-        this.description = Optional.ofNullable(method.getAnnotation(RamlDescription.class)).map(RamlDescription::value).orElse(null);
-        this.securedBy = Optional.ofNullable(method.getAnnotation(RamlSecuredBy.class)).map(v -> newHashSet(v.value())).orElse(null);
-        this.traits = Optional.ofNullable(method.getAnnotation(RamlTraits.class)).map(v -> newHashSet(v.value())).orElse(null);
-        this.responses = getResponses(method);
+        this.description = description;
+        this.securedBy = securedBy;
+        this.traits = traits;
+        this.queryParameters = queryParameters;
+        this.headers = headers;
+        this.responses = responses;
     }
 
     @JsonIgnore
@@ -54,32 +63,23 @@ public class RamlMethodModel {
         return nullIfEmpty(securedBy);
     }
 
-    @JsonProperty("traits")
+    @JsonProperty("is")
     public Set<String> getTraits() {
         return nullIfEmpty(traits);
     }
 
-    @JsonProperty("responses")
-    public Map<Integer, RamlResponseModel> getResponses() {
-        return responses;
+    @JsonProperty("queryParameters")
+    public Map<String, RamlParameterModel> getQueryParameters() {
+        return nullIfEmpty(queryParameters);
     }
 
-    private static Map<Integer, RamlResponseModel> getResponses(Method method) {
-        RamlResponses annotation = method.getAnnotation(RamlResponses.class);
-        if (annotation != null)
-            return Arrays.stream(annotation.value()).collect(toMap(RamlResponse::status, RamlResponseModel::new));
+    @JsonProperty("headers")
+    public Map<String, RamlParameterModel> getHeaders() {
+        return nullIfEmpty(headers);
+    }
 
-        Set<String> contentTypes = Optional.ofNullable(method.getAnnotation(Produces.class)).map(v -> newHashSet(v.value())).orElse(newHashSet("application/json"));
-
-        Class<?> returnType = method.getReturnType();
-        Map<Integer, RamlResponseModel> responses = newHashMap();
-
-        if (returnType == Response.class) {
-            responses.put(200, new RamlResponseModel(contentTypes));
-        } else {
-            responses.put(200, new RamlResponseModel(contentTypes, returnType));
-        }
-
+    @JsonProperty("responses")
+    public Map<Integer, RamlResponseModel> getResponses() {
         return responses;
     }
 }

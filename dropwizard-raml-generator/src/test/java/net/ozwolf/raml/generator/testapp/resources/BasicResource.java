@@ -1,7 +1,7 @@
 package net.ozwolf.raml.generator.testapp.resources;
 
 import com.codahale.metrics.annotation.Timed;
-import net.ozwolf.raml.annotations.RamlResource;
+import net.ozwolf.raml.annotations.*;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -16,6 +16,24 @@ public class BasicResource {
     @Produces("application/json")
     @Timed
     public Response getSimpleResponse() {
+        return Response.ok().entity("{\"random\":\"" + UUID.randomUUID().toString() + "\"}").build();
+    }
+
+    @RamlResponses(
+            @RamlResponse(
+                    status = 200,
+            description = "successfully returned a random string",
+            bodies = @RamlBody(
+                    contentType = "application/json",
+                    schema = "apispecs/resources/schemas/simple-resource/simple-response.json",
+                    example = "apispecs/resources/examples/simple-resource/simple-response.json"
+            ))
+    )
+    @RamlDescription("resource to retrieve a random value")
+    @Path("/sub-resource")
+    @GET
+    @Produces("application/json")
+    public Response getSimpleSubResponse(){
         return Response.ok().entity("{\"random\":\"" + UUID.randomUUID().toString() + "\"}").build();
     }
 }
