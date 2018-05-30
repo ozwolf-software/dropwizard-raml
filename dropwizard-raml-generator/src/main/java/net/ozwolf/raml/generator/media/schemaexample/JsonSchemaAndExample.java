@@ -7,7 +7,7 @@ import net.ozwolf.raml.generator.RamlGenerator;
 import net.ozwolf.raml.generator.media.SchemaAndExampleGenerator;
 import net.ozwolf.raml.generator.model.SchemaAndExample;
 import net.ozwolf.raml.generator.util.JacksonUtils;
-import net.ozwolf.raml.generator.util.ResourceUtils;
+import net.ozwolf.raml.generator.util.ClassPathUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -18,8 +18,8 @@ import java.util.Optional;
 public class JsonSchemaAndExample implements SchemaAndExampleGenerator {
     @Override
     public SchemaAndExample generate(RamlBody annotation) {
-        String schema = ResourceUtils.getResourceAsString(annotation.schema());
-        String example = ResourceUtils.getResourceAsString(annotation.example());
+        String schema = ClassPathUtils.getResourceAsString(annotation.schema());
+        String example = ClassPathUtils.getResourceAsString(annotation.example());
 
         if (annotation.returnType() != RamlBody.NotDefinedReturnType.class) {
             return new SchemaAndExample(

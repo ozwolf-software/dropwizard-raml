@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.common.annotations.VisibleForTesting;
 import net.ozwolf.raml.annotations.RamlApp;
 import net.ozwolf.raml.annotations.RamlIgnore;
 import net.ozwolf.raml.generator.exception.RamlGenerationError;
@@ -27,6 +28,7 @@ import static com.google.common.collect.Lists.newArrayList;
 public class RamlGenerator {
     private final String version;
     private final Reflections reflections;
+    private ResourceFactory resourceFactory;
 
     public final static ObjectMapper MAPPER = new ObjectMapper().registerModule(new JodaModule()).registerModule(new JavaTimeModule());
     private final static ObjectMapper YAML_MAPPER = new YAMLMapper();
@@ -43,6 +45,7 @@ public class RamlGenerator {
                 new TypeAnnotationsScanner(),
                 new SubTypesScanner()
         );
+        this.resourceFactory = new ResourceFactory();
     }
 
     public void registerModule(Module module) {
@@ -89,7 +92,7 @@ public class RamlGenerator {
         reflections.getTypesAnnotatedWith(Path.class)
                 .stream()
                 .filter(r -> !r.isAnnotationPresent(RamlIgnore.class))
-                .forEach(r -> ResourceFactory.apply(r, model::addResource, onError));
+                .forEach(r -> resourceFactory.apply(r, model::addResource, onError));
 
         if (!errors.isEmpty())
             throw new RamlGenerationException(errors);
@@ -99,5 +102,10 @@ public class RamlGenerator {
         } catch (Exception e) {
             throw new RamlGenerationUnhandledException(e);
         }
+    }
+
+    @VisibleForTesting
+    protected void setResourceFactory(ResourceFactory resourceFactory){
+        this.resourceFactory = resourceFactory;
     }
 }

@@ -26,7 +26,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 public class ParametersFactory {
-    public static void getUriParameters(Class<?> resource, Consumer<RamlParameterModel> onSuccess, Consumer<RamlGenerationError> onError) {
+    public void getUriParameters(Class<?> resource, Consumer<RamlParameterModel> onSuccess, Consumer<RamlGenerationError> onError) {
         getUriParameters(
                 resource.getAnnotation(Path.class),
                 resource.getAnnotation(RamlUriParameters.class),
@@ -35,7 +35,7 @@ public class ParametersFactory {
         );
     }
 
-    public static void getUriParameters(Method method, Consumer<RamlParameterModel> onSuccess, Consumer<RamlGenerationError> onError) {
+    public void getUriParameters(Method method, Consumer<RamlParameterModel> onSuccess, Consumer<RamlGenerationError> onError) {
         getUriParameters(
                 method.getAnnotation(Path.class),
                 method.getAnnotation(RamlUriParameters.class),
@@ -44,7 +44,7 @@ public class ParametersFactory {
         );
     }
 
-    public static void getQueryParameters(Method method, Consumer<RamlParameterModel> onSuccess, Consumer<RamlGenerationError> onError) {
+    public void getQueryParameters(Method method, Consumer<RamlParameterModel> onSuccess, Consumer<RamlGenerationError> onError) {
         Map<String, RamlParameter> descriptions = Optional.ofNullable(method.getAnnotation(RamlQueryParameters.class))
                 .map(a -> Arrays.stream(a.value()).collect(toMap(RamlParameter::name, v -> v)))
                 .orElse(newHashMap());
@@ -59,7 +59,7 @@ public class ParametersFactory {
         );
     }
 
-    public static void getHeaders(Method method, Consumer<RamlParameterModel> onSuccess, Consumer<RamlGenerationError> onError) {
+    public void getHeaders(Method method, Consumer<RamlParameterModel> onSuccess, Consumer<RamlGenerationError> onError) {
         Map<String, RamlParameter> descriptions = Optional.ofNullable(method.getAnnotation(RamlHeaders.class))
                 .map(a -> Arrays.stream(a.value()).collect(toMap(RamlParameter::name, v -> v)))
                 .orElse(newHashMap());

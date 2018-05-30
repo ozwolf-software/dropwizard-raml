@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 import static com.google.common.collect.Sets.newHashSet;
 
 public class ResponseFactory {
-    public static void create(Method method, Consumer<RamlResponseModel> onSuccess, Consumer<RamlGenerationError> onError) {
+    public void getResponses(Method method, Consumer<RamlResponseModel> onSuccess, Consumer<RamlGenerationError> onError) {
         RamlResponses annotation = method.getAnnotation(RamlResponses.class);
 
         if (annotation != null) {

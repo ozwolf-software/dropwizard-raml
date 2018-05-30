@@ -28,10 +28,15 @@ public class RamlGenerationError {
     }
 
     public String getMessage() {
-        String prefix = "[ " + resource.getSimpleName() + " ]";
+        String prefix = resource.getSimpleName();
         if (method != null)
-            prefix += "[ " + method.getName() + " ]";
+            prefix += "." + method.getName();
 
-        return prefix + " " + message;
+        return prefix + " : " + message;
+    }
+
+    @Override
+    public String toString() {
+        return "[" + this.getClass().getSimpleName() + "<message=" + getMessage() + ">]";
     }
 }

@@ -1,6 +1,6 @@
 package net.ozwolf.raml.generator.factory;
 
-import net.ozwolf.raml.annotations.RamlDescription;
+import com.google.common.annotations.VisibleForTesting;
 import net.ozwolf.raml.annotations.RamlIgnore;
 import net.ozwolf.raml.annotations.RamlResource;
 import net.ozwolf.raml.generator.exception.RamlGenerationError;
@@ -20,7 +20,15 @@ import java.util.function.Consumer;
 import static com.google.common.collect.Maps.newHashMap;
 
 public class ResourceFactory {
-    public static void apply(Class<?> resource, Consumer<RamlResourceModel> onSuccess, Consumer<RamlGenerationError> onError) {
+    private ParametersFactory parametersFactory;
+    private MethodFactory methodFactory;
+
+    public ResourceFactory() {
+        this.parametersFactory = new ParametersFactory();
+        this.methodFactory = new MethodFactory();
+    }
+
+    public void apply(Class<?> resource, Consumer<RamlResourceModel> onSuccess, Consumer<RamlGenerationError> onError) {
         Path path = resource.getAnnotation(Path.class);
         RamlResource annotation = resource.getAnnotation(RamlResource.class);
 
@@ -35,7 +43,7 @@ public class ResourceFactory {
         CheckedOnError e = new CheckedOnError(onError);
 
         Map<String, RamlParameterModel> uriParameters = newHashMap();
-        ParametersFactory.getUriParameters(resource, p -> uriParameters.put(p.getName(), p), e);
+        parametersFactory.getUriParameters(resource, p -> uriParameters.put(p.getName(), p), e);
 
         RamlResourceModel model = new RamlResourceModel(path.value(), annotation.displayName(), annotation.description(), uriParameters);
         applyMethods(resource, null, model::addMethod, e);
@@ -45,7 +53,17 @@ public class ResourceFactory {
             onSuccess.accept(model);
     }
 
-    private static void apply(Method method, Consumer<RamlResourceModel> onSuccess, Consumer<RamlGenerationError> onError) {
+    @VisibleForTesting
+    protected void setParametersFactory(ParametersFactory parametersFactory) {
+        this.parametersFactory = parametersFactory;
+    }
+
+    @VisibleForTesting
+    protected void setMethodFactory(MethodFactory methodFactory) {
+        this.methodFactory = methodFactory;
+    }
+
+    private void apply(Method method, Consumer<RamlResourceModel> onSuccess, Consumer<RamlGenerationError> onError) {
         Path path = method.getAnnotation(Path.class);
 
         if (path == null) {
@@ -56,7 +74,7 @@ public class ResourceFactory {
         CheckedOnError e = new CheckedOnError(onError);
 
         Map<String, RamlParameterModel> uriParameters = newHashMap();
-        ParametersFactory.getUriParameters(method, p -> uriParameters.put(p.getName(), p), e);
+        parametersFactory.getUriParameters(method, p -> uriParameters.put(p.getName(), p), e);
 
         RamlResourceModel model = new RamlResourceModel(
                 path.value(),
@@ -70,14 +88,14 @@ public class ResourceFactory {
             onSuccess.accept(model);
     }
 
-    private static void applySubResources(Class<?> resource, Consumer<RamlResourceModel> onSuccess, Consumer<RamlGenerationError> onError) {
+    private void applySubResources(Class<?> resource, Consumer<RamlResourceModel> onSuccess, Consumer<RamlGenerationError> onError) {
         Arrays.stream(resource.getDeclaredMethods())
                 .filter(m -> !m.isAnnotationPresent(RamlIgnore.class))
                 .filter(m -> m.isAnnotationPresent(Path.class))
                 .forEach(m -> apply(m, onSuccess, onError));
     }
 
-    private static void applyMethods(Class<?> resource, Path path, Consumer<RamlMethodModel> onSuccess, Consumer<RamlGenerationError> onError) {
+    private void applyMethods(Class<?> resource, Path path, Consumer<RamlMethodModel> onSuccess, Consumer<RamlGenerationError> onError) {
         Arrays.stream(resource.getDeclaredMethods())
                 .filter(m -> !m.isAnnotationPresent(RamlIgnore.class))
                 .filter(m -> {
@@ -86,6 +104,6 @@ public class ResourceFactory {
                     return Objects.equals(resourcePath, methodPath);
                 })
                 .filter(m -> RamlAction.getActionFor(m).isPresent())
-                .forEach(m -> MethodFactory.apply(m, onSuccess, onError));
+                .forEach(m -> methodFactory.getMethod(m, onSuccess, onError));
     }
 }

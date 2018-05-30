@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.ozwolf.raml.annotations.RamlDocumentation;
-import net.ozwolf.raml.generator.util.ResourceUtils;
+import net.ozwolf.raml.generator.util.ClassPathUtils;
 
 @JsonSerialize
 @JsonPropertyOrder({"title", "content"})
@@ -14,7 +14,7 @@ public class RamlDocumentationModel {
 
     public RamlDocumentationModel(RamlDocumentation annotation) {
         this.title = annotation.title();
-        this.content = ResourceUtils.getResourceAsString(annotation.content());
+        this.content = ClassPathUtils.getResourceAsString(annotation.content());
     }
 
     @JsonProperty("title")

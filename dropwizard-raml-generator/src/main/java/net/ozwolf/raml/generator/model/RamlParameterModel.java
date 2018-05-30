@@ -61,7 +61,7 @@ public class RamlParameterModel {
         this.name = name;
         this.displayName = null;
         this.description = Optional.ofNullable(parameter.getAnnotation(RamlDescription.class)).map(RamlDescription::value).orElse(null);
-        this.type = multiple ? "array" : ParameterUtils.getTypeOf(parameter);
+        this.type = multiple ? "array" : RamlParameterType.getRamlType(parameter);
         this.required = parameter.isAnnotationPresent(NotNull.class);
         this.items = multiple ? new ArrayItemsModel(parameter) : null;
         this.defaultValue = multiple ? null : Optional.ofNullable(parameter.getAnnotation(DefaultValue.class)).map(DefaultValue::value).orElse(null);
@@ -153,7 +153,7 @@ public class RamlParameterModel {
         }
 
         private ArrayItemsModel(Parameter parameter) {
-            this.type = ParameterUtils.getTypeOf(parameter);
+            this.type = RamlParameterType.getRamlType(parameter);
             this.allowedValues = ParameterUtils.getAllowedValues(parameter);
             this.example = Optional.ofNullable(parameter.getAnnotation(RamlExample.class)).map(v -> trimToNull(v.value())).orElse(null);
             this.pattern = Optional.ofNullable(parameter.getAnnotation(Pattern.class)).map(Pattern::regexp).orElse(null);

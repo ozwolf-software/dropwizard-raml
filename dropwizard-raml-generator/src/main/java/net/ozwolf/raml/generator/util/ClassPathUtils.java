@@ -10,7 +10,7 @@ import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
 
-public class ResourceUtils {
+public class ClassPathUtils {
     private final static Map<String, String> LOADED = newHashMap();
 
     public static String getResourceAsString(String resource) {
@@ -20,7 +20,7 @@ public class ResourceUtils {
             if (StringUtils.isBlank(resource))
                 return null;
 
-            URL url = ResourceUtils.class.getClassLoader().getResource(resource);
+            URL url = ClassPathUtils.class.getClassLoader().getResource(resource);
             if (url == null)
                 return null;
 

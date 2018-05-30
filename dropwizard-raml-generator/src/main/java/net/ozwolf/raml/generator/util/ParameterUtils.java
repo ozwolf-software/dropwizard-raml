@@ -10,26 +10,11 @@ import static com.google.common.collect.Sets.newHashSet;
 import static java.util.stream.Collectors.toSet;
 
 public class ParameterUtils {
-    public static String getTypeOf(Parameter parameter) {
+    public static Class<?> getRealType(Parameter parameter){
         Class<?> type = parameter.getType();
         if (Collection.class.isAssignableFrom(type))
             type = (Class<?>) ((ParameterizedType) parameter.getParameterizedType()).getActualTypeArguments()[0];
-
-        if (type.isPrimitive())
-
-        if (String.class.isAssignableFrom(type))
-            return "string";
-
-        if (Integer.class.isAssignableFrom(type) || Long.class.isAssignableFrom(type) || type.getName().equals("integer") || type.getName().equals("long"))
-            return "integer";
-
-        if (Number.class.isAssignableFrom(type) || type.getName().equals("double") || type.getName().equals("float"))
-            return "number";
-
-        if (Boolean.class.isAssignableFrom(type) || type.getName().equals("boolean"))
-            return "boolean";
-
-        return "string";
+        return type;
     }
 
     public static Set<String> getAllowedValues(Parameter parameter) {
