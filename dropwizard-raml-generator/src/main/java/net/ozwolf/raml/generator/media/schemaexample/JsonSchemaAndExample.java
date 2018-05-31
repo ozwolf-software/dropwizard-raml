@@ -1,12 +1,15 @@
 package net.ozwolf.raml.generator.media.schemaexample;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.kjetland.jackson.jsonSchema.JsonSchemaConfig;
+import com.kjetland.jackson.jsonSchema.JsonSchemaGenerator;
 import net.ozwolf.raml.annotations.RamlBody;
 import net.ozwolf.raml.annotations.RamlExample;
-import net.ozwolf.raml.generator.RamlGenerator;
+import net.ozwolf.raml.generator.MediaMappers;
 import net.ozwolf.raml.generator.media.SchemaAndExampleGenerator;
+import net.ozwolf.raml.generator.media.SupportedMediaType;
 import net.ozwolf.raml.generator.model.SchemaAndExample;
-import net.ozwolf.raml.generator.util.JacksonUtils;
 import net.ozwolf.raml.generator.util.ClassPathUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -23,7 +26,7 @@ public class JsonSchemaAndExample implements SchemaAndExampleGenerator {
 
         if (annotation.type() != RamlBody.NotDefinedReturnType.class) {
             return new SchemaAndExample(
-                    JacksonUtils.toJsonSchema(annotation.type()),
+                    toJsonSchema(annotation.type()),
                     Optional.ofNullable(fromMethod(annotation.type())).orElse(example)
             );
         } else {
@@ -34,7 +37,7 @@ public class JsonSchemaAndExample implements SchemaAndExampleGenerator {
     @Override
     public SchemaAndExample generate(Class<?> type) {
         return new SchemaAndExample(
-                JacksonUtils.toJsonSchema(type),
+                toJsonSchema(type),
                 Optional.ofNullable(fromMethod(type)).orElse(null)
         );
     }
@@ -54,11 +57,22 @@ public class JsonSchemaAndExample implements SchemaAndExampleGenerator {
         try {
             Object example = method.invoke(type);
 
-            return RamlGenerator.MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(example);
+            return MediaMappers.instance().mapperFor(SupportedMediaType.JSON).writerWithDefaultPrettyPrinter().writeValueAsString(example);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new IllegalStateException("Unable to invoke method [ " + type.getName() + "#" + method.getName() + " ]", e);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Example of [ " + type.getName() + " ] could not be serialized to JSON.", e);
+        }
+    }
+
+    private static String toJsonSchema(Class<?> type) {
+        try {
+            JsonSchemaGenerator generator = new JsonSchemaGenerator(MediaMappers.instance().mapperFor(SupportedMediaType.JSON), JsonSchemaConfig.vanillaJsonSchemaDraft4());
+
+            JsonNode schema = generator.generateJsonSchema(type);
+            return MediaMappers.instance().mapperFor(SupportedMediaType.JSON).writerWithDefaultPrettyPrinter().writeValueAsString(schema);
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException("Error generating schema for [ " + type.getName() + " ].", e);
         }
     }
 }

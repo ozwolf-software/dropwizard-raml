@@ -1,10 +1,7 @@
 package net.ozwolf.raml.generator;
 
-import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.annotations.VisibleForTesting;
 import net.ozwolf.raml.annotations.RamlApp;
 import net.ozwolf.raml.annotations.RamlIgnore;
@@ -17,8 +14,6 @@ import org.reflections.Reflections;
 import org.reflections.scanners.*;
 
 import javax.ws.rs.Path;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -27,9 +22,9 @@ import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * <h1>RAML Generator</h1>
- *
+ * <p>
  * This class is designed to read across the supplied base package and generate a valid RAML specification from the use of the RAML annotations and JAX-RS + Jackson entities within.
- *
+ * <p>
  * The generator will resolve resources into inline content as part of this process to create a singular RAML specification that is not reliant on classpathing.
  */
 public class RamlGenerator {
@@ -37,14 +32,12 @@ public class RamlGenerator {
     private final Reflections reflections;
     private ResourceFactory resourceFactory;
 
-    public final static ObjectMapper MAPPER = new ObjectMapper().registerModule(new JodaModule()).registerModule(new JavaTimeModule());
-    private final static ObjectMapper YAML_MAPPER = new YAMLMapper();
-
     private final static String HEADER = "#%RAML 1.0";
+    private final static ObjectMapper YAML_MAPPER = new YAMLMapper();
 
     /**
      * Construct a new RAML generator.
-     *
+     * <p>
      * The generator requires a base package to scan from so as to limit reflection computations.
      *
      * @param basePackage the base package of the application generate documetnation for
@@ -61,48 +54,6 @@ public class RamlGenerator {
                 new SubTypesScanner()
         );
         this.resourceFactory = new ResourceFactory();
-    }
-
-    /**
-     * Register a Jackson module with the generator.
-     *
-     * This is important if your application uses any custom tooling with Jackson (such as custom serialization, etc).
-     *
-     * @param module the Jackson module
-     */
-    public void registerModule(Module module) {
-        MAPPER.registerModule(module);
-    }
-
-    /**
-     * Register a Jackson module via the class name string.
-     *
-     * This option is used when driving the generator from a configuration file (such as through the Maven plugin).
-     *
-     * The class _must_ have a default constructor.
-     *
-     * @param className the class name of the module.
-     * @throws IllegalArgumentException if the class could not be found or does not have a default constructor.
-     * @throws IllegalStateException    if the class could not be instantiated
-     */
-    @SuppressWarnings("unchecked")
-    public void registerModule(String className) {
-        try {
-            Class<?> module = Class.forName(className);
-            if (!Module.class.isAssignableFrom(module))
-                throw new IllegalArgumentException("Class [ " + className + " ] does not implement [ " + Module.class.getName() + " ]");
-
-            Constructor<? extends Module> constructor = ((Class<? extends Module>) module).getConstructor();
-
-            Module instance = constructor.newInstance();
-            MAPPER.registerModule(instance);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException("Module [ " + className + " ] does not have a default constructor.", e);
-        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            throw new IllegalStateException("Could not instantiate instance of [ " + className + " ] module.", e);
-        } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("Module [ " + className + " ] could not be found.", e);
-        }
     }
 
     /**

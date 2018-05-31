@@ -157,6 +157,20 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${javadoc.plugin.version}</version>
+                <configuration>
+                    <doclet>ch.raffael.mddoclet.MarkdownDoclet</doclet>
+                    <docletArtifact>
+                        <groupId>ch.raffael.markdown-doclet</groupId>
+                        <artifactId>markdown-doclet</artifactId>
+                        <version>1.4</version>
+                    </docletArtifact>
+                    <useStandardDocletOptions>true</useStandardDocletOptions>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
