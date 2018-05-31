@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>dropwizard-raml-toolbox</artifactId>
+        <groupId>net.ozwolf</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>dropwizard-raml-example-service</artifactId>
+    <name>DropWizard RAML Example Service</name>
+    <description>An example DropWizard service with full RAML specification annotations.</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.ozwolf</groupId>
+            <artifactId>jaxrs-raml-annotations</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-core</artifactId>
+        </dependency>
+    </dependencies>
+</project>

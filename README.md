@@ -1,4 +1,4 @@
-# DropWizard RAML Toolbox
+# RAML Toolbox
 
 A collection of tools that originally started as a way to better learn how [RAML](https://raml.org) and JAX-RS could integrate together (before MuleSoft released the [RAML for JAX-RS](https://github.com/mulesoft-labs/raml-for-jax-rs) project.
 
@@ -20,9 +20,9 @@ For more information on how RAML works, please refer to the following links:
 
 ## Components
 
-+ [dropwizard-raml-annotations](./dropwizard-raml-annotations) - a library containing the RAML annotations used to help describe your service in code
-+ [dropwizard-raml-generator](./dropwizard-raml-generator) - the library that contains the logic to investigate your project and derive a RAML specification
-+ dropwizard-raml-maven-plugin (TBA) - a Maven plugin that can be used to generate a RAML specification file during the build process
++ [jaxrs-raml-annotations](./jaxrs-raml-annotations) - a library containing the RAML annotations used to help describe a JAX-RS service in code
++ [jaxrs-raml-generator](./jaxrs-raml-generator) - the library that contains the logic to investigate your project and derive a RAML specification
++ maven-jaxrs-raml-plugin (TBA) - a Maven plugin that can be used to generate a RAML specification file during the build process
 + dropwizard-raml-view (TBA) - a configured bundle that provides a readable endpoint on services explaining the API
 + dropwizard-raml-monitor (TBA) - a runtime library that monitors incoming and outgoing requests, logging if successful request/response chains do not adhere to the API specification
 + dropwizard-raml-tester (TBA) - a testing library that allows DropWizard testing to verify RAML specifications
