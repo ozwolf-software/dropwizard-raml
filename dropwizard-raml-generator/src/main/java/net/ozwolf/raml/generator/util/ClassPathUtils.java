@@ -22,7 +22,7 @@ public class ClassPathUtils {
 
             URL url = ClassPathUtils.class.getClassLoader().getResource(resource);
             if (url == null)
-                return null;
+                return resource;
 
             String content = Resources.toString(url, Charset.defaultCharset());
             if (StringUtils.isNotBlank(content))

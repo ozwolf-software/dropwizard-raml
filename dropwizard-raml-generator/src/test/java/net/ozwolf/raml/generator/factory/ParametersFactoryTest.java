@@ -16,8 +16,10 @@ import java.util.List;
 import static com.google.common.collect.Lists.newArrayList;
 import static net.ozwolf.raml.generator.matchers.RamlGeneratorErrorMatchers.errorOf;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-@SuppressWarnings("JavaReflectionMemberAccess")
+@SuppressWarnings({"JavaReflectionMemberAccess", "SameParameterValue"})
 class ParametersFactoryTest {
     @Test
     void shouldDeriveUriParametersForResource() {
@@ -52,16 +54,18 @@ class ParametersFactoryTest {
 
         assertThat(errors)
                 .hasSize(2)
-                .areAtLeastOne(errorOf("TestResource3 : parameter [ testParameter ] has no [ @" + RamlParameter.class.getSimpleName() + " ] definition"))
-                .areAtLeastOne(errorOf("TestResource3 : parameter [ unknownParameter ] described but is not in path"));
+                .areAtLeastOne(errorOf("TestResource3 : /test/{testParameter} : parameter [ testParameter ] has no [ @" + RamlParameter.class.getSimpleName() + " ] definition"))
+                .areAtLeastOne(errorOf("TestResource3 : /test/{testParameter} : parameter [ unknownParameter ] described but is not in path"));
     }
 
     @Test
-    void shouldDeriveUriParametersForMethod() throws NoSuchMethodException {
+    void shouldDeriveUriParametersForMethod() {
         ParametersFactory factory = new ParametersFactory();
 
+        Path path = pathOf("/{otherParameter}");
+
         List<RamlParameterModel> parameters = newArrayList();
-        factory.getUriParameters(TestResource1.class.getMethod("getOther", String.class, String.class), parameters::add, null);
+        factory.getUriParameters(TestResource1.class, path, parameters::add, null);
 
         assertThat(parameters)
                 .hasSize(1)
@@ -117,28 +121,32 @@ class ParametersFactoryTest {
     }
 
     @Test
-    void shouldRaiseErrorWhenMethodIsMissingAnnotation() throws NoSuchMethodException {
+    void shouldRaiseErrorWhenMethodIsMissingAnnotation() {
         ParametersFactory factory = new ParametersFactory();
 
+        Path path = pathOf("/{otherParameter}");
+
         List<RamlGenerationError> errors = newArrayList();
-        factory.getUriParameters(TestResource2.class.getMethod("getOther"), null, errors::add);
+        factory.getUriParameters(TestResource2.class, path, null, errors::add);
 
         assertThat(errors)
                 .hasSize(1)
-                .areAtLeastOne(errorOf("TestResource2.getOther : has URI parameters but is missing [ @" + RamlUriParameters.class.getSimpleName() + " ] annotation"));
+                .areAtLeastOne(errorOf("TestResource2 : /{otherParameter} : has URI parameters but resource is missing [ @" + RamlSubResources.class.getSimpleName() + " ] entry"));
     }
 
     @Test
-    void shouldRaiseErrorsWhenMethodDescribedParametersDoesNotAlignWithPath() throws NoSuchMethodException {
+    void shouldRaiseErrorsWhenMethodDescribedParametersDoesNotAlignWithPath() {
         ParametersFactory factory = new ParametersFactory();
 
+        Path path = pathOf("/{otherParameter}");
+
         List<RamlGenerationError> errors = newArrayList();
-        factory.getUriParameters(TestResource3.class.getMethod("getOther"), null, errors::add);
+        factory.getUriParameters(TestResource3.class, path, null, errors::add);
 
         assertThat(errors)
                 .hasSize(2)
-                .areAtLeastOne(errorOf("TestResource3.getOther : parameter [ otherParameter ] has no [ @" + RamlParameter.class.getSimpleName() + " ] definition"))
-                .areAtLeastOne(errorOf("TestResource3.getOther : parameter [ unknownParameter ] described but is not in path"));
+                .areAtLeastOne(errorOf("TestResource3 : /{otherParameter} : parameter [ otherParameter ] has no [ @" + RamlParameter.class.getSimpleName() + " ] definition"))
+                .areAtLeastOne(errorOf("TestResource3 : /{otherParameter} : parameter [ unknownParameter ] described but is not in path"));
     }
 
     private static Condition<RamlParameterModel> parameterOf(String name, String type, String description) {
@@ -148,15 +156,21 @@ class ParametersFactoryTest {
         );
     }
 
+    private static Path pathOf(String value){
+        Path path = mock(Path.class);
+        when(path.value()).thenReturn(value);
+        return path;
+    }
+
     @RamlResource(displayName = "Test Resource 1", description = "test resource 1")
     @RamlUriParameters(
             @RamlParameter(name = "testParameter", type = "string", description = "test parameter")
     )
+    @RamlSubResources(
+        @RamlSubResource(path = @Path("/{otherParameter}"), uriParameters = @RamlParameter(name = "otherParameter", type = "string", description = "test parameter"))
+    )
     @Path("/test/{testParameter}")
     public static class TestResource1 {
-        @RamlUriParameters(
-                @RamlParameter(name = "otherParameter", type = "string", description = "test parameter")
-        )
         @RamlQueryParameters(
                 @RamlParameter(name = "test-query", type = "string", description = "test query parameter")
         )
@@ -190,11 +204,11 @@ class ParametersFactoryTest {
     @RamlUriParameters(
             @RamlParameter(name = "unknownParameter", type = "string", description = "an unknown parameter")
     )
+    @RamlSubResources(
+            @RamlSubResource(path = @Path("/{otherParameter}"), uriParameters = @RamlParameter(name = "unknownParameter", type = "string", description = "an unknown parameter"))
+    )
     @Path("/test/{testParameter}")
     public static class TestResource3 {
-        @RamlUriParameters(
-                @RamlParameter(name = "unknownParameter", type = "string", description = "an unknown parameter")
-        )
         @Path("/{otherParameter}")
         @GET
         public Response getOther() {

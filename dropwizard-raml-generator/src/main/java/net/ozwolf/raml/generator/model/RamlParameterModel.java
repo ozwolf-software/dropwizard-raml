@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 @JsonSerialize
@@ -49,7 +48,7 @@ public class RamlParameterModel {
         this.required = annotation.required();
         this.items = annotation.multiple() ? new ArrayItemsModel(annotation) : null;
         this.defaultValue = annotation.multiple() ? null : annotation.defaultValue();
-        this.allowedValues = annotation.multiple() ? null : newHashSet(annotation.allowedValues());
+        this.allowedValues = annotation.multiple() ? null : ParameterUtils.getAllowedValues(annotation);
         this.example = annotation.multiple() ? null : annotation.example();
         this.pattern = annotation.multiple() ? null : annotation.pattern();
         this.minimum = annotation.multiple() ? null : annotation.minimum();
@@ -145,7 +144,7 @@ public class RamlParameterModel {
 
         private ArrayItemsModel(RamlParameter annotation) {
             this.type = annotation.type();
-            this.allowedValues = newHashSet(annotation.allowedValues());
+            this.allowedValues = ParameterUtils.getAllowedValues(annotation);
             this.example = annotation.example();
             this.pattern = annotation.pattern();
             this.minimum = annotation.minimum();

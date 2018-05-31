@@ -6,16 +6,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <h1>RAML Traits Annotation</h1>
+ * <h1>RAML Requests Annotation</h1>
  *
- * An annotation to flag what traits a resource method is going to inherit.
- *
- * These traits are defined by the `{@literal @}RamlTrait` annotation.
- *
- * @see RamlTrait
+ * Used to describe the allowed request bodies for a `POST`, `PUT` or `PATCH` resource method.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface RamlTraits {
-    String[] value();
+public @interface RamlRequests {
+    RamlBody[] value();
 }

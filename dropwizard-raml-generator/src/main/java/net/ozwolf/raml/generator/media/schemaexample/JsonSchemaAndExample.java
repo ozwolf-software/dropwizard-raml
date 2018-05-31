@@ -21,10 +21,10 @@ public class JsonSchemaAndExample implements SchemaAndExampleGenerator {
         String schema = ClassPathUtils.getResourceAsString(annotation.schema());
         String example = ClassPathUtils.getResourceAsString(annotation.example());
 
-        if (annotation.returnType() != RamlBody.NotDefinedReturnType.class) {
+        if (annotation.type() != RamlBody.NotDefinedReturnType.class) {
             return new SchemaAndExample(
-                    JacksonUtils.toJsonSchema(annotation.returnType()),
-                    Optional.ofNullable(fromMethod(annotation.returnType())).orElse(example)
+                    JacksonUtils.toJsonSchema(annotation.type()),
+                    Optional.ofNullable(fromMethod(annotation.type())).orElse(example)
             );
         } else {
             return new SchemaAndExample(schema, example);

@@ -54,6 +54,7 @@ public class MethodFactory {
                             Optional.ofNullable(method.getAnnotation(RamlTraits.class)).map(v -> newHashSet(v.value())).orElse(newHashSet()),
                             queryParameters,
                             headers,
+                            newHashMap(),
                             responses
                     )
             );

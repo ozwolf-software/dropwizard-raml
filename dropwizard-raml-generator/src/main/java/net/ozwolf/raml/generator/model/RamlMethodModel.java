@@ -5,15 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import net.ozwolf.raml.annotations.RamlDescription;
-import net.ozwolf.raml.annotations.RamlParameter;
-import net.ozwolf.raml.annotations.RamlSecuredBy;
-import net.ozwolf.raml.annotations.RamlTraits;
-import net.ozwolf.raml.generator.factory.ResponseFactory;
 
-import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
@@ -21,7 +14,7 @@ import static net.ozwolf.raml.generator.util.CollectionUtils.nullIfEmpty;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 @JsonSerialize
-@JsonPropertyOrder({"description", "securedBy", "is", "headers", "queryParameters", "responses"})
+@JsonPropertyOrder({"description", "securedBy", "is", "headers", "queryParameters", "body", "responses"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RamlMethodModel {
     private final String action;
@@ -30,6 +23,7 @@ public class RamlMethodModel {
     private final Set<String> traits;
     private final Map<String, RamlParameterModel> queryParameters;
     private final Map<String, RamlParameterModel> headers;
+    private final Map<String, RamlBodyModel> requests;
     private final Map<Integer, RamlResponseModel> responses;
 
     public RamlMethodModel(String action,
@@ -38,12 +32,14 @@ public class RamlMethodModel {
                            Set<String> traits,
                            Map<String, RamlParameterModel> queryParameters,
                            Map<String, RamlParameterModel> headers,
+                           Map<String, RamlBodyModel> requests,
                            Map<Integer, RamlResponseModel> responses) {
         this.action = action;
         this.description = description;
         this.securedBy = securedBy;
         this.traits = traits;
         this.queryParameters = queryParameters;
+        this.requests = requests;
         this.headers = headers;
         this.responses = responses;
     }
@@ -76,6 +72,11 @@ public class RamlMethodModel {
     @JsonProperty("headers")
     public Map<String, RamlParameterModel> getHeaders() {
         return nullIfEmpty(headers);
+    }
+
+    @JsonProperty("body")
+    public Map<String, RamlBodyModel> getRequests() {
+        return nullIfEmpty(requests);
     }
 
     @JsonProperty("responses")

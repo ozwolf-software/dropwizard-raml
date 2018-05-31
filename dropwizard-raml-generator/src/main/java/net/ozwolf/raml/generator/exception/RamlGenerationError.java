@@ -1,6 +1,7 @@
 package net.ozwolf.raml.generator.exception;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 public class RamlGenerationError {
     private final Class<?> resource;
@@ -38,5 +39,17 @@ public class RamlGenerationError {
     @Override
     public String toString() {
         return "[" + this.getClass().getSimpleName() + "<message=" + getMessage() + ">]";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof RamlGenerationError))
+            return false;
+
+        RamlGenerationError e = (RamlGenerationError) o;
+
+        return Objects.equals(e.resource, this.resource) &&
+                Objects.equals(e.method, this.method) &&
+                Objects.equals(e.message, this.message);
     }
 }

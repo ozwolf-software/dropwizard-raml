@@ -13,6 +13,9 @@ import javax.ws.rs.*;
 @RamlUriParameters({
         @RamlParameter(name = "complexId", type = "string", description = "the complex identifier")
 })
+@RamlSubResources({
+        @RamlSubResource(path = @Path("/person/{personId}"), uriParameters = @RamlParameter(name = "personId", type = "string", description = "the person identifier"))
+})
 @Path("/complex/{complexId}")
 public class ComplexResource {
     @RamlSecuredBy("custom-token")
@@ -24,7 +27,7 @@ public class ComplexResource {
                     description = "the complex object was successfully found",
                     bodies = @RamlBody(
                             contentType = "application/json",
-                            returnType = ComplexResponse.class
+                            type = ComplexResponse.class
                     )
             )
     )
@@ -40,16 +43,13 @@ public class ComplexResource {
     @RamlSecuredBy("custom-token")
     @RamlTraits("has404")
     @RamlDescription("resource to return a person")
-    @RamlUriParameters(
-            @RamlParameter(name = "personId", type = "string", description = "the person identifier")
-    )
     @RamlResponses(
             @RamlResponse(
                     status = 200,
                     description = "person successfully found",
                     bodies = @RamlBody(
                             contentType = "application/json",
-                            returnType = PersonResponse.class
+                            type = PersonResponse.class
                     )
             )
     )

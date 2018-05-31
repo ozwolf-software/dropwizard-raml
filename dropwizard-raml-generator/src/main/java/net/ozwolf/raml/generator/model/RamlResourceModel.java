@@ -54,11 +54,21 @@ public class RamlResourceModel {
     }
 
     @JsonAnyGetter
-    public Map<String, Object> getMethods() {
+    public Map<String, Object> getChildren() {
         Map<String, Object> result = newHashMap();
         result.putAll(methods);
         result.putAll(resources);
         return result;
+    }
+
+    @JsonIgnore
+    public Map<String, RamlMethodModel> getMethods() {
+        return methods;
+    }
+
+    @JsonIgnore
+    public Map<String, RamlResourceModel> getResources() {
+        return resources;
     }
 
     public void addMethod(RamlMethodModel method) {
