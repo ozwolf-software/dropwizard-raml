@@ -24,10 +24,13 @@ public enum RamlAction {
         this.method = method;
     }
 
-    public static Optional<String> getActionFor(Method method) {
+    public boolean hasBody() {
+        return this == post || this == patch || this == put;
+    }
+
+    public static Optional<RamlAction> find(Method method) {
         return Arrays.stream(values())
                 .filter(v -> method.isAnnotationPresent(v.method))
-                .findFirst()
-                .map(Enum::name);
+                .findFirst();
     }
 }

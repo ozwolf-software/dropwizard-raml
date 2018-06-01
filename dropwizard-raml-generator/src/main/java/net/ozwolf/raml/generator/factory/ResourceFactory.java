@@ -53,12 +53,12 @@ public class ResourceFactory {
         Arrays.stream(resource.getMethods())
                 .filter(m -> !m.isAnnotationPresent(RamlIgnore.class))
                 .filter(m -> !m.isAnnotationPresent(Path.class))
-                .filter(m -> RamlAction.getActionFor(m).isPresent())
+                .filter(m -> RamlAction.find(m).isPresent())
                 .forEach(m -> methods.computeIfAbsent(path, k -> newArrayList()).add(m));
         Arrays.stream(resource.getMethods())
                 .filter(m -> !m.isAnnotationPresent(RamlIgnore.class))
                 .filter(m -> m.isAnnotationPresent(Path.class))
-                .filter(m -> RamlAction.getActionFor(m).isPresent())
+                .filter(m -> RamlAction.find(m).isPresent())
                 .forEach(m -> methods.computeIfAbsent(m.getAnnotation(Path.class), k -> newArrayList()).add(m));
 
         methods.get(path).forEach(m -> methodFactory.getMethod(m, model::addMethod, e));

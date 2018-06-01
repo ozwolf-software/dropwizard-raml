@@ -22,6 +22,20 @@ public @interface RamlTrait {
     String key();
 
     /**
+     * Describe the usage situation of the trait
+     *
+     * @return the trait usage
+     */
+    String usage() default "";
+
+    /**
+     * Describe the trait
+     *
+     * @return the trait description
+     */
+    String description() default "";
+
+    /**
      * The overall descriptor of the trait, covering required headers, query parameters and associated responses.
      *
      * @return the trait descriptor

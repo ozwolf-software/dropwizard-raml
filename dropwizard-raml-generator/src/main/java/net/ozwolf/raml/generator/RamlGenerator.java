@@ -22,9 +22,9 @@ import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * <h1>RAML Generator</h1>
- * <p>
+ *
  * This class is designed to read across the supplied base package and generate a valid RAML specification from the use of the RAML annotations and JAX-RS + Jackson entities within.
- * <p>
+ *
  * The generator will resolve resources into inline content as part of this process to create a singular RAML specification that is not reliant on classpathing.
  */
 public class RamlGenerator {

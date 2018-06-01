@@ -37,7 +37,7 @@ public class RamlResponseModel {
         this.status = status;
         this.description = "auto generated responses";
         this.headers = newHashMap();
-        this.body = contentTypes.stream().collect(toMap(v -> v, v -> new RamlBodyModel()));
+        this.body = contentTypes.stream().collect(toMap(v -> v, RamlBodyModel::new));
     }
 
     public RamlResponseModel(Integer status, Set<String> contentTypes, Class<?> type) {

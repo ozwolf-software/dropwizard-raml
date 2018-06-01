@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>jaxrs-raml</artifactId>
+        <artifactId>dropwizard-raml</artifactId>
         <groupId>net.ozwolf</groupId>
         <version>1.0.0</version>
     </parent>
@@ -16,13 +16,19 @@
     <dependencies>
         <dependency>
             <groupId>net.ozwolf</groupId>
-            <artifactId>jaxrs-raml-annotations</artifactId>
+            <artifactId>dropwizard-raml-annotations</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.ozwolf</groupId>
+            <artifactId>dropwizard-raml-generator</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

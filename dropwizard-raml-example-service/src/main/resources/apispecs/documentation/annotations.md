@@ -1,1 +1,1 @@
-The `dropwizard-raml-annotations` project contains a collection of annotations that can be used in conjunction with
+This example service uses the `net.ozwolf:dropwizard-raml-annotations` library for the purpose of combining with JAX-RS and Jackson annotations to better document the service. 

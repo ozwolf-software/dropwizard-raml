@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.ozwolf.raml.annotations.RamlSecurity;
 
-import static org.apache.commons.lang3.StringUtils.trimToNull;
+import static org.apache.commons.lang.StringUtils.trimToNull;
 
 @JsonSerialize
 @JsonPropertyOrder({"type", "description", "describedBy"})
@@ -16,7 +16,7 @@ public class RamlSecurityModel {
     private final String description;
     private final RamlDescribedByModel describedBy;
 
-    public RamlSecurityModel(RamlSecurity annotation){
+    public RamlSecurityModel(RamlSecurity annotation) {
         this.type = annotation.type();
         this.description = annotation.description();
         this.describedBy = new RamlDescribedByModel(annotation.describedBy());

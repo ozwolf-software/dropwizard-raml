@@ -1,5 +1,6 @@
 package net.ozwolf.raml.generator.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -11,18 +12,27 @@ import net.ozwolf.raml.generator.media.SupportedMediaType;
 @JsonPropertyOrder({"schema", "example"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RamlBodyModel {
+    private final String contentType;
     private final SchemaAndExample schemaAndExample;
 
     public RamlBodyModel(RamlBody annotation) {
+        this.contentType = annotation.contentType();
         this.schemaAndExample = SupportedMediaType.getSchemaAndExample(annotation);
     }
 
-    public RamlBodyModel(){
+    RamlBodyModel(String contentType){
+        this.contentType = contentType;
         this.schemaAndExample = SchemaAndExample.NONE;
     }
 
-    public RamlBodyModel(String contentType, Class<?> type){
+    RamlBodyModel(String contentType, Class<?> type){
+        this.contentType = contentType;
         this.schemaAndExample = SupportedMediaType.getSchemaAndExample(contentType, type);
+    }
+
+    @JsonIgnore
+    public String getContentType(){
+        return contentType;
     }
 
     @JsonProperty("schema")

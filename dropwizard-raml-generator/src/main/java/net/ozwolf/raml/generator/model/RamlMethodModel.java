@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.Map;
 import java.util.Set;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static net.ozwolf.raml.generator.util.CollectionUtils.nullIfEmpty;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 

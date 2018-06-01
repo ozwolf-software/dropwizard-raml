@@ -5,10 +5,7 @@ import net.ozwolf.raml.annotations.RamlDescription;
 import net.ozwolf.raml.annotations.RamlSecuredBy;
 import net.ozwolf.raml.annotations.RamlTraits;
 import net.ozwolf.raml.generator.exception.RamlGenerationError;
-import net.ozwolf.raml.generator.model.RamlAction;
-import net.ozwolf.raml.generator.model.RamlMethodModel;
-import net.ozwolf.raml.generator.model.RamlParameterModel;
-import net.ozwolf.raml.generator.model.RamlResponseModel;
+import net.ozwolf.raml.generator.model.*;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -26,10 +23,12 @@ import static com.google.common.collect.Sets.newHashSet;
 class MethodFactory {
     private ParametersFactory parametersFactory;
     private ResponseFactory responseFactory;
+    private RequestFactory requestFactory;
 
     MethodFactory() {
         this.parametersFactory = new ParametersFactory();
         this.responseFactory = new ResponseFactory();
+        this.requestFactory = new RequestFactory();
     }
 
     /**
@@ -40,7 +39,7 @@ class MethodFactory {
      * @param onError   the on error handler
      */
     void getMethod(Method method, Consumer<RamlMethodModel> onSuccess, Consumer<RamlGenerationError> onError) {
-        String action = RamlAction.getActionFor(method).orElse(null);
+        RamlAction action = RamlAction.find(method).orElse(null);
         if (action == null) {
             onError.accept(new RamlGenerationError(method.getDeclaringClass(), method, "unsupported action"));
             return;
@@ -57,16 +56,21 @@ class MethodFactory {
         Map<Integer, RamlResponseModel> responses = newHashMap();
         responseFactory.getResponses(method, m -> responses.put(m.getStatus(), m), e);
 
+        Map<String, RamlBodyModel> requests = newHashMap();
+        if (action.hasBody()){
+            requestFactory.getRequests(method, b -> requests.put(b.getContentType(), b), e);
+        }
+
         if (!e.isInError())
             onSuccess.accept(
                     new RamlMethodModel(
-                            action,
+                            action.name(),
                             Optional.ofNullable(method.getAnnotation(RamlDescription.class)).map(RamlDescription::value).orElse(null),
                             Optional.ofNullable(method.getAnnotation(RamlSecuredBy.class)).map(v -> newHashSet(v.value())).orElse(newHashSet()),
                             Optional.ofNullable(method.getAnnotation(RamlTraits.class)).map(v -> newHashSet(v.value())).orElse(newHashSet()),
                             queryParameters,
                             headers,
-                            newHashMap(),
+                            requests,
                             responses
                     )
             );
@@ -80,5 +84,10 @@ class MethodFactory {
     @VisibleForTesting
     void setResponseFactory(ResponseFactory responseFactory) {
         this.responseFactory = responseFactory;
+    }
+
+    @VisibleForTesting
+    void setRequestFactory(RequestFactory requestFactory) {
+        this.requestFactory = requestFactory;
     }
 }
