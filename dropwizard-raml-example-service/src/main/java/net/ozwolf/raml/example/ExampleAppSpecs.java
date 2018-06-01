@@ -1,6 +1,7 @@
 package net.ozwolf.raml.example;
 
 import net.ozwolf.raml.annotations.*;
+import net.ozwolf.raml.annotations.security.RamlOAuth2Settings;
 
 @RamlApp(
         title = "DropWizard Example App",
@@ -8,8 +9,8 @@ import net.ozwolf.raml.annotations.*;
         protocols = "HTTP",
         baseUri = "http://localhost:8888",
         documentation = {
-                @RamlDocumentation(title = "Summary", content = "apispecs/documetnation/summary.md"),
-                @RamlDocumentation(title = "Annotations", content = "apispecs/documetnation/annotations.md")
+                @RamlDocumentation(title = "Summary", content = "apispecs/documentation/summary.md"),
+                @RamlDocumentation(title = "Annotations", content = "apispecs/documentation/annotations.md")
         },
         security = {
                 @RamlSecurity(
@@ -52,12 +53,17 @@ import net.ozwolf.raml.annotations.*;
                                                 )
                                         )
                                 }
+                        ),
+                        oauth2Settings = @RamlOAuth2Settings(
+                                authorizationUri = "http://localhost:8888/oauth2/authorize",
+                                accessTokenUri = "http://localhost:8888/oauth2/token",
+                                authorizationGrants = {"authorization_code", "password"}
                         )
                 ),
                 @RamlSecurity(
                         key = "user-token",
                         type = "x-user-token",
-                        description = "a token provided by the application's own security provider",
+                        description = "a token provided by the applications own security provider",
                         describedBy = @RamlDescriptor(
                                 headers = @RamlParameter(
                                         name = "Authorization",

@@ -11,26 +11,22 @@ import static com.google.common.collect.Sets.newHashSet;
 
 public class Author {
     private final Integer id;
-    private final String name;
+    private String name;
     private final LocalDate firstPublishedDate;
-    private final Set<Genre> knownFor;
 
     public Author(Integer id,
                   String name,
-                  LocalDate firstPublishedDate,
-                  Set<Genre> knownFor) {
+                  LocalDate firstPublishedDate) {
         this.id = id;
         this.name = name;
         this.firstPublishedDate = firstPublishedDate;
-        this.knownFor = knownFor;
     }
 
     public Author(AuthorRequest request) {
         this(
                 getNextId(),
                 request.getName(),
-                null,
-                newHashSet()
+                null
         );
     }
 
@@ -46,8 +42,9 @@ public class Author {
         return Optional.ofNullable(firstPublishedDate);
     }
 
-    public Set<Genre> getKnownFor() {
-        return knownFor;
+    public Author update(AuthorRequest request){
+        this.name = request.getName();
+        return this;
     }
 
     private final static AtomicInteger NEXT_ID = new AtomicInteger(1);

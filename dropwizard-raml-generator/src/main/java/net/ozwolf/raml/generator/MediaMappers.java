@@ -49,6 +49,15 @@ public class MediaMappers {
     }
 
     /**
+     * Replace a provisioned mapper with a Jackson ObjectMapper of your own choosing.
+     * @param mediaType the media type to replace with
+     * @param mapper the mapper
+     */
+    public void replaceMapperFor(SupportedMediaType mediaType, ObjectMapper mapper){
+        this.mappers.put(mediaType, mapper);
+    }
+
+    /**
      * Register a Jackson module with the mapper for the given media type.
      *
      * @param mediaType the media type mapper to register with

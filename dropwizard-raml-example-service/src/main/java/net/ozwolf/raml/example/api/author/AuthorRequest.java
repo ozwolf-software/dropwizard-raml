@@ -5,10 +5,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @JsonDeserialize
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSchemaTitle("Author Request")
+@JsonSchemaDescription("a request to create or modify an author")
 public class AuthorRequest {
     @NotEmpty(message = "must be provided")
     private final String name;

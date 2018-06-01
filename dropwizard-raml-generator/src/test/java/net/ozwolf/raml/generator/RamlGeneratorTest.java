@@ -2,7 +2,6 @@ package net.ozwolf.raml.generator;
 
 import com.google.common.base.Joiner;
 import net.ozwolf.raml.generator.exception.RamlGenerationException;
-import net.ozwolf.raml.generator.module.TestModule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.raml.v2.api.RamlModelBuilder;
@@ -22,8 +21,7 @@ class RamlGeneratorTest {
 
     @Test
     void shouldGenerateValidRAML() throws RamlGenerationException {
-        RamlGenerator generator = new RamlGenerator("net.ozwolf.raml.generator.testapp", "1.0.0");
-        MediaMappers.instance().registerModuleFor("application/json", TestModule.class.getName());
+        RamlGenerator generator = new RamlGenerator("net.ozwolf.raml.example", "1.0.0");
 
         String raml = generator.generate();
 

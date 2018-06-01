@@ -1,5 +1,8 @@
 package net.ozwolf.raml.annotations;
 
+import net.ozwolf.raml.annotations.security.RamlOAuth1Settings;
+import net.ozwolf.raml.annotations.security.RamlOAuth2Settings;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -48,4 +51,16 @@ public @interface RamlSecurity {
      * @return the security scheme descriptor
      */
     RamlDescriptor describedBy();
+
+    /**
+     * Define the settings for OAuth 1.0
+     * @return the OAuth 1.0 settings
+     */
+    RamlOAuth1Settings oauth1Settings() default @RamlOAuth1Settings(requestTokenUri = "", authorizationUri = "", tokenCredentialsUri = "");
+
+    /**
+     * Define the settings for OAuth 2.0
+     * @return the OAuth 2.0 settings
+     */
+    RamlOAuth2Settings oauth2Settings() default @RamlOAuth2Settings(authorizationUri = "", authorizationGrants = "", accessTokenUri = "");
 }
