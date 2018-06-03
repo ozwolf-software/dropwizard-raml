@@ -5,9 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaFormat;
+import net.ozwolf.raml.annotations.RamlExample;
 import net.ozwolf.raml.example.api.book.BookReferenceResponse;
 import net.ozwolf.raml.example.core.domain.Author;
 import net.ozwolf.raml.example.core.domain.Book;
+import net.ozwolf.raml.example.core.domain.Genre;
 import net.ozwolf.raml.example.resources.AuthorsResource;
 import org.joda.time.LocalDate;
 
@@ -64,5 +66,32 @@ public class AuthorResponse {
     @JsonProperty(value = "books", required = true)
     public List<BookReferenceResponse> getBooks() {
         return books;
+    }
+
+    @RamlExample
+    public static AuthorResponse example(){
+        return new AuthorResponse(
+                new Author(
+                        1,
+                        "John Smith",
+                        LocalDate.parse("2018-01-01")
+                ),
+                newArrayList(
+                        new Book(
+                                1,
+                                "My First Book",
+                                Genre.Action,
+                                LocalDate.parse("2018-01-01"),
+                                1
+                        ),
+                        new Book(
+                                2,
+                                "Beyond",
+                                Genre.SciFi,
+                                LocalDate.parse("2018-05-20"),
+                                1
+                        )
+                )
+        );
     }
 }

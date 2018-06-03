@@ -77,6 +77,11 @@
                 <version>${dropwizard.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-xml</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.kjetland</groupId>
                 <artifactId>mbknor-jackson-jsonschema_2.12</artifactId>
                 <version>${jackson.jsonschema.version}</version>

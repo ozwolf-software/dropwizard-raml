@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import net.ozwolf.raml.annotations.RamlExample;
 import net.ozwolf.raml.example.api.validation.ValidAuthor;
 import net.ozwolf.raml.example.core.domain.Genre;
 import org.joda.time.LocalDate;
@@ -58,5 +59,15 @@ public class BookRequest {
 
     public Integer getAuthorId() {
         return authorId;
+    }
+
+    @RamlExample
+    public static BookRequest example(){
+        return new BookRequest(
+                "Beyond the Stars",
+                Genre.SciFi,
+                LocalDate.parse("2017-06-01"),
+                1
+        );
     }
 }

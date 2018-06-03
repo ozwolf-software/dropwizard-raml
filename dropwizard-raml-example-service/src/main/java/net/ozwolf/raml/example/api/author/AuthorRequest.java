@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
+import net.ozwolf.raml.annotations.RamlExample;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @JsonDeserialize
@@ -26,5 +27,10 @@ public class AuthorRequest {
 
     public String getName() {
         return name;
+    }
+
+    @RamlExample
+    public static AuthorRequest example(){
+        return new AuthorRequest("Tom Clancy");
     }
 }

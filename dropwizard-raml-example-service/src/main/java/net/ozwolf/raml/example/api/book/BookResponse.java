@@ -2,7 +2,10 @@ package net.ozwolf.raml.example.api.book;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import net.ozwolf.raml.annotations.RamlExample;
 import net.ozwolf.raml.example.api.author.AuthorReferenceResponse;
+import net.ozwolf.raml.example.core.domain.Author;
+import net.ozwolf.raml.example.core.domain.Book;
 import net.ozwolf.raml.example.core.domain.BookAndAuthor;
 import net.ozwolf.raml.example.core.domain.Genre;
 import net.ozwolf.raml.example.resources.BooksResource;
@@ -58,5 +61,25 @@ public class BookResponse {
 
     public AuthorReferenceResponse getAuthor() {
         return author;
+    }
+
+    @RamlExample
+    public static BookResponse example(){
+        return new BookResponse(
+                new BookAndAuthor(
+                        new Book(
+                                1,
+                                "Book 1: How to RAML",
+                                Genre.NonFiction,
+                                LocalDate.parse("2018-05-20"),
+                                1
+                        ),
+                        new Author(
+                                1,
+                                "John Smith",
+                                LocalDate.parse("2018-01-01")
+                        )
+                )
+        );
     }
 }

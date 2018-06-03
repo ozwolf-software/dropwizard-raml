@@ -12,7 +12,7 @@ import static com.google.common.collect.Sets.newHashSet;
 public class Author {
     private final Integer id;
     private String name;
-    private final LocalDate firstPublishedDate;
+    private LocalDate firstPublishedDate;
 
     public Author(Integer id,
                   String name,
@@ -51,5 +51,11 @@ public class Author {
 
     private static synchronized Integer getNextId() {
         return NEXT_ID.getAndIncrement();
+    }
+
+    public Author withPublishDate(LocalDate publishDate) {
+        if (this.firstPublishedDate == null || this.firstPublishedDate.isAfter(publishDate))
+            this.firstPublishedDate = publishDate;
+        return this;
     }
 }

@@ -54,7 +54,7 @@ public class BookService {
     public BookAndAuthor create(BookRequest request) {
         Book book = new Book(request);
         books.add(book);
-        return new BookAndAuthor(book, authorService.find(book.getAuthorId()).orElseThrow(() -> new IllegalStateException("Unknown author [ " + book.getAuthorId() + " ]")));
+        return new BookAndAuthor(book, authorService.find(book.getAuthorId()).map(a -> a.withPublishDate(book.getPublishDate())).orElseThrow(() -> new IllegalStateException("Unknown author [ " + book.getAuthorId() + " ]")));
     }
 
     public final static BookService INSTANCE = new BookService();
