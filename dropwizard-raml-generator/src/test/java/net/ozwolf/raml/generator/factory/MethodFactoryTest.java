@@ -152,7 +152,7 @@ class MethodFactoryTest {
 
     @RamlDescription("Test method")
     @RamlSecuredBy("test-token")
-    @RamlTraits("has404")
+    @RamlIs("has404")
     @RamlRequests(
             @RamlBody(contentType = "text/plain", example = "example request")
     )

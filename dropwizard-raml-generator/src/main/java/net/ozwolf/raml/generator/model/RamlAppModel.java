@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.ozwolf.raml.annotations.RamlApp;
-import net.ozwolf.raml.annotations.RamlSecurity;
+import net.ozwolf.raml.annotations.RamlSecurityScheme;
 import net.ozwolf.raml.annotations.RamlTrait;
 import net.ozwolf.raml.generator.exception.RamlGenerationError;
 
@@ -48,7 +48,7 @@ public class RamlAppModel {
         this.protocols = newHashSet(annotation.protocols());
         this.baseUri = annotation.baseUri();
         this.documentation = Arrays.stream(annotation.documentation()).map(RamlDocumentationModel::new).collect(toList());
-        this.securitySchemes = Arrays.stream(annotation.security()).collect(toMap(RamlSecurity::key, RamlSecurityModel::new));
+        this.securitySchemes = Arrays.stream(annotation.security()).collect(toMap(RamlSecurityScheme::key, RamlSecurityModel::new));
         this.traits = Arrays.stream(annotation.traits()).collect(toMap(RamlTrait::key, a -> new RamlDescribedByModel(a.describedBy())));
 
         this.resources = newHashMap();

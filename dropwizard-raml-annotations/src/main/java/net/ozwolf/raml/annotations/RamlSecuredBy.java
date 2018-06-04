@@ -10,9 +10,9 @@ import java.lang.annotation.Target;
  *
  * An annotation to flag what security schemes a resource method is protected by.
  *
- * These security schemes are defined by the `{@literal @}RamlSecurity` annotation.
+ * These security schemes are defined by the `{@literal @}RamlSecurityScheme` annotation.
  *
- * @see RamlSecurity
+ * @see RamlSecurityScheme
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

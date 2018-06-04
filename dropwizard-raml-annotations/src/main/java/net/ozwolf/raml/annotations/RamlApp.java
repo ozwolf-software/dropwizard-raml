@@ -61,7 +61,7 @@ public @interface RamlApp {
      *
      * @return the application's security schemes
      */
-    RamlSecurity[] security() default {};
+    RamlSecurityScheme[] security() default {};
 
     /**
      * The global traits of the application.  Can include descriptions of common request headers and query parameters as well as re-useable descriptors of responses.

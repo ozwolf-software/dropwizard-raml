@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <h1>RAML Traits Annotation</h1>
+ * <h1>RAML Is Annotation</h1>
  *
  * An annotation to flag what traits a resource method is going to inherit.
  *
@@ -16,6 +16,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface RamlTraits {
+public @interface RamlIs {
     String[] value();
 }

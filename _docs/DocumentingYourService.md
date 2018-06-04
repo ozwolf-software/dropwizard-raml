@@ -10,11 +10,28 @@ Instead, it is recommended to have a companion class with the annotation, whose 
 
 An example can be found [here](../dropwizard-raml-example-service/src/main/java/net/ozwolf/raml/example/ExampleAppSpecs.java)
 
+**`@RamlApp` Annotation**
+
+| Property | Required | Default | Description |
+| -------- | -------- | ------- | ----------- |
+| title | yes | | the title of the application |
+| description | yes |  | the description of the application |
+| protocols | yes | `HTTPS` | the list of protocols the application can be connected to with |
+| baseUri | yes | | the base URI that the service can be found one |
+| documentation | no | | the list of documentation items for the RAML specification |
+| security | no | | the list of security schemes the service supports |
+| traits | no | | the list of traits that can be inherited | 
+
 ### Documentation
 
 You can include as many pages of supporting documentation as you like to your RAML specification using the `documentation` property on the `@RamlApp` annotation, which takes a collection of `@RamlDocumentation` elements.
 
-Each item of documentation will have a `title` and a `content` element.  The `content` property can either reference a file on the classpath or contain the documentation as a raw value.
+**`@RamlDocumentation` Annotation**
+
+| Property | Description                                                                                     |
+| -------- | ----------------------------------------------------------------------------------------------- |
+| title    | the title of the documentation item                                                             |
+| content  | the documentation content.  Can be either a reference to a resource file or the raw text itself |
 
 ### Security Schemes
 
@@ -32,9 +49,17 @@ The `key` value used on the scheme can then be used with the `@RamlSecuredBy` an
 
 Traits are a way to define common behaviours within a single definition, making it easier to define such behaviour in multiple locations.
 
-Using the `trats` property on the `@RamlApp` annotation, you can define a trait using a `@RamlTrait` entry.
+Using the `traits` property on the `@RamlApp` annotation, you can define a trait using a `@RamlTrait` entry.
 
-Traits describe 
+Within this annotation, you can describe both request header and query parameters as well as expected responses.
+
+All elements are optional.
+
+## Parameters
+
+All parameters, whether URI, header or query, can be described using the `@RamlParameter` annotation.
+
+This annotation covers all properties for the different parameters of  
 
 ## Ignoring Elements
 
@@ -87,7 +112,7 @@ Because URI parameters are relevant to resources and sub-resources and not speci
 
 If a resource or sub-resource are found to have URI parameter placeholders in their `@Path` annotation but no definition is found, an error will be raised.
 
-To document the URI parameters associated with a resource class, use the `@RamlUriParameters` annotation.  For documenting URI parameters associated with sub-resources, the `@RamlSubResource` annotation has a `uriParmaeters` property that can be set.
+To document the URI parameters associated with a resource class, use the `@RamlUriParameters` annotation.  For documenting URI parameters associated with sub-resources, the `@RamlSubResource` annotation has a `uriParameters` property that can be set.
 
 #### Example
 ```java
@@ -110,4 +135,16 @@ public class AuthorResource {
 
 ## Documenting A Resource Method
 
-A resource method is any method implementing the `@GET`, `@POST`, `@PUT`, `@PATCH` or `@DELETE`
+A resource method is any method implementing the `@GET`, `@POST`, `@PUT`, `@PATCH` or `@DELETE` annotations.
+
+The RAML generator will automatically create method entries for the RAML on any method that is annotated with the afore-mentioned annotations.  It will make it's best effort to divine the inputs and outputs of the resource method using JAX-RS annotations such as `@Consumers`, `@Produces`, `@QueryParam` and `@HeaderParam`.
+
+Of course, the documentation around your resource method will be a lot better if the RAML annotations relevant to that method are used to enrich it.
+
+### Description
+
+Your resource method can be given a description using the `@RamlDescription` annotation.
+
+### Query Parameters
+
+Query parameters can be defined and described in two ways.

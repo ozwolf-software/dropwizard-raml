@@ -3,7 +3,7 @@ package net.ozwolf.raml.generator.factory;
 import com.google.common.annotations.VisibleForTesting;
 import net.ozwolf.raml.annotations.RamlDescription;
 import net.ozwolf.raml.annotations.RamlSecuredBy;
-import net.ozwolf.raml.annotations.RamlTraits;
+import net.ozwolf.raml.annotations.RamlIs;
 import net.ozwolf.raml.generator.exception.RamlGenerationError;
 import net.ozwolf.raml.generator.model.*;
 
@@ -67,7 +67,7 @@ class MethodFactory {
                             action.name(),
                             Optional.ofNullable(method.getAnnotation(RamlDescription.class)).map(RamlDescription::value).orElse(null),
                             Optional.ofNullable(method.getAnnotation(RamlSecuredBy.class)).map(v -> newHashSet(v.value())).orElse(newHashSet()),
-                            Optional.ofNullable(method.getAnnotation(RamlTraits.class)).map(v -> newHashSet(v.value())).orElse(newHashSet()),
+                            Optional.ofNullable(method.getAnnotation(RamlIs.class)).map(v -> newHashSet(v.value())).orElse(newHashSet()),
                             queryParameters,
                             headers,
                             requests,

@@ -13,11 +13,11 @@ import net.ozwolf.raml.annotations.security.RamlOAuth2Settings;
                 @RamlDocumentation(title = "Annotations", content = "apispecs/documentation/annotations.md")
         },
         security = {
-                @RamlSecurity(
+                @RamlSecurityScheme(
                         key = "oauth2",
                         type = "OAuth 2.0",
                         description = "application supports OAuth 2.0 tokens through LinkedIn",
-                        describedBy = @RamlDescriptor(
+                        describedBy = @RamlDescribedBy(
                                 headers = @RamlParameter(
                                         name = "Authorization",
                                         type = "string",
@@ -60,11 +60,11 @@ import net.ozwolf.raml.annotations.security.RamlOAuth2Settings;
                                 authorizationGrants = {"authorization_code", "password"}
                         )
                 ),
-                @RamlSecurity(
+                @RamlSecurityScheme(
                         key = "user-token",
                         type = "x-user-token",
                         description = "a token provided by the applications own security provider",
-                        describedBy = @RamlDescriptor(
+                        describedBy = @RamlDescribedBy(
                                 headers = @RamlParameter(
                                         name = "Authorization",
                                         type = "string",
@@ -108,7 +108,7 @@ import net.ozwolf.raml.annotations.security.RamlOAuth2Settings;
                         key = "has400",
                         usage = "apply this to any method that will return a bad request response",
                         description = "some requests may result in a bad request error",
-                        describedBy = @RamlDescriptor(
+                        describedBy = @RamlDescribedBy(
                                 responses = @RamlResponse(
                                         status = 400,
                                         description = "request could not be deserialized",
@@ -124,7 +124,7 @@ import net.ozwolf.raml.annotations.security.RamlOAuth2Settings;
                         key = "has404",
                         usage = "apply this to any method that will return a not found response",
                         description = "some requests may result in a not found",
-                        describedBy = @RamlDescriptor(
+                        describedBy = @RamlDescribedBy(
                                 responses = @RamlResponse(
                                                 status = 404,
                                                 description = "resource could not be found",
@@ -140,7 +140,7 @@ import net.ozwolf.raml.annotations.security.RamlOAuth2Settings;
                         key = "validated",
                         usage = "apply this to any method whose request is validated",
                         description = "request bodies will be validated and return an error response if it fails",
-                        describedBy = @RamlDescriptor(
+                        describedBy = @RamlDescribedBy(
                                 responses = @RamlResponse(
                                         status = 422,
                                         description = "request failed validation",

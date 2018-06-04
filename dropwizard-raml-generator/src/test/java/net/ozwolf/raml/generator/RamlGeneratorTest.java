@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class RamlGeneratorTest {
     @AfterEach
     void tearDown() {
-        MediaMappers.instance().reset();
+        RamlMedia.instance().reset();
     }
 
     @Test

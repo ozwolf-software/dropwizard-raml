@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * <h1>RAML Security Annotation</h1>
+ * <h1>RAML Security Scheme Annotation</h1>
  *
  * Used to describe a security scheme.
  *
@@ -19,7 +19,7 @@ import java.lang.annotation.RetentionPolicy;
  * @see RamlSecuredBy
  */
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RamlSecurity {
+public @interface RamlSecurityScheme {
     /**
      * The security scheme key.
      *
@@ -50,7 +50,7 @@ public @interface RamlSecurity {
      *
      * @return the security scheme descriptor
      */
-    RamlDescriptor describedBy();
+    RamlDescribedBy describedBy();
 
     /**
      * Define the settings for OAuth 1.0

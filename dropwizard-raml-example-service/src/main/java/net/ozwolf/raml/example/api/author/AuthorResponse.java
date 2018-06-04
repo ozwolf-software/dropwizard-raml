@@ -2,9 +2,12 @@ package net.ozwolf.raml.example.api.author;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaFormat;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
 import net.ozwolf.raml.annotations.RamlExample;
 import net.ozwolf.raml.example.api.book.BookReferenceResponse;
 import net.ozwolf.raml.example.core.domain.Author;
@@ -21,7 +24,9 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.util.stream.Collectors.toList;
 
 @JsonSerialize
-@JsonPropertyOrder({"self", "id", "name", "firstPublished", "books"})
+@JsonPropertyOrder({"self", "id", "name", "firstPublished", "bibliography"})
+@JsonSchemaTitle("Author Response")
+@JsonSchemaDescription("an author")
 public class AuthorResponse {
     private final URI self;
     private final Integer id;
@@ -42,28 +47,33 @@ public class AuthorResponse {
     }
 
     @JsonProperty(value = "self", required = true)
+    @JsonPropertyDescription("the reference to this resource")
     public URI getSelf() {
         return self;
     }
 
     @JsonProperty(value = "id", required = true)
+    @JsonPropertyDescription("the author unique identifier")
     public Integer getId() {
         return id;
     }
 
     @JsonProperty(value = "name", required = true)
+    @JsonPropertyDescription("the author's name")
     public String getName() {
         return name;
     }
 
-    @JsonProperty(value = "firstPublished", required = false)
+    @JsonProperty("firstPublished")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonSchemaFormat("yyyy-MM-dd")
+    @JsonPropertyDescription("the date the author was first published")
     public LocalDate getFirstPublished() {
         return firstPublished;
     }
 
-    @JsonProperty(value = "books", required = true)
+    @JsonProperty(value = "bibliography", required = true)
+    @JsonPropertyDescription("the bibliography of the author")
     public List<BookReferenceResponse> getBooks() {
         return books;
     }

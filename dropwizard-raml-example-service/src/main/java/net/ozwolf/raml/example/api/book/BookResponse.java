@@ -1,7 +1,13 @@
 package net.ozwolf.raml.example.api.book;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaFormat;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
 import net.ozwolf.raml.annotations.RamlExample;
 import net.ozwolf.raml.example.api.author.AuthorReferenceResponse;
 import net.ozwolf.raml.example.core.domain.Author;
@@ -16,6 +22,8 @@ import java.net.URI;
 
 @JsonSerialize
 @JsonPropertyOrder({"self", "download", "id", "title", "genre", "publishDate", "author"})
+@JsonSchemaTitle("Book Response")
+@JsonSchemaDescription("a book")
 public class BookResponse {
     private final URI self;
     private final URI download;
@@ -35,30 +43,46 @@ public class BookResponse {
         this.author = new AuthorReferenceResponse(book.getAuthor());
     }
 
+    @JsonProperty(value = "self", required = true)
+    @JsonPropertyDescription("the reference to this resource")
     public URI getSelf() {
         return self;
     }
 
+    @JsonProperty(value = "download", required = true)
+    @JsonPropertyDescription("the reference to the download resource")
     public URI getDownload() {
         return download;
     }
 
+    @JsonProperty(value = "id", required = true)
+    @JsonPropertyDescription("the book unique id")
     public Integer getId() {
         return id;
     }
 
+    @JsonProperty(value = "title", required = true)
+    @JsonPropertyDescription("the title of the book")
     public String getTitle() {
         return title;
     }
 
+    @JsonProperty(value = "genre", required = true)
+    @JsonPropertyDescription("the book genre")
     public Genre getGenre() {
         return genre;
     }
 
+    @JsonProperty(value = "publishDate", required = true)
+    @JsonPropertyDescription("the date the book was published")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonSchemaFormat("yyyy-MM-dd")
     public LocalDate getPublishDate() {
         return publishDate;
     }
 
+    @JsonProperty(value = "author", required = true)
+    @JsonPropertyDescription("the author of the book")
     public AuthorReferenceResponse getAuthor() {
         return author;
     }

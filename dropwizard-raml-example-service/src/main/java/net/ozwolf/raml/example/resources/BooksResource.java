@@ -59,7 +59,7 @@ public class BooksResource {
             @RamlBody(contentType = "application/json", type = BookRequest.class)
     )
     @RamlSecuredBy("oauth2")
-    @RamlTraits({"has400", "validated"})
+    @RamlIs({"has400", "validated"})
     @POST
     @Consumes("application/json")
     @Produces("application/json")

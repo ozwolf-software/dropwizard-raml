@@ -8,14 +8,14 @@ import java.lang.annotation.RetentionPolicy;
  *
  * A way to describe a particular trait, including request headers, query parameters and responses.
  *
- * This can then be referenced using the `{@literal @}RamlTraits` annotation on resource methods, allowing those methods to inherit the defined trait.
+ * This can then be referenced using the `{@literal @}RamlIs` annotation on resource methods, allowing those methods to inherit the defined trait.
  *
- * @see RamlTraits
+ * @see RamlIs
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RamlTrait {
     /**
-     * The trait key that is used by the `{@literal @}RamlTraits` annotation.
+     * The trait key that is used by the `{@literal @}RamlIs` annotation.
      *
      * @return the trait key
      */
@@ -40,5 +40,5 @@ public @interface RamlTrait {
      *
      * @return the trait descriptor
      */
-    RamlDescriptor describedBy();
+    RamlDescribedBy describedBy();
 }

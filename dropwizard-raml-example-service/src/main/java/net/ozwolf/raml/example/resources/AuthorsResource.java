@@ -53,7 +53,7 @@ public class AuthorsResource {
             @RamlBody(contentType = "application/json", type = AuthorRequest.class)
     )
     @RamlSecuredBy("oauth2")
-    @RamlTraits({"has400", "validated"})
+    @RamlIs({"has400", "validated"})
     @POST
     @Consumes("application/json")
     @Produces("application/json")
@@ -74,7 +74,7 @@ public class AuthorsResource {
                     bodies = @RamlBody(contentType = "application/json", type = AuthorResponse.class)
             )
     )
-    @RamlTraits("has404")
+    @RamlIs("has404")
     @Path("/{id}")
     @Produces("application/json")
     @Timed
@@ -93,7 +93,7 @@ public class AuthorsResource {
             )
     )
     @RamlSecuredBy({"oauth2", "user-token"})
-    @RamlTraits({"has400", "validated"})
+    @RamlIs({"has400", "validated"})
     @Path("/{id}")
     @Consumes("application/json")
     @Produces("application/json")

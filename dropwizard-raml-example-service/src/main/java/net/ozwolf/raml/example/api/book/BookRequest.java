@@ -1,10 +1,8 @@
 package net.ozwolf.raml.example.api.book;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaFormat;
 import net.ozwolf.raml.annotations.RamlExample;
 import net.ozwolf.raml.example.api.validation.ValidAuthor;
 import net.ozwolf.raml.example.core.domain.Genre;
@@ -35,6 +33,8 @@ public class BookRequest {
                                Genre genre,
                        @JsonProperty(value = "publishDate", required = true)
                        @JsonPropertyDescription("the date the book was published")
+                       @JsonSchemaFormat("yyyy-MM-dd")
+                       @JsonFormat(pattern = "yyyy-MM-dd")
                                LocalDate publishDate,
                        @JsonProperty(value = "authorId", required = true)
                        @JsonPropertyDescription("the id of the author")
@@ -62,7 +62,7 @@ public class BookRequest {
     }
 
     @RamlExample
-    public static BookRequest example(){
+    public static BookRequest example() {
         return new BookRequest(
                 "Beyond the Stars",
                 Genre.SciFi,

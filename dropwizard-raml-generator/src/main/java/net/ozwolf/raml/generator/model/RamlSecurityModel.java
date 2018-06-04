@@ -4,13 +4,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import net.ozwolf.raml.annotations.RamlSecurity;
+import net.ozwolf.raml.annotations.RamlSecurityScheme;
 import net.ozwolf.raml.annotations.security.RamlOAuth1Settings;
 import net.ozwolf.raml.annotations.security.RamlOAuth2Settings;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
 import static net.ozwolf.raml.generator.util.CollectionUtils.nullIfEmpty;
@@ -25,7 +24,7 @@ public class RamlSecurityModel {
     private final RamlDescribedByModel describedBy;
     private final Object settings;
 
-    public RamlSecurityModel(RamlSecurity annotation) {
+    public RamlSecurityModel(RamlSecurityScheme annotation) {
         this.type = annotation.type();
         this.description = annotation.description();
         this.describedBy = new RamlDescribedByModel(annotation.describedBy());
@@ -52,7 +51,7 @@ public class RamlSecurityModel {
         return settings;
     }
 
-    private static Object createSettings(RamlSecurity annotation){
+    private static Object createSettings(RamlSecurityScheme annotation){
         if (annotation.type().equalsIgnoreCase("OAuth 1.0")){
             return new OAuth1SettingsModel(annotation.oauth1Settings());
         } else if (annotation.type().equalsIgnoreCase("OAuth 2.0")){
