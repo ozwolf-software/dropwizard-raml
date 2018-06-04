@@ -10,7 +10,7 @@ In conjunction with Jackson's own JSON annotations, the project also uses Morten
 
 ## Describing Your Application
 
-### `@RamlApp`
+### @RamlApp
 
 The `@RamlApp` annotation is used to provide the description information for your application.  This annotation needs to exist once (and once only) within the base package and sub-packages defined when the specification document gets generated.
 
@@ -26,7 +26,7 @@ This annotation _does not_ need to reside on your application class and due to t
 | security | no | | The collection of security schemes your application supports using the `@RamlSecurity` annotation
 | traits | no | | The collection of traits your application's resource methods can inherit from |
 
-#### `@RamlDocumentation`
+#### @RamlDocumentation
 
 The `documentation` property on the `@RamlApp` annotation can accept a list of `@RamlDocumentation` annotations.  This annotation provides the RAML specification with a collection of documentation pages to be referenced.
 
@@ -35,7 +35,7 @@ The `documentation` property on the `@RamlApp` annotation can accept a list of `
 | title | yes | The title of the documentation page |
 | content | yes | The content of the documentation page.  Can be a reference to a resource file _or_ the content directly. |
 
-#### `@RamlSecurityScheme`
+#### @RamlSecurityScheme
 
 The `security` property on the `@RamlApp` annotation can accept a list of `@RamlSecurityScheme` annotations.  This annotation provides a description of supported security schemes that your application uses.
 
@@ -50,7 +50,7 @@ This collection is used in combination with the `@RamlSecuredBy` annotation to b
 | oauth1Settings | yes if type is `OAuth 1.0` | The settings related to OAuth 1.0 security type |
 | oauth2Settings | yes if type is `OAuth 2.0` | The settings related to OAuth 2.0 security type |
 
-#### `@RamlTrait`
+#### @RamlTrait
 
 The `traits` property on the `@RamlApp` annotation can accept a list of `@RamlTrait` annotations.  This annotation is used to describe traits that resource methods can inherit behaviour from.
 
@@ -63,7 +63,7 @@ This collection is used in combination with the `@RamlIs` annotation to attach t
 | description | no | The description of the trait |
 | describedBy | yes | The system descriptor of the trait's behaviour.  See the `@RamlDescribedBy` annotation. |
 
-#### `@RamlDescribedBy` 
+#### @RamlDescribedBy 
 
 Both the `@RamlSecurityScheme` and `@RamlTrait` annotations to describe their request/response behaviour and properties.
 
@@ -75,11 +75,11 @@ Both the `@RamlSecurityScheme` and `@RamlTrait` annotations to describe their re
 
 ## Common Annotations
 
-### `@JsonIgnore`
+### @RamlIgnore
 
-Any resource class or method with the `@JsonIgnore` annotation will be excluded for documentation purposes.
+Any resource class or method with the `@RamlIgnore` annotation will be excluded for documentation purposes.
 
-### `@RamlParameter`
+### @RamlParameter
 
 The `@RamlParameter` annotation is used to define a URI, header or query parameter as per the RAML 1.0 specifications.
 
@@ -98,7 +98,7 @@ The `@RamlParameter` annotation is used to define a URI, header or query paramet
 | minimum | no | | The minimum value of the parameter (as a `long`).  This is ignored for non-numeric types. |
 | maximum | no | | The maximum value of the parameter (as a `long`).  This is ignored for non-numeric types. |
 
-### `@RamlResponse`
+### @RamlResponse
 
 The `@RamlResponse` annotation is used to describe a response related to a status.  This annotation is used by the `@RamlDescribedBy` annotation within the security schemes and traits as well as by the `@RamlResponses` annotation on a resource method.  A response consists of a status code, description and collection of available body entities.
 
@@ -108,7 +108,7 @@ The `@RamlResponse` annotation is used to describe a response related to a statu
 | description | no | A description of what this response represents |
 | bodies | yes | A collection of `@RamlBody` definitions related to the response |
 
-### `@RamlBody`
+### @RamlBody
 
 The `@RamlBody` annotation is used to describe a body entity for a specific content type.  With this annotation you specify a content type and can either reference a class type to generate schemas and examples from or directly reference resources/text for these.
 
@@ -119,7 +119,7 @@ The `@RamlBody` annotation is used to describe a body entity for a specific cont
 | schema | no | A reference to a resource file or direct text specifying the body schema.  Ignored if `type` is defined. |
 | schema | no | A reference to a resource file or direct text providing a body example.  Ignored if `type` is defined. |
 
-#### `@RamlExample` Usage
+#### @RamlExample Usage
 
 The `@RamlExample` usage can be placed on any static method for a response type and the generation process will use that static method to instantiate an instance of the type and use the appropriate Jackson `ObjectMapper` to generate an example payload.
 
@@ -140,7 +140,7 @@ Resources are the bread and butter of your application.  This section onwards wi
 
 The generation process will assume that any class with a `@Path` annotation is a base resource location unless that class has the `@RamlIgnore` annotation on it.
 
-### `@RamlResource`
+### @RamlResource
 
 Any resource class with a `@Path` annotation also requires a `@RamlResource` annotation on it.
 
@@ -149,17 +149,17 @@ Any resource class with a `@Path` annotation also requires a `@RamlResource` ann
 | displayName | yes | The display name for the resource |
 | description | yes | A meaningful description for the resource |
 
-### `@RamlUriParameters`
+### @RamlUriParameters
 
 If the `@Path` annotation on a resource class includes a URI parameter in it's template, the class will also require the `@RamlUriParameters` annotation, describing those path parameters for the resource.  The parameter takes one or more `@RamlParameter` annotations.
 
-### `@RamlSubResources`
+### @RamlSubResources
 
 A resource class can contain sub-resources.  For example, the resource could have a `@Path("/authors")` annotation on it with methods within the class having their own `@Path` annotations (eg. `@Path("/{id}")` indicating a sub-resource path of `/authors/{id}`).  Because sub-resource paths can be shared across multiple methods, sub-resources need to be defined through the use of the `@RamlSubResources` annotation on the resource class itself.
 
 This annotation takes on or many `@RamlSubResource` annotations.
 
-#### `@RamlSubResource`
+#### @RamlSubResource
 
 This annotation is used to describe a single sub-resource that will be found inside the resource class.
 
@@ -181,15 +181,15 @@ A resource method is any method within a resource class annotated with one of th
 
 If a method inside the resource does not have one of the above annotations or has the `@RamlIgnore` annotation, it will not be included in the specification.
 
-### `@RamlDescription`
+### @RamlDescription
 
 A meaningful description of what the method is for can be supplied via the use of the `@RamlDescription` annotation on the method.
 
-### `@RamlSecuredBy`
+### @RamlSecuredBy
 
 The `@RamlSecuredBy` annotation can be used to bind the resource method to one or more security schemes defined by the `@RamlApp.security` property.
 
-### `@RamlIs`
+### @RamlIs
 
 This annotation can be used to inherit specific traits defined by the `@RamlApp.traits` property.
 
@@ -220,7 +220,7 @@ The following annotations attached to a parameter will help drive out further do
 | `@javax.validation.constraints.Min` | Defines a minimum numeric value the parameter must be greater than |
 | `@javax.validation.constraints.Max` | Defines a maximum numeric value the parameter must be less than |
 
-### `@RamlRequests`
+### @RamlRequests
 
 Request bodies are defined via the `@RamlRequests` annotation.  This annotation takes one or many `@RamlBody` annotations.
 
