@@ -13,7 +13,7 @@ import static net.ozwolf.raml.generator.util.CollectionUtils.nullIfEmpty;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 @JsonSerialize
-@JsonPropertyOrder({"description", "securedBy", "is", "headers", "queryParameters", "body", "responses"})
+@JsonPropertyOrder({"description", "securedBy", "is", "headers", "queryParameters", "formParameters", "body", "responses"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RamlMethodModel {
     private final String action;
@@ -22,6 +22,7 @@ public class RamlMethodModel {
     private final Set<String> traits;
     private final Map<String, RamlParameterModel> queryParameters;
     private final Map<String, RamlParameterModel> headers;
+    private final Map<String, RamlParameterModel> formParameters;
     private final Map<String, RamlBodyModel> requests;
     private final Map<Integer, RamlResponseModel> responses;
 
@@ -31,6 +32,7 @@ public class RamlMethodModel {
                            Set<String> traits,
                            Map<String, RamlParameterModel> queryParameters,
                            Map<String, RamlParameterModel> headers,
+                           Map<String, RamlParameterModel> formParameters,
                            Map<String, RamlBodyModel> requests,
                            Map<Integer, RamlResponseModel> responses) {
         this.action = action;
@@ -38,8 +40,9 @@ public class RamlMethodModel {
         this.securedBy = securedBy;
         this.traits = traits;
         this.queryParameters = queryParameters;
-        this.requests = requests;
         this.headers = headers;
+        this.formParameters = formParameters;
+        this.requests = requests;
         this.responses = responses;
     }
 
@@ -71,6 +74,11 @@ public class RamlMethodModel {
     @JsonProperty("headers")
     public Map<String, RamlParameterModel> getHeaders() {
         return nullIfEmpty(headers);
+    }
+
+    @JsonProperty("formParameters")
+    public Map<String, RamlParameterModel> getFormParameters() {
+        return nullIfEmpty(formParameters);
     }
 
     @JsonProperty("body")

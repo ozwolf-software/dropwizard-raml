@@ -40,6 +40,9 @@ class MethodFactoryTest {
         RamlParameterModel header = mock(RamlParameterModel.class);
         when(header.getName()).thenReturn("x-test-header");
 
+        RamlParameterModel formParameter = mock(RamlParameterModel.class);
+        when(formParameter.getName()).thenReturn("test-form");
+
         RamlResponseModel response = mock(RamlResponseModel.class);
         when(response.getStatus()).thenReturn(200);
 
@@ -48,11 +51,13 @@ class MethodFactoryTest {
 
         Answer<Void> queryOnSuccess = onSuccessFor(queryParameter);
         Answer<Void> headerOnSuccess = onSuccessFor(header);
+        Answer<Void> formOnSuccess = onSuccessFor(formParameter);
         Answer<Void> responseOnSuccess = onSuccessFor(response);
         Answer<Void> requestOnSuccess = onSuccessFor(request);
 
         doAnswer(queryOnSuccess).when(parametersFactory).getQueryParameters(eq(method), any(Consumer.class), any(Consumer.class));
         doAnswer(headerOnSuccess).when(parametersFactory).getHeaders(eq(method), any(Consumer.class), any(Consumer.class));
+        doAnswer(formOnSuccess).when(parametersFactory).getFormParameters(eq(method), any(Consumer.class), any(Consumer.class));
         doAnswer(responseOnSuccess).when(responseFactory).getResponses(eq(method), any(Consumer.class), any(Consumer.class));
         doAnswer(requestOnSuccess).when(requestFactory).getRequests(eq(method), any(), any());
 
@@ -77,6 +82,10 @@ class MethodFactoryTest {
         assertThat(model.getHeaders())
                 .hasSize(1)
                 .containsEntry("x-test-header", header);
+
+        assertThat(model.getFormParameters())
+                .hasSize(1)
+                .containsEntry("test-form", formParameter);
 
         assertThat(model.getResponses())
                 .hasSize(1)
@@ -108,16 +117,19 @@ class MethodFactoryTest {
 
         RamlGenerationError queryError = new RamlGenerationError(MethodFactoryTest.class, method, "query parameter wrong");
         RamlGenerationError headerError = new RamlGenerationError(MethodFactoryTest.class, method, "header wrong");
+        RamlGenerationError formError = new RamlGenerationError(MethodFactoryTest.class, method, "form parameter wrong");
         RamlGenerationError responseError = new RamlGenerationError(MethodFactoryTest.class, method, "response wrong");
         RamlGenerationError requestError = new RamlGenerationError(MethodFactoryTest.class, method, "request wrong");
 
         Answer<Void> queryOnError = onErrorFor(queryError);
         Answer<Void> headerOnError = onErrorFor(headerError);
+        Answer<Void> formOnError = onErrorFor(formError);
         Answer<Void> responseOnError = onErrorFor(responseError);
         Answer<Void> requestOnError = onErrorFor(requestError);
 
         doAnswer(queryOnError).when(parametersFactory).getQueryParameters(eq(method), any(Consumer.class), any(Consumer.class));
         doAnswer(headerOnError).when(parametersFactory).getHeaders(eq(method), any(Consumer.class), any(Consumer.class));
+        doAnswer(formOnError).when(parametersFactory).getFormParameters(eq(method), any(Consumer.class), any(Consumer.class));
         doAnswer(responseOnError).when(responseFactory).getResponses(eq(method), any(Consumer.class), any(Consumer.class));
         doAnswer(requestOnError).when(requestFactory).getRequests(eq(method), any(), any());
 
@@ -130,8 +142,8 @@ class MethodFactoryTest {
         factory.getMethod(method, null, errors::add);
 
         assertThat(errors)
-                .hasSize(4)
-                .contains(queryError, headerError, responseError, requestError);
+                .hasSize(5)
+                .contains(queryError, headerError, formError, responseError, requestError);
     }
 
     private static <T> Answer<Void> onSuccessFor(T result) {

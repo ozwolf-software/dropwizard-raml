@@ -11,6 +11,6 @@ class JsonSchemaFactoryTest {
     @Test
     void shouldCreateSchema() throws JSONException {
         String schema = new JsonSchemaFactory().create(JsonTestResponse.class, TestMappers.json()).orElse(null);
-        JSONAssert.assertEquals(fixture("fixtures/json-schema-example/schema.json"), schema, true);
+        JSONAssert.assertEquals(fixture("fixtures/media/json/schema.json"), schema, true);
     }
 }

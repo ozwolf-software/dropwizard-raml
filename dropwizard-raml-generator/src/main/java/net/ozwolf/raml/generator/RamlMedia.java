@@ -3,10 +3,13 @@ package net.ozwolf.raml.generator;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import net.ozwolf.raml.generator.media.FromMethodExampleFactory;
 import net.ozwolf.raml.generator.media.MediaFactory;
-import net.ozwolf.raml.generator.media.json.JsonExampleFactory;
 import net.ozwolf.raml.generator.media.json.JsonSchemaFactory;
 
 import javax.ws.rs.core.MediaType;
@@ -146,7 +149,16 @@ public class RamlMedia {
                 new MediaTools(
                         defaultJsonMapper(),
                         new JsonSchemaFactory(),
-                        new JsonExampleFactory()
+                        new FromMethodExampleFactory()
+                )
+        );
+
+        tools.put(
+                "text/xml",
+                new MediaTools(
+                        defaultXmlMapper(),
+                        (t, m) -> Optional.empty(),
+                        new FromMethodExampleFactory()
                 )
         );
 
@@ -155,6 +167,14 @@ public class RamlMedia {
 
     private static ObjectMapper defaultJsonMapper() {
         ObjectMapper mapper = new ObjectMapper().registerModule(new JodaModule()).registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        return mapper;
+    }
+
+    private static ObjectMapper defaultXmlMapper() {
+        XmlMapper mapper = new XmlMapper(new JacksonXmlModule());
+        mapper.registerModule(new JodaModule()).registerModule(new JavaTimeModule());
+        mapper.configure(ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true);
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         return mapper;
     }

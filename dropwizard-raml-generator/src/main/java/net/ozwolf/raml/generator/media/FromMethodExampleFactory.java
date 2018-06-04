@@ -1,9 +1,8 @@
-package net.ozwolf.raml.generator.media.json;
+package net.ozwolf.raml.generator.media;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.ozwolf.raml.annotations.RamlExample;
-import net.ozwolf.raml.generator.media.MediaFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,7 +10,7 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class JsonExampleFactory implements MediaFactory {
+public class FromMethodExampleFactory implements MediaFactory {
     @Override
     public Optional<String> create(Class<?> type, ObjectMapper mapper) {
         Method method = Arrays.stream(type.getMethods())

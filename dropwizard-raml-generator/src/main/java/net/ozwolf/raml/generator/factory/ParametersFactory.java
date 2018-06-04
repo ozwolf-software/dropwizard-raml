@@ -5,6 +5,7 @@ import net.ozwolf.raml.generator.exception.RamlGenerationError;
 import net.ozwolf.raml.generator.model.RamlParameterModel;
 import org.glassfish.jersey.uri.UriTemplate;
 
+import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -92,6 +93,21 @@ class ParametersFactory {
         getMethodParameters(
                 p -> p.isAnnotationPresent(HeaderParam.class),
                 p -> p.getAnnotation(HeaderParam.class).value(),
+                descriptions,
+                method,
+                onSuccess,
+                onError
+        );
+    }
+
+    void getFormParameters(Method method, Consumer<RamlParameterModel> onSuccess, Consumer<RamlGenerationError> onError){
+        Map<String, RamlParameter> descriptions = Optional.ofNullable(method.getAnnotation(RamlFormParameters.class))
+                .map(a -> Arrays.stream(a.value()).collect(toMap(RamlParameter::name, v -> v)))
+                .orElse(newHashMap());
+
+        getMethodParameters(
+                p -> p.isAnnotationPresent(FormParam.class),
+                p -> p.getAnnotation(FormParam.class).value(),
                 descriptions,
                 method,
                 onSuccess,

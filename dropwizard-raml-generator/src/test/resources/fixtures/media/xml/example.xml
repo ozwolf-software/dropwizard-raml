@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<test self="/test-response/1" id="1">
+    <name>Test Response 1</name>
+    <startDate>2018-01-01</startDate>
+    <endDate>2018-05-01</endDate>
+    <people>
+        <person id="1" lastName="Smith" givenNames="John">
+            <address street="123 Main Street" suburb="Sydney" state="NSW" postCode="2000" country="AU"/>
+        </person>
+        <person id="2" lastName="Rogers" givenNames="Billy">
+            <address street="1000 Center Street" suburb="Sydney" state="NSW" postCode="2000" country="AU"/>
+        </person>
+    </people>
+</test>

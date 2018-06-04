@@ -53,6 +53,9 @@ class MethodFactory {
         Map<String, RamlParameterModel> headers = newHashMap();
         parametersFactory.getHeaders(method, p -> headers.put(p.getName(), p), e);
 
+        Map<String, RamlParameterModel> formParameters = newHashMap();
+        parametersFactory.getFormParameters(method, p -> formParameters.put(p.getName(), p), e);
+
         Map<Integer, RamlResponseModel> responses = newHashMap();
         responseFactory.getResponses(method, m -> responses.put(m.getStatus(), m), e);
 
@@ -70,6 +73,7 @@ class MethodFactory {
                             Optional.ofNullable(method.getAnnotation(RamlIs.class)).map(v -> newHashSet(v.value())).orElse(newHashSet()),
                             queryParameters,
                             headers,
+                            formParameters,
                             requests,
                             responses
                     )
