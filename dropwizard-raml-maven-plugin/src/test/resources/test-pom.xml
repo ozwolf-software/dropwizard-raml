@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>net.ozwolf</groupId>
+                <artifactId>dropwizard-raml-maven-plugin</artifactId>
+                <configuration>
+                    <basePackage>net.ozwolf.raml.example</basePackage>
+                    <version>1.2.3</version>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

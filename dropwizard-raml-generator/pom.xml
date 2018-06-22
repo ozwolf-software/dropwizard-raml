@@ -28,23 +28,24 @@
             <artifactId>mbknor-jackson-jsonschema_2.12</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-xml</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.raml</groupId>
             <artifactId>raml-parser-2</artifactId>
         </dependency>
 
-        <!-- Provided Dependencies -->
+        <!-- Jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
+
+        <!-- Provided -->
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <!-- Testing -->
@@ -84,11 +85,11 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>net.ozwolf</groupId>
-            <artifactId>dropwizard-raml-example-service</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>test</scope>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>net.ozwolf</groupId>-->
+            <!--<artifactId>dropwizard-raml-example-service</artifactId>-->
+            <!--<version>${project.parent.version}</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
     </dependencies>
 </project>

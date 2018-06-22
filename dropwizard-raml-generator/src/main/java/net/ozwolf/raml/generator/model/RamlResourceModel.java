@@ -3,10 +3,8 @@ package net.ozwolf.raml.generator.model;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import java.util.List;
 import java.util.Map;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static net.ozwolf.raml.generator.util.CollectionUtils.nullIfEmpty;
 
