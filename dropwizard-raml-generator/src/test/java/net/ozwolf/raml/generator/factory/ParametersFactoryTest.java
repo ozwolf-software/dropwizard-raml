@@ -4,7 +4,7 @@ import net.ozwolf.raml.annotations.*;
 import net.ozwolf.raml.generator.exception.RamlGenerationError;
 import net.ozwolf.raml.generator.model.RamlParameterModel;
 import org.assertj.core.api.Condition;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -20,9 +20,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings({"JavaReflectionMemberAccess", "SameParameterValue"})
-class ParametersFactoryTest {
+public class ParametersFactoryTest {
     @Test
-    void shouldDeriveUriParametersForResource() {
+    public void shouldDeriveUriParametersForResource() {
         ParametersFactory factory = new ParametersFactory();
 
         List<RamlParameterModel> parameters = newArrayList();
@@ -34,7 +34,7 @@ class ParametersFactoryTest {
     }
 
     @Test
-    void shouldRaiseErrorWhenResourceIsMissingAnnotation() {
+    public void shouldRaiseErrorWhenResourceIsMissingAnnotation() {
         ParametersFactory factory = new ParametersFactory();
 
         List<RamlGenerationError> errors = newArrayList();
@@ -46,7 +46,7 @@ class ParametersFactoryTest {
     }
 
     @Test
-    void shouldRaiseErrorsWhenResourceDescribedParametersDoesNotAlignWithPath() {
+    public void shouldRaiseErrorsWhenResourceDescribedParametersDoesNotAlignWithPath() {
         ParametersFactory factory = new ParametersFactory();
 
         List<RamlGenerationError> errors = newArrayList();
@@ -59,7 +59,7 @@ class ParametersFactoryTest {
     }
 
     @Test
-    void shouldDeriveUriParametersForMethod() {
+    public void shouldDeriveUriParametersForMethod() {
         ParametersFactory factory = new ParametersFactory();
 
         Path path = pathOf("/{otherParameter}");
@@ -73,7 +73,7 @@ class ParametersFactoryTest {
     }
 
     @Test
-    void shouldDeriveQueryParametersForMethodUsingDescriber() throws NoSuchMethodException {
+    public void shouldDeriveQueryParametersForMethodUsingDescriber() throws NoSuchMethodException {
         ParametersFactory factory = new ParametersFactory();
 
         List<RamlParameterModel> parameters = newArrayList();
@@ -85,7 +85,7 @@ class ParametersFactoryTest {
     }
 
     @Test
-    void shouldDeriveQueryParametersForMethodUsingParameters() throws NoSuchMethodException {
+    public void shouldDeriveQueryParametersForMethodUsingParameters() throws NoSuchMethodException {
         ParametersFactory factory = new ParametersFactory();
 
         List<RamlParameterModel> parameters = newArrayList();
@@ -97,7 +97,7 @@ class ParametersFactoryTest {
     }
 
     @Test
-    void shouldDeriveHeaderParametersForMethodUsingDescriber() throws NoSuchMethodException {
+    public void shouldDeriveHeaderParametersForMethodUsingDescriber() throws NoSuchMethodException {
         ParametersFactory factory = new ParametersFactory();
 
         List<RamlParameterModel> parameters = newArrayList();
@@ -109,7 +109,7 @@ class ParametersFactoryTest {
     }
 
     @Test
-    void shouldDeriveHeaderParametersForMethodUsingParameters() throws NoSuchMethodException {
+    public void shouldDeriveHeaderParametersForMethodUsingParameters() throws NoSuchMethodException {
         ParametersFactory factory = new ParametersFactory();
 
         List<RamlParameterModel> parameters = newArrayList();
@@ -121,7 +121,7 @@ class ParametersFactoryTest {
     }
 
     @Test
-    void shouldRaiseErrorWhenMethodIsMissingAnnotation() {
+    public void shouldRaiseErrorWhenMethodIsMissingAnnotation() {
         ParametersFactory factory = new ParametersFactory();
 
         Path path = pathOf("/{otherParameter}");
@@ -135,7 +135,7 @@ class ParametersFactoryTest {
     }
 
     @Test
-    void shouldRaiseErrorsWhenMethodDescribedParametersDoesNotAlignWithPath() {
+    public void shouldRaiseErrorsWhenMethodDescribedParametersDoesNotAlignWithPath() {
         ParametersFactory factory = new ParametersFactory();
 
         Path path = pathOf("/{otherParameter}");
@@ -156,7 +156,7 @@ class ParametersFactoryTest {
         );
     }
 
-    private static Path pathOf(String value){
+    private static Path pathOf(String value) {
         Path path = mock(Path.class);
         when(path.value()).thenReturn(value);
         return path;
@@ -167,7 +167,7 @@ class ParametersFactoryTest {
             @RamlParameter(name = "testParameter", type = "string", description = "test parameter")
     )
     @RamlSubResources(
-        @RamlSubResource(path = @Path("/{otherParameter}"), uriParameters = @RamlParameter(name = "otherParameter", type = "string", description = "test parameter"))
+            @RamlSubResource(path = @Path("/{otherParameter}"), uriParameters = @RamlParameter(name = "otherParameter", type = "string", description = "test parameter"))
     )
     @Path("/test/{testParameter}")
     public static class TestResource1 {

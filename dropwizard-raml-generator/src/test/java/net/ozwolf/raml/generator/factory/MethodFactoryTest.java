@@ -6,7 +6,7 @@ import net.ozwolf.raml.generator.model.RamlBodyModel;
 import net.ozwolf.raml.generator.model.RamlMethodModel;
 import net.ozwolf.raml.generator.model.RamlParameterModel;
 import net.ozwolf.raml.generator.model.RamlResponseModel;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.mockito.stubbing.Answer;
 
 import javax.ws.rs.HEAD;
@@ -25,13 +25,13 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @SuppressWarnings({"JavaReflectionMemberAccess", "unchecked"})
-class MethodFactoryTest {
+public class MethodFactoryTest {
     private final ParametersFactory parametersFactory = mock(ParametersFactory.class);
     private final ResponseFactory responseFactory = mock(ResponseFactory.class);
     private final RequestFactory requestFactory = mock(RequestFactory.class);
 
     @Test
-    void shouldCreateMethodModel() throws NoSuchMethodException {
+    public void shouldCreateMethodModel() throws NoSuchMethodException {
         Method method = MethodFactoryTest.class.getMethod("testMethod", String.class);
 
         RamlParameterModel queryParameter = mock(RamlParameterModel.class);
@@ -97,7 +97,7 @@ class MethodFactoryTest {
     }
 
     @Test
-    void shouldRaiseErrorWhenUnknownMethod() throws NoSuchMethodException {
+    public void shouldRaiseErrorWhenUnknownMethod() throws NoSuchMethodException {
         Method method = MethodFactoryTest.class.getMethod("head");
 
         List<RamlGenerationError> errors = newArrayList();
@@ -112,7 +112,7 @@ class MethodFactoryTest {
     }
 
     @Test
-    void shouldCaptureErrorsFromChildFactories() throws NoSuchMethodException {
+    public void shouldCaptureErrorsFromChildFactories() throws NoSuchMethodException {
         Method method = MethodFactoryTest.class.getMethod("testMethod", String.class);
 
         RamlGenerationError queryError = new RamlGenerationError(MethodFactoryTest.class, method, "query parameter wrong");

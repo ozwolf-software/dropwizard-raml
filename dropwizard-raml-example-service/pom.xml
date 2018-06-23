@@ -19,7 +19,12 @@
             <artifactId>dropwizard-raml-annotations</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.kjetland</groupId>
+            <artifactId>mbknor-jackson-jsonschema_2.12</artifactId>
+        </dependency>
 
+        <!-- Provided -->
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
@@ -27,26 +32,26 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>net.ozwolf</groupId>
-                <artifactId>dropwizard-raml-maven-plugin</artifactId>
-                <version>${project.parent.version}</version>
-                <configuration>
-                    <basePackage>net.ozwolf.raml.example</basePackage>
-                    <version>${project.parent.version}</version>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>generate</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <phase>prepare-package</phase>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+    <!--<build>-->
+        <!--<plugins>-->
+            <!--<plugin>-->
+                <!--<groupId>net.ozwolf</groupId>-->
+                <!--<artifactId>dropwizard-raml-maven-plugin</artifactId>-->
+                <!--<version>${project.parent.version}</version>-->
+                <!--<configuration>-->
+                    <!--<basePackage>net.ozwolf.raml.example</basePackage>-->
+                    <!--<version>${project.parent.version}</version>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>generate</id>-->
+                        <!--<goals>-->
+                            <!--<goal>generate</goal>-->
+                        <!--</goals>-->
+                        <!--<phase>prepare-package</phase>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
+    <!--</build>-->
 </project>

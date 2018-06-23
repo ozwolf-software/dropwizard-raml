@@ -6,12 +6,13 @@ import net.ozwolf.raml.generator.exception.RamlGenerationException;
 import net.ozwolf.raml.generator.exception.RamlGenerationUnhandledException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.CaseUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.raml.v2.api.RamlModelBuilder;
 import org.raml.v2.api.RamlModelResult;
 import org.raml.v2.api.model.common.ValidationResult;
@@ -22,9 +23,9 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 
-@Mojo(name = "generate")
+@Mojo(name = "generate", defaultPhase = LifecyclePhase.COMPILE, requiresDependencyResolution = ResolutionScope.RUNTIME, threadSafe = true)
 public class RamlGenerateMojo extends AbstractMojo {
-    @Parameter(property = "generate.basePackage")
+    @Parameter(property = "generate.basePackage", defaultValue = "${project.version}")
     private String basePackage;
 
     @Parameter(property = "generate.version")
@@ -48,11 +49,12 @@ public class RamlGenerateMojo extends AbstractMojo {
         }
 
         if (StringUtils.isBlank(outputFile)) {
-            missingProperties = true;
-            getLog().error("an [ outputFile ] must be provided");
+            outputFile = "target/classes/apidocs/apidocs.raml";
+            getLog().warn("setting output file to [ " + outputFile + " ]");
         }
 
-        if (missingProperties) return;
+        if (missingProperties)
+            throw new IllegalArgumentException("one or more required properties not provided");
 
         try {
             File output = new File(outputFile);
@@ -63,8 +65,6 @@ public class RamlGenerateMojo extends AbstractMojo {
             if (output.exists() && !output.isFile()) {
                 throw new MojoExecutionException("[ " + output.getName() + " ] exists but is not a file.");
             }
-
-            CaseUtils.toCamelCase()
 
             RamlGenerator generator = new RamlGenerator(basePackage, version);
             String raml = generator.generate();

@@ -48,7 +48,7 @@ public class RamlMethodModel {
 
     @JsonIgnore
     public String getAction() {
-        return action;
+        return action.toLowerCase();
     }
 
     @JsonProperty("description")

@@ -100,7 +100,7 @@ class ParametersFactory {
         );
     }
 
-    void getFormParameters(Method method, Consumer<RamlParameterModel> onSuccess, Consumer<RamlGenerationError> onError){
+    void getFormParameters(Method method, Consumer<RamlParameterModel> onSuccess, Consumer<RamlGenerationError> onError) {
         Map<String, RamlParameter> descriptions = Optional.ofNullable(method.getAnnotation(RamlFormParameters.class))
                 .map(a -> Arrays.stream(a.value()).collect(toMap(RamlParameter::name, v -> v)))
                 .orElse(newHashMap());

@@ -7,8 +7,7 @@ import net.ozwolf.raml.annotations.RamlBody;
 import net.ozwolf.raml.annotations.RamlResponse;
 import net.ozwolf.raml.annotations.RamlResponses;
 import net.ozwolf.raml.generator.model.RamlResponseModel;
-import org.assertj.core.api.MapAssert;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
@@ -18,9 +17,9 @@ import java.util.Map;
 import static com.google.common.collect.Maps.newHashMap;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ResponseFactoryTest {
+public class ResponseFactoryTest {
     @Test
-    void shouldGenerateResponsesBasedOnAnnotation() throws NoSuchMethodException {
+    public void shouldGenerateResponsesBasedOnAnnotation() throws NoSuchMethodException {
         Method method = ResponseFactoryTest.class.getMethod("getAnnotatedMethod");
 
         Map<Integer, RamlResponseModel> result = newHashMap();
@@ -35,7 +34,7 @@ class ResponseFactoryTest {
     }
 
     @Test
-    void shouldGenerateDefaultResponseBasedOnMethod() throws NoSuchMethodException {
+    public void shouldGenerateDefaultResponseBasedOnMethod() throws NoSuchMethodException {
         Method method = ResponseFactoryTest.class.getMethod("getResponseMethod");
 
         Map<Integer, RamlResponseModel> result = newHashMap();
@@ -52,7 +51,7 @@ class ResponseFactoryTest {
     }
 
     @Test
-    void shouldGenerateResponseFromType() throws NoSuchMethodException {
+    public void shouldGenerateResponseFromType() throws NoSuchMethodException {
             Method method = ResponseFactoryTest.class.getMethod("getTypeMethod");
 
             Map<Integer, RamlResponseModel> result = newHashMap();

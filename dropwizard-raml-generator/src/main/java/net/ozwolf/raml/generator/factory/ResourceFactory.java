@@ -2,13 +2,13 @@ package net.ozwolf.raml.generator.factory;
 
 import com.google.common.annotations.VisibleForTesting;
 import net.ozwolf.raml.annotations.RamlIgnore;
+import net.ozwolf.raml.annotations.RamlResource;
 import net.ozwolf.raml.annotations.RamlSubResource;
 import net.ozwolf.raml.annotations.RamlSubResources;
-import net.ozwolf.raml.annotations.RamlResource;
 import net.ozwolf.raml.generator.exception.RamlGenerationError;
-import net.ozwolf.raml.generator.model.RamlAction;
 import net.ozwolf.raml.generator.model.RamlParameterModel;
 import net.ozwolf.raml.generator.model.RamlResourceModel;
+import net.ozwolf.raml.generator.util.MethodUtils;
 
 import javax.ws.rs.Path;
 import java.lang.reflect.Method;
@@ -53,12 +53,12 @@ public class ResourceFactory {
         Arrays.stream(resource.getMethods())
                 .filter(m -> !m.isAnnotationPresent(RamlIgnore.class))
                 .filter(m -> !m.isAnnotationPresent(Path.class))
-                .filter(m -> RamlAction.find(m).isPresent())
+                .filter(m -> MethodUtils.getAction(m) != null)
                 .forEach(m -> methods.computeIfAbsent(path, k -> newArrayList()).add(m));
         Arrays.stream(resource.getMethods())
                 .filter(m -> !m.isAnnotationPresent(RamlIgnore.class))
                 .filter(m -> m.isAnnotationPresent(Path.class))
-                .filter(m -> RamlAction.find(m).isPresent())
+                .filter(m -> MethodUtils.getAction(m) != null)
                 .forEach(m -> methods.computeIfAbsent(m.getAnnotation(Path.class), k -> newArrayList()).add(m));
 
         methods.get(path).forEach(m -> methodFactory.getMethod(m, model::addMethod, e));

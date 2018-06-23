@@ -4,7 +4,7 @@ import net.ozwolf.raml.annotations.RamlBody;
 import net.ozwolf.raml.annotations.RamlRequests;
 import net.ozwolf.raml.generator.exception.RamlGenerationError;
 import net.ozwolf.raml.generator.model.RamlBodyModel;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -19,9 +19,9 @@ import static com.google.common.collect.Maps.newHashMap;
 import static net.ozwolf.raml.generator.matchers.RamlGeneratorErrorMatchers.errorOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RequestFactoryTest {
+public class RequestFactoryTest {
     @Test
-    void shouldGenerateRequestBodiesFromAnnotation() throws NoSuchMethodException {
+    public void shouldGenerateRequestBodiesFromAnnotation() throws NoSuchMethodException {
         Method method = RequestFactoryTest.class.getMethod("putValidRequest", String.class);
 
         Map<String, RamlBodyModel> result = newHashMap();
@@ -38,7 +38,7 @@ class RequestFactoryTest {
     }
 
     @Test
-    void shouldHandleMethodGracefullyIfNotExpectedToHaveBody() throws NoSuchMethodException {
+    public void shouldHandleMethodGracefullyIfNotExpectedToHaveBody() throws NoSuchMethodException {
         Method method = RequestFactoryTest.class.getMethod("getValidResponse", String.class);
 
         RequestFactory factory = new RequestFactory();
@@ -48,7 +48,7 @@ class RequestFactoryTest {
     }
 
     @Test
-    void shouldHandleMethodWithNoDetectedBody() throws NoSuchMethodException {
+    public void shouldHandleMethodWithNoDetectedBody() throws NoSuchMethodException {
         Method method = RequestFactoryTest.class.getMethod("postValidRequest");
 
         RequestFactory factory = new RequestFactory();
@@ -58,7 +58,7 @@ class RequestFactoryTest {
     }
 
     @Test
-    void shouldRaiseErrorIfRequestBodyDetectedButNoRamlRequestsDefined() throws NoSuchMethodException {
+    public void shouldRaiseErrorIfRequestBodyDetectedButNoRamlRequestsDefined() throws NoSuchMethodException {
         Method method = RequestFactoryTest.class.getMethod("putInvalidRequest", String.class);
 
         RequestFactory factory = new RequestFactory();

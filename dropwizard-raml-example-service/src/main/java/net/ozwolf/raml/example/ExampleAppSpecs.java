@@ -154,5 +154,5 @@ import net.ozwolf.raml.annotations.security.RamlOAuth2Settings;
                 )
         }
 )
-public final class ExampleAppSpecs {
+public class ExampleAppSpecs {
 }

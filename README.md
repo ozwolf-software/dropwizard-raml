@@ -1,5 +1,7 @@
 # DropWizard RAML
 
+[![Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](LICENSE)
+
 This project started as a way to better learn how [RAML](https://raml.org) and JAX-RS could integrate together (before MuleSoft released the [RAML for JAX-RS](https://github.com/mulesoft-labs/raml-for-jax-rs) project).
 
 During this time, this private project expanded with tools and plugins that were suitable for integrating RAML specification generating and usage with a DropWizard micro service.
@@ -18,8 +20,24 @@ Please refer to the [wiki](./_docs) for information on using the tools in this p
 + [Tester](./dropwizard-raml-tester) - a testing library that allows DropWizard testing to verify RAML specifications
 + [Example Service](./dropwizard-raml-example-service) - an example DropWizard JAX-RS service showcasing all the tools available in this project
 
-## Using In JAX-RS Projects
+## Using In Non-DropWizard Jersey JAX-RS Projects
 
-This project has been built on a number of assumptions around dependencies and libraries provided by the DropWizard framework.  While certain components are (to a certain degree) agnostic of DropWizard and would theoretically work with a JAX-RS + Jackson combination, the dependency tree is fleshed out.
+The [Annotations](./dropwizard-raml-annotations) and [RAML Generator](./dropwizard-raml-generator) components _can_ be used in non-DropWizard Jersey JAX-RS projects that utilise Jackson.
 
-While no guarantee is given for certain libraries to work 100%, as long as the transient dependencies they inherit from DropWizard are available (eg. JAX-RS API, Jackson modules, dataformats, etc), they should _theoretically_ work.  YMMV.
+This would allow a RAML specification to be generated from such a service.
+
+To achieve this, specific dependencies will need to be provided for the components.  The dependencies are provided below.  While no guarantee is provided, it should _theoretically_ work.  YMMV.
+
+### Dependencies
+
++ **Annotations**
+    + `javax.ws.rs:javax.ws.rs-api:2.0.1+`
++ **RAML Generator**
+    + `com.fasterxml.jackson.core:jackson-core:2.9.5+`
+    + `com.fasterxml.jackson.core:jackson-databind:2.9.5+`
+    + `com.fasterxml.jackson.core:jackson-annotations:2.9.5+`
+    + `com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.5+`
+    + `com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.5+`
+    + `javax.ws.rs:javax.ws.rs-api:2.0.1+`
+    + `org.glassfish.jersey.core:jersey-common:2.25.1+`
+    + `org.apache.commons:commons-lan3:3.5+`

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+  <name>${project.name}</name>
+  <description>${project.description}</description>
+  <groupId>${project.groupId}</groupId>
+  <artifactId>${project.artifactId}</artifactId>
+  <version>${project.version}</version>
+  <goalPrefix>dropwizard-raml</goalPrefix>
+  <mojos>
+    <mojo>
+      <goal>generate</goal>
+      <requiresDependencyResolution>runtime</requiresDependencyResolution>
+      <requiresDirectInvocation>false</requiresDirectInvocation>
+      <requiresProject>true</requiresProject>
+      <requiresReports>false</requiresReports>
+      <aggregator>false</aggregator>
+      <requiresOnline>false</requiresOnline>
+      <inheritedByDefault>true</inheritedByDefault>
+      <phase>prepare-package</phase>
+      <implementation>net.ozwolf.raml.maven.RamlGenerateMojo</implementation>
+      <language>java</language>
+      <instantiationStrategy>per-lookup</instantiationStrategy>
+      <executionStrategy>once-per-session</executionStrategy>
+      <threadSafe>true</threadSafe>
+      <parameters>
+        <parameter>
+          <name>basePackage</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description></description>
+        </parameter>
+        <parameter>
+          <name>outputFile</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description></description>
+        </parameter>
+        <parameter>
+          <name>version</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description></description>
+        </parameter>
+      </parameters>
+      <configuration>
+        <basePackage implementation="java.lang.String">${generate.basePackage}</basePackage>
+        <outputFile implementation="java.lang.String" default-value="${basedir}/target/classes/apidocs/apidocs.raml">${generate.outputFile}</outputFile>
+        <version implementation="java.lang.String">${generate.version}</version>
+      </configuration>
+    </mojo>
+  </mojos>
+</plugin>

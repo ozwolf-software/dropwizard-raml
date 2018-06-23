@@ -8,7 +8,7 @@ import net.ozwolf.raml.generator.exception.RamlGenerationError;
 import net.ozwolf.raml.generator.model.RamlMethodModel;
 import net.ozwolf.raml.generator.model.RamlParameterModel;
 import net.ozwolf.raml.generator.model.RamlResourceModel;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.mockito.stubbing.Answer;
 
 import javax.ws.rs.GET;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class ResourceFactoryTest {
+public class ResourceFactoryTest {
     private final ParametersFactory parametersFactory = mock(ParametersFactory.class);
     private final MethodFactory methodFactory = mock(MethodFactory.class);
 
@@ -89,7 +89,7 @@ class ResourceFactoryTest {
     }
 
     @Test
-    void shouldRaiseErrorThatResourceIsMissingRamlResourceAnnotation(){
+    public void shouldRaiseErrorThatResourceIsMissingRamlResourceAnnotation(){
         ResourceFactory factory = new ResourceFactory();
 
         List<RamlGenerationError> errors = newArrayList();
@@ -102,7 +102,7 @@ class ResourceFactoryTest {
     }
 
     @Test
-    void shouldRaiseErrorsCollectedFromProcessAndNotTriggerOnSuccess() throws NoSuchMethodException {
+    public void shouldRaiseErrorsCollectedFromProcessAndNotTriggerOnSuccess() throws NoSuchMethodException {
         Method getBase = CorrectResource.class.getMethod("getBase");
         Method postSub = CorrectResource.class.getMethod("postSub");
         Method getSub = CorrectResource.class.getMethod("getSub");

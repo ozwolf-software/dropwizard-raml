@@ -14,11 +14,6 @@
     <description>Library that contains extra annotations to use in conjunction with DropWizard JAX-RS resources and Jackson API entities to document your service.</description>
 
     <dependencies>
-        <dependency>
-            <groupId>com.kjetland</groupId>
-            <artifactId>mbknor-jackson-jsonschema_2.12</artifactId>
-        </dependency>
-
         <!-- Provided -->
         <dependency>
             <groupId>io.dropwizard</groupId>

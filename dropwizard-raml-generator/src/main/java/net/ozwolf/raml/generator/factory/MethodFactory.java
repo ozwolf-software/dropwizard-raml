@@ -2,10 +2,14 @@ package net.ozwolf.raml.generator.factory;
 
 import com.google.common.annotations.VisibleForTesting;
 import net.ozwolf.raml.annotations.RamlDescription;
-import net.ozwolf.raml.annotations.RamlSecuredBy;
 import net.ozwolf.raml.annotations.RamlIs;
+import net.ozwolf.raml.annotations.RamlSecuredBy;
 import net.ozwolf.raml.generator.exception.RamlGenerationError;
-import net.ozwolf.raml.generator.model.*;
+import net.ozwolf.raml.generator.model.RamlBodyModel;
+import net.ozwolf.raml.generator.model.RamlMethodModel;
+import net.ozwolf.raml.generator.model.RamlParameterModel;
+import net.ozwolf.raml.generator.model.RamlResponseModel;
+import net.ozwolf.raml.generator.util.MethodUtils;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -39,7 +43,7 @@ class MethodFactory {
      * @param onError   the on error handler
      */
     void getMethod(Method method, Consumer<RamlMethodModel> onSuccess, Consumer<RamlGenerationError> onError) {
-        RamlAction action = RamlAction.find(method).orElse(null);
+        String action = MethodUtils.getAction(method);
         if (action == null) {
             onError.accept(new RamlGenerationError(method.getDeclaringClass(), method, "unsupported action"));
             return;
@@ -60,14 +64,14 @@ class MethodFactory {
         responseFactory.getResponses(method, m -> responses.put(m.getStatus(), m), e);
 
         Map<String, RamlBodyModel> requests = newHashMap();
-        if (action.hasBody()){
+        if (MethodUtils.hasBody(method)) {
             requestFactory.getRequests(method, b -> requests.put(b.getContentType(), b), e);
         }
 
         if (!e.isInError())
             onSuccess.accept(
                     new RamlMethodModel(
-                            action.name(),
+                            action,
                             Optional.ofNullable(method.getAnnotation(RamlDescription.class)).map(RamlDescription::value).orElse(null),
                             Optional.ofNullable(method.getAnnotation(RamlSecuredBy.class)).map(v -> newHashSet(v.value())).orElse(newHashSet()),
                             Optional.ofNullable(method.getAnnotation(RamlIs.class)).map(v -> newHashSet(v.value())).orElse(newHashSet()),
