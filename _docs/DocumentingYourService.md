@@ -212,6 +212,7 @@ If the type is an `Enum`, the allowed values will be defined for the parameter.
 The following annotations attached to a parameter will help drive out further documentation:
 
 | Annotation | Description |
+| ---------- | ----------- |
 | `@RamlDescription` | Adds a meaningful description to the parameter |
 | `@RamlExample` | Provides an example value for the parameter |
 | `@javax.validation.constraints.NotNull` | Flags the parameter as being required |
@@ -226,10 +227,16 @@ Request bodies are defined via the `@RamlRequests` annotation.  This annotation 
 
 If no `@RamlRequests` annotation is found on a method with a request parameter associated with it, a generation error will occur.
 
+At this point in time, the generator will not auto-discover request body POJO's and generate documentation.
+
 ### Responses
 
 Documenting responses for a resource method is best achieved through the `@RamlResponses` annotation, which takes one or many `@RamlResponse` annotations.  If however this annotation isn't present, the generation process will assume a `200 OK` response code and try to generate a response definition from a combination of then `@Produces` annotation (defaulting to `application/json` if not present) and the return type.
 
-If the return type of the method is a Jackson-annotated object with a `@RamlExample` annotation present, it will create schemas and examples automatically.
+If the return type of the method is a Jackson-annotated object, then the generator will automatically create a schema for JSON payloads.  If the return type has a static `@RamlExample` method present, it will create an example automatically.
 
 The `@RamlResponses` annotation allows better control over defining the status codes being returned.
+
+#### XML Schemas
+
+At present, it is not possible to generate XSD documents automatically from Jackson-annotated classes.  You will need to use the `schema` property on the `@RamlBody` annotation to provide a manual XSD document.

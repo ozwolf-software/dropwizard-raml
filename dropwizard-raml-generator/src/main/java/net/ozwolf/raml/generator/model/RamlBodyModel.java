@@ -54,13 +54,15 @@ public class RamlBodyModel {
         if (annotation.type() == RamlBody.NotDefinedReturnType.class)
             return ClassPathUtils.getResourceAsString(annotation.schema());
 
-        return RamlMedia.instance().generateSchemaFor(annotation.contentType(), annotation.type()).orElse(null);
+        return RamlMedia.instance().generateSchemaFor(annotation.contentType(), annotation.type())
+                .orElseGet(() -> ClassPathUtils.getResourceAsString(annotation.schema()));
     }
 
     private static String generateExample(RamlBody annotation) {
         if (annotation.type() == RamlBody.NotDefinedReturnType.class)
             return ClassPathUtils.getResourceAsString(annotation.example());
 
-        return RamlMedia.instance().generateExampleFor(annotation.contentType(), annotation.type()).orElse(null);
+        return RamlMedia.instance().generateExampleFor(annotation.contentType(), annotation.type())
+                .orElseGet(() -> ClassPathUtils.getResourceAsString(annotation.example()));
     }
 }
