@@ -396,7 +396,7 @@ traits:
           ,\r\n  \"title\" : \"Author Request\",\r\n  \"type\" : \"object\",\r\n \
           \ \"additionalProperties\" : false,\r\n  \"description\" : \"a request to\
           \ create or modify an author\",\r\n  \"properties\" : {\r\n    \"name\"\
-          \ : {\r\n      \"type\" : \"string\",\r\n      \"description\" : \"the name\
+          \ : {\r\n      \"type\" : \"string\",\r\n      \"minLength\" : 1,\r\n      \"description\" : \"the name\
           \ of the author\"\r\n    }\r\n  },\r\n  \"required\" : [ \"name\" ]\r\n}"
         example: "{\r\n  \"name\" : \"Tom Clancy\"\r\n}"
     responses:

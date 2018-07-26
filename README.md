@@ -8,14 +8,16 @@ During this time, this private project expanded with tools and plugins that were
 
 ## Documentation
 
-Please refer to the [wiki](./_docs) for information on using the tools in this project.
+Please refer to the [documentation](./_docs) for information on using the tools in this project.
+
+**Note:** The documentation of this project is an ongoing task.  If you feel something is fundamentally missing from it, please raise an issue with a suggestion.
 
 ## Components
 
 + [Annotations](./dropwizard-raml-annotations) - a library containing the RAML annotations used to help describe a JAX-RS service in code
 + [RAML Generator](./dropwizard-raml-generator) - the library that contains the logic to investigate your project and derive a RAML specification
 + [Maven Plugin](./dropwizard-raml-maven-plugin) - a Maven plugin that can be used to generate a RAML specification file during the build process
-+ [HTML View](./dropwizard-raml-html) - a configured bundle that provides a readable endpoint on services explaining the API
++ [API Docs](./dropwizard-raml-apidocs) - a configured bundle that provides a readable endpoint on services explaining the API
 + [Monitor](./dropwizard-raml-monitor) - a runtime library that monitors incoming and outgoing requests, logging if successful request/response chains do not adhere to the API specification
 + [Tester](./dropwizard-raml-tester) - a testing library that allows DropWizard testing to verify RAML specifications
 + [Example Service](./dropwizard-raml-example-service) - an example DropWizard JAX-RS service showcasing all the tools available in this project

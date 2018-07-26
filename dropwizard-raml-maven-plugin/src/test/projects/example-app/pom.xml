@@ -12,7 +12,7 @@
                 <groupId>net.ozwolf</groupId>
                 <artifactId>dropwizard-raml-maven-plugin</artifactId>
                 <configuration>
-                    <basePackage>net.ozwolf.raml.example</basePackage>
+                    <basePackage>net.ozwolf.raml.test</basePackage>
                     <version>1.2.3</version>
                     <outputFile>${basedir}/target/test-result/apidocs/apidocs.raml</outputFile>
                 </configuration>

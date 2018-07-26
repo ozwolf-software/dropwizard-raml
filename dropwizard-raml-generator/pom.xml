@@ -78,7 +78,7 @@
 
         <dependency>
             <groupId>net.ozwolf</groupId>
-            <artifactId>dropwizard-raml-example-service</artifactId>
+            <artifactId>dropwizard-raml-test-service</artifactId>
             <version>${project.parent.version}</version>
             <scope>test</scope>
         </dependency>
