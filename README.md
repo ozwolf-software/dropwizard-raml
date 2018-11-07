@@ -22,6 +22,10 @@ Please refer to the [documentation](./_docs) for information on using the tools 
 + [Tester](./dropwizard-raml-tester) - a testing library that allows DropWizard testing to verify RAML specifications
 + [Example Service](./examples/example-service/dropwizard-raml-example-service) - an example DropWizard JAX-RS service showcasing all the tools available in this project
 
+## Scala Dependency
+
+This project has a dependency on `org.scala-lang:scala-library:2.12.4+`.  As a transient depdendency, this may cause conflicts with other libraries.
+
 ## Using In Non-DropWizard Jersey JAX-RS Projects
 
 The [Annotations](./dropwizard-raml-annotations) and [RAML Generator](./dropwizard-raml-generator) components _can_ be used in non-DropWizard Jersey JAX-RS projects that utilise Jackson.
