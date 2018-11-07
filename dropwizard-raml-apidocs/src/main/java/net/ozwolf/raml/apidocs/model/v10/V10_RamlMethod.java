@@ -2,8 +2,11 @@ package net.ozwolf.raml.apidocs.model.v10;
 
 import net.ozwolf.raml.apidocs.model.*;
 import org.raml.v2.api.model.v10.methods.Method;
+import org.raml.v2.api.model.v10.system.types.AnnotableStringType;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.stream.Collectors.toList;
@@ -22,7 +25,7 @@ public class V10_RamlMethod implements RamlMethod {
 
     @Override
     public String getDescription() {
-        return method.description().value();
+        return Optional.ofNullable(method.description()).map(AnnotableStringType::value).orElse(null);
     }
 
     @Override
@@ -47,6 +50,6 @@ public class V10_RamlMethod implements RamlMethod {
 
     @Override
     public List<RamlResponse> getResponses() {
-        return method.responses().stream().map(V10_RamlResponse::new).collect(toList());
+        return method.responses().stream().map(V10_RamlResponse::new).sorted(Comparator.comparing(V10_RamlResponse::getStatus)).collect(toList());
     }
 }

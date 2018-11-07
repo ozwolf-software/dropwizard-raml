@@ -1,13 +1,13 @@
-package net.ozwolf.raml.test;
+package net.ozwolf.raml.example;
 
 import com.google.common.io.Resources;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import net.ozwolf.raml.apidocs.ApiDocsBundle;
-import net.ozwolf.raml.test.resources.AuthorsResource;
-import net.ozwolf.raml.test.resources.BooksResource;
-import net.ozwolf.raml.test.resources.filters.SecurityFilter;
+import net.ozwolf.raml.example.resources.AuthorsResource;
+import net.ozwolf.raml.example.resources.BooksResource;
+import net.ozwolf.raml.example.resources.filters.SecurityFilter;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,7 +23,7 @@ public class ExampleServiceApp extends Application<ExampleServiceAppConfiguratio
 
     @Override
     public void initialize(Bootstrap<ExampleServiceAppConfiguration> bootstrap) {
-        bootstrap.addBundle(new ApiDocsBundle("apispecs/"));
+        bootstrap.addBundle(new ApiDocsBundle("net.ozwolf.raml."));
     }
 
     @Override

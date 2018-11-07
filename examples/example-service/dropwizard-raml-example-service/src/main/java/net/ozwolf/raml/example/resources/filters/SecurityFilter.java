@@ -1,7 +1,7 @@
-package net.ozwolf.raml.test.resources.filters;
+package net.ozwolf.raml.example.resources.filters;
 
-import net.ozwolf.raml.test.security.Secured;
-import net.ozwolf.raml.test.security.Users;
+import net.ozwolf.raml.example.security.Secured;
+import net.ozwolf.raml.example.security.Users;
 
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;

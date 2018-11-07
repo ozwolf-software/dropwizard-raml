@@ -4,8 +4,10 @@ import net.ozwolf.raml.apidocs.model.RamlParameter;
 import net.ozwolf.raml.apidocs.model.RamlResponse;
 import net.ozwolf.raml.apidocs.model.RamlSecurity;
 import org.raml.v2.api.model.v10.security.SecurityScheme;
+import org.raml.v2.api.model.v10.system.types.AnnotableStringType;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.stream.Collectors.toList;
@@ -29,7 +31,7 @@ public class V10_RamlSecurity implements RamlSecurity {
 
     @Override
     public String getDescription() {
-        return scheme.description().value();
+        return Optional.ofNullable(scheme.description()).map(AnnotableStringType::value).orElse(null);
     }
 
     @Override

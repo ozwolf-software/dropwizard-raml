@@ -4,8 +4,10 @@ import net.ozwolf.raml.apidocs.model.RamlBody;
 import net.ozwolf.raml.apidocs.model.RamlParameter;
 import net.ozwolf.raml.apidocs.model.RamlResponse;
 import org.raml.v2.api.model.v10.bodies.Response;
+import org.raml.v2.api.model.v10.system.types.AnnotableStringType;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.stream.Collectors.toList;
@@ -24,7 +26,7 @@ public class V10_RamlResponse implements RamlResponse {
 
     @Override
     public String getDescription() {
-        return response.description().value();
+        return Optional.ofNullable(response.description()).map(AnnotableStringType::value).orElse(null);
     }
 
     @Override

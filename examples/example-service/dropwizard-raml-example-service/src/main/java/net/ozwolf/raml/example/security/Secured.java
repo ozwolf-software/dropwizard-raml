@@ -1,4 +1,4 @@
-package net.ozwolf.raml.test.security;
+package net.ozwolf.raml.example.security;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package net.ozwolf.raml.test;
+package net.ozwolf.raml.example;
 
 import net.ozwolf.raml.annotations.*;
 import net.ozwolf.raml.annotations.security.RamlOAuth2Settings;

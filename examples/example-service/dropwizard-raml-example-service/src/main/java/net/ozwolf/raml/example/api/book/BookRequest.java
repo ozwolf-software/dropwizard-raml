@@ -1,11 +1,11 @@
-package net.ozwolf.raml.test.api.book;
+package net.ozwolf.raml.example.api.book;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaFormat;
 import net.ozwolf.raml.annotations.RamlExample;
-import net.ozwolf.raml.test.api.validation.ValidAuthor;
-import net.ozwolf.raml.test.core.domain.Genre;
+import net.ozwolf.raml.example.api.validation.ValidAuthor;
+import net.ozwolf.raml.example.core.domain.Genre;
 import org.joda.time.LocalDate;
 
 import javax.validation.constraints.NotEmpty;

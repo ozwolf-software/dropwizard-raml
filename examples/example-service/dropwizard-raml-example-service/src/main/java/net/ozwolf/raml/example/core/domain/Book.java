@@ -1,6 +1,6 @@
-package net.ozwolf.raml.test.core.domain;
+package net.ozwolf.raml.example.core.domain;
 
-import net.ozwolf.raml.test.api.book.BookRequest;
+import net.ozwolf.raml.example.api.book.BookRequest;
 import org.joda.time.LocalDate;
 
 import java.util.concurrent.atomic.AtomicInteger;

@@ -1,7 +1,7 @@
-package net.ozwolf.raml.test.core.service;
+package net.ozwolf.raml.example.core.service;
 
-import net.ozwolf.raml.test.api.author.AuthorRequest;
-import net.ozwolf.raml.test.core.domain.Author;
+import net.ozwolf.raml.example.api.author.AuthorRequest;
+import net.ozwolf.raml.example.core.domain.Author;
 
 import java.util.List;
 import java.util.Optional;

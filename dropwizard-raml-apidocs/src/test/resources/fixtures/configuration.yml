@@ -1,0 +1,17 @@
+server:
+  maxThreads: 30
+  applicationConnectors:
+    - type: http
+      port: 8443
+  adminConnectors:
+    - type: http
+      port: 8446
+
+logging:
+  level: INFO
+  appenders:
+    - type: file
+      timeZone: Australia/Melbourne
+      currentLogFilename: target/logs/test-app.log
+      archivedLogFilenamePattern: target/logs/test-app-%d.log.gz
+      archivedFileCount: 1

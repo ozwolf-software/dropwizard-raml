@@ -20,7 +20,7 @@ Please refer to the [documentation](./_docs) for information on using the tools 
 + [API Docs](./dropwizard-raml-apidocs) - a configured bundle that provides a readable endpoint on services explaining the API
 + [Monitor](./dropwizard-raml-monitor) - a runtime library that monitors incoming and outgoing requests, logging if successful request/response chains do not adhere to the API specification
 + [Tester](./dropwizard-raml-tester) - a testing library that allows DropWizard testing to verify RAML specifications
-+ [Example Service](./dropwizard-raml-example-service) - an example DropWizard JAX-RS service showcasing all the tools available in this project
++ [Example Service](./examples/example-service/dropwizard-raml-example-service) - an example DropWizard JAX-RS service showcasing all the tools available in this project
 
 ## Using In Non-DropWizard Jersey JAX-RS Projects
 

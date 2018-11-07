@@ -25,13 +25,13 @@ import static com.google.common.collect.Lists.newArrayList;
 
 @Mojo(name = "generate", defaultPhase = LifecyclePhase.COMPILE, requiresDependencyResolution = ResolutionScope.RUNTIME, threadSafe = true)
 public class RamlGenerateMojo extends AbstractMojo {
-    @Parameter(property = "generate.basePackage", defaultValue = "${project.version}")
+    @Parameter(property = "generate.basePackage")
     private String basePackage;
 
-    @Parameter(property = "generate.version")
+    @Parameter(property = "generate.version", defaultValue = "${project.version}")
     private String version;
 
-    @Parameter(property = "generate.outputFile", defaultValue = "${basedir}/target/classes/apidocs/apidocs.raml")
+    @Parameter(property = "generate.outputFile", defaultValue = "${basedir}/target/classes/apidocs/apidocs.yml")
     private String outputFile;
 
     @Override

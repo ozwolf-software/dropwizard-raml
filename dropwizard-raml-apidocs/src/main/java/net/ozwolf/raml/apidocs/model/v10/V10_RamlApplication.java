@@ -1,12 +1,14 @@
 package net.ozwolf.raml.apidocs.model.v10;
 
 import net.ozwolf.raml.apidocs.model.RamlApplication;
+import net.ozwolf.raml.apidocs.model.RamlDocumentation;
 import net.ozwolf.raml.apidocs.model.RamlResource;
 import org.raml.v2.api.model.v10.api.Api;
+import org.raml.v2.api.model.v10.system.types.AnnotableStringType;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.stream.Collectors.toList;
@@ -20,22 +22,32 @@ public class V10_RamlApplication implements RamlApplication {
 
     @Override
     public String getTitle() {
-        return api.title().value();
+        return Optional.ofNullable(api.title()).map(AnnotableStringType::value).orElse("Unknown");
     }
 
     @Override
     public String getVersion() {
-        return api.version().value();
+        return Optional.ofNullable(api.version()).map(AnnotableStringType::value).orElse("Unknown");
     }
 
     @Override
     public String getDescription() {
-        return api.description().toString();
+        return Optional.ofNullable(api.description()).map(AnnotableStringType::value).orElse(null);
     }
 
     @Override
     public Set<String> getProtocols() {
         return newHashSet(api.protocols());
+    }
+
+    @Override
+    public String getBaseUri() {
+        return Optional.ofNullable(api.baseUri()).map(AnnotableStringType::value).orElse(null);
+    }
+
+    @Override
+    public List<RamlDocumentation> getDocumentation() {
+        return api.documentation().stream().map(V10_RamlDocumentation::new).collect(toList());
     }
 
     @Override

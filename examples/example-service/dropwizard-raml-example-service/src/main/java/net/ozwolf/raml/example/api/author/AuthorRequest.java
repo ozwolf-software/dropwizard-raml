@@ -1,4 +1,4 @@
-package net.ozwolf.raml.test.api.author;
+package net.ozwolf.raml.example.api.author;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

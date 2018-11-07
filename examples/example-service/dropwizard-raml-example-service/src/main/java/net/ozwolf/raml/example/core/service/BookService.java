@@ -1,9 +1,9 @@
-package net.ozwolf.raml.test.core.service;
+package net.ozwolf.raml.example.core.service;
 
-import net.ozwolf.raml.test.api.book.BookRequest;
-import net.ozwolf.raml.test.core.domain.Book;
-import net.ozwolf.raml.test.core.domain.BookAndAuthor;
-import net.ozwolf.raml.test.core.domain.Genre;
+import net.ozwolf.raml.example.api.book.BookRequest;
+import net.ozwolf.raml.example.core.domain.Book;
+import net.ozwolf.raml.example.core.domain.BookAndAuthor;
+import net.ozwolf.raml.example.core.domain.Genre;
 import org.joda.time.LocalDate;
 
 import java.util.List;

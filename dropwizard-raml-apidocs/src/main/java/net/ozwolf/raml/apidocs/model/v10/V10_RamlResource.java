@@ -4,8 +4,10 @@ import net.ozwolf.raml.apidocs.model.RamlMethod;
 import net.ozwolf.raml.apidocs.model.RamlParameter;
 import net.ozwolf.raml.apidocs.model.RamlResource;
 import org.raml.v2.api.model.v10.resources.Resource;
+import org.raml.v2.api.model.v10.system.types.AnnotableStringType;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.stream.Collectors.toList;
@@ -19,12 +21,12 @@ public class V10_RamlResource implements RamlResource {
 
     @Override
     public String getDisplayName() {
-        return resource.displayName().value();
+        return Optional.ofNullable(resource.displayName()).map(AnnotableStringType::value).orElse(null);
     }
 
     @Override
     public String getDescription() {
-        return resource.description().value();
+        return Optional.ofNullable(resource.description()).map(AnnotableStringType::value).orElse(null);
     }
 
     @Override

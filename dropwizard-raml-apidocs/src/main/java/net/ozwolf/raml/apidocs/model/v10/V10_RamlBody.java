@@ -1,8 +1,11 @@
 package net.ozwolf.raml.apidocs.model.v10;
 
 import net.ozwolf.raml.apidocs.model.RamlBody;
+import org.raml.v2.api.model.v10.datamodel.ExampleSpec;
 import org.raml.v2.api.model.v10.datamodel.ExternalTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
+
+import java.util.Optional;
 
 public class V10_RamlBody implements RamlBody {
     private final TypeDeclaration body;
@@ -23,6 +26,6 @@ public class V10_RamlBody implements RamlBody {
 
     @Override
     public String getExample() {
-        return body.example().value();
+        return Optional.ofNullable(body.example()).map(ExampleSpec::value).orElse(null);
     }
 }

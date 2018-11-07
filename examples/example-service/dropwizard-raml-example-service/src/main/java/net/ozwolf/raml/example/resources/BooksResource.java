@@ -1,15 +1,15 @@
-package net.ozwolf.raml.test.resources;
+package net.ozwolf.raml.example.resources;
 
 import com.codahale.metrics.annotation.Timed;
 import net.ozwolf.raml.annotations.*;
-import net.ozwolf.raml.test.ExampleServiceApp;
-import net.ozwolf.raml.test.api.book.BookRequest;
-import net.ozwolf.raml.test.api.book.BookResponse;
-import net.ozwolf.raml.test.api.book.BooksResponse;
-import net.ozwolf.raml.test.core.domain.BookAndAuthor;
-import net.ozwolf.raml.test.core.domain.Genre;
-import net.ozwolf.raml.test.core.service.BookService;
-import net.ozwolf.raml.test.security.Secured;
+import net.ozwolf.raml.example.ExampleServiceApp;
+import net.ozwolf.raml.example.api.book.BookRequest;
+import net.ozwolf.raml.example.api.book.BookResponse;
+import net.ozwolf.raml.example.api.book.BooksResponse;
+import net.ozwolf.raml.example.core.domain.BookAndAuthor;
+import net.ozwolf.raml.example.core.domain.Genre;
+import net.ozwolf.raml.example.core.service.BookService;
+import net.ozwolf.raml.example.security.Secured;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;

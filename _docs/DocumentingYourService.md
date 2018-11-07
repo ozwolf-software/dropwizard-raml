@@ -2,7 +2,7 @@
 
 The DropWizard RAML project uses a combination of JAX-RS + Jackson annotations with the [RAML Annotations](../dropwizard-raml-annotations) library to document your application's code base.
 
-An example of a documented service can be found in the [Example Service Project](../dropwizard-raml-example-service).
+An example of a documented service can be found in the [Example Service Project](../examples/example-service/dropwizard-raml-example-service).
 
 ### JSON Schema Documentation
 
@@ -14,7 +14,7 @@ In conjunction with Jackson's own JSON annotations, the project also uses Morten
 
 The `@RamlApp` annotation is used to provide the description information for your application.  This annotation needs to exist once (and once only) within the base package and sub-packages defined when the specification document gets generated.
 
-This annotation _does not_ need to reside on your application class and due to the size it can reach, we recommend placing it on a supporting class.  You can see such usage [here](../dropwizard-raml-example-service/src/main/java/net/ozwolf/raml/example/ExampleAppSpecs.java).
+This annotation _does not_ need to reside on your application class and due to the size it can reach, we recommend placing it on a supporting class.  You can see such usage [here](../examples/example-service/dropwizard-raml-example-service/src/main/java/net/ozwolf/raml/example/ExampleAppSpecs.java).
 
 | Property | Required | Default | Description |
 | -------- | :------: | :-----: | ----------- |

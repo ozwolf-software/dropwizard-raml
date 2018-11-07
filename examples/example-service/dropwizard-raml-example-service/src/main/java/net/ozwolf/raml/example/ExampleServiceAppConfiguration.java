@@ -1,4 +1,4 @@
-package net.ozwolf.raml.test;
+package net.ozwolf.raml.example;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

@@ -1,23 +1,36 @@
 package net.ozwolf.raml.apidocs.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import net.ozwolf.raml.apidocs.util.MarkDownHelper;
 
+import javax.ws.rs.core.Response;
 import java.util.List;
 
-@JsonSerialize
-@JsonPropertyOrder({"status", "description", "headers", "bodies"})
 public interface RamlResponse {
-    @JsonProperty("status")
     Integer getStatus();
 
-    @JsonProperty("description")
+    default String getStatusName() {
+        Response.Status status = Response.Status.fromStatusCode(getStatus());
+
+        if (status != null)
+            return status.getReasonPhrase();
+
+        switch (getStatus()) {
+            case 422:
+                return "Unprocessible Entity";
+            case 423:
+                return "Locked";
+            default:
+                return "";
+        }
+    }
+
     String getDescription();
 
-    @JsonProperty("headers")
+    default String getDescriptionHtml() {
+        return MarkDownHelper.toHtml(getDescription());
+    }
+
     List<RamlParameter> getHeaders();
 
-    @JsonProperty("bodies")
     List<RamlBody> getBodies();
 }

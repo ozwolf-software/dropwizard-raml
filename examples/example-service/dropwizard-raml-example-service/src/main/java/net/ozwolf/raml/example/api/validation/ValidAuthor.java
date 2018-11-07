@@ -1,6 +1,6 @@
-package net.ozwolf.raml.test.api.validation;
+package net.ozwolf.raml.example.api.validation;
 
-import net.ozwolf.raml.test.core.service.AuthorService;
+import net.ozwolf.raml.example.core.service.AuthorService;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;

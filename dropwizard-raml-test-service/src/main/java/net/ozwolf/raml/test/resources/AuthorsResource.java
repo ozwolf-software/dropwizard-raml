@@ -61,6 +61,7 @@ public class AuthorsResource {
     )
     @RamlIs("has404")
     @Path("/{id}")
+    @GET
     @Produces("application/json")
     @Timed
     public AuthorResponse getAuthor(@PathParam("id") Integer id) {
@@ -68,6 +69,9 @@ public class AuthorsResource {
     }
 
     @RamlDescription("update an author")
+    @RamlRequests({
+            @RamlBody(contentType = "application/json", type = AuthorRequest.class)
+    })
     @RamlResponses(
             @RamlResponse(
                     status = 200,
@@ -78,6 +82,7 @@ public class AuthorsResource {
     @RamlSecuredBy({"oauth2", "user-token"})
     @RamlIs({"has400", "validated"})
     @Path("/{id}")
+    @PUT
     @Consumes("application/json")
     @Produces("application/json")
     @Timed

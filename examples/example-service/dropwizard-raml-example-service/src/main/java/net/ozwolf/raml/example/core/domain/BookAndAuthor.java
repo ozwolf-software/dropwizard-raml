@@ -1,4 +1,4 @@
-package net.ozwolf.raml.test.core.domain;
+package net.ozwolf.raml.example.core.domain;
 
 import org.joda.time.LocalDate;
 

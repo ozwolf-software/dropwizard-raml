@@ -54,7 +54,15 @@
             </resource>
         </resources>
         <plugins>
-            <plugin></plugin>
+            <plugin>
+                <groupId>net.ozwolf</groupId>
+                <artifactId>dropwizard-raml-maven-plugin</artifactId>
+                <version>RELEASE</version>
+                <configuration>
+                    <basePackage>net.ozwolf.raml.example</basePackage>
+                    <version>${project.version}</version>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

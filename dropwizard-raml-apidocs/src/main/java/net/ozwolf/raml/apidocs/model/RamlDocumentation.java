@@ -1,15 +1,13 @@
 package net.ozwolf.raml.apidocs.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import net.ozwolf.raml.apidocs.util.MarkDownHelper;
 
-@JsonSerialize
-@JsonPropertyOrder({"title", "content"})
 public interface RamlDocumentation {
-    @JsonProperty("title")
     String getTitle();
 
-    @JsonProperty("content")
     String getContent();
+
+    default String getContentHtml() {
+        return MarkDownHelper.toHtml(getContent());
+    }
 }

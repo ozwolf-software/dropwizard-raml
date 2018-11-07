@@ -1,4 +1,4 @@
-package net.ozwolf.raml.test.api.book;
+package net.ozwolf.raml.example.api.book;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -7,9 +7,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
 import net.ozwolf.raml.annotations.RamlExample;
-import net.ozwolf.raml.test.core.domain.Book;
-import net.ozwolf.raml.test.core.domain.Genre;
-import net.ozwolf.raml.test.resources.BooksResource;
+import net.ozwolf.raml.example.core.domain.Book;
+import net.ozwolf.raml.example.core.domain.Genre;
+import net.ozwolf.raml.example.resources.BooksResource;
 import org.joda.time.LocalDate;
 
 import javax.ws.rs.core.UriBuilder;

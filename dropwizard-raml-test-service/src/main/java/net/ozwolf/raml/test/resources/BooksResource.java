@@ -75,6 +75,7 @@ public class BooksResource {
     }
 
     @RamlDescription("download a book in PDF format")
+    @RamlSecuredBy({"user-token", "oauth2"})
     @Path("/{id}/download")
     @GET
     @Produces("application/pdf")

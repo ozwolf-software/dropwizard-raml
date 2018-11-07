@@ -13,6 +13,10 @@
     <name>DropWizard RAML Annotations</name>
     <description>Library that contains extra annotations to use in conjunction with DropWizard JAX-RS resources and Jackson API entities to document your service.</description>
 
+    <properties>
+        <maven.deploy.skip>false</maven.deploy.skip>
+    </properties>
+
     <dependencies>
         <!-- Provided -->
         <dependency>
