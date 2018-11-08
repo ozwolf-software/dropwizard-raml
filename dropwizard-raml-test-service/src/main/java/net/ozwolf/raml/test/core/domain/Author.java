@@ -24,7 +24,7 @@ public class Author {
     public Author(AuthorRequest request) {
         this(
                 getNextId(),
-                request.getName(),
+                request.getN(),
                 null
         );
     }
@@ -42,7 +42,7 @@ public class Author {
     }
 
     public Author update(AuthorRequest request){
-        this.name = request.getName();
+        this.name = request.getN();
         return this;
     }
 

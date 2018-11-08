@@ -17,7 +17,8 @@ public class JsonSchemaFactory implements MediaFactory {
 
     private static String toJsonSchema(Class<?> type, ObjectMapper mapper) {
         try {
-            JsonSchemaGenerator generator = new JsonSchemaGenerator(mapper, JsonSchemaConfig.vanillaJsonSchemaDraft4());
+            JsonSchemaConfig config = JsonSchemaConfig.vanillaJsonSchemaDraft4();
+            JsonSchemaGenerator generator = new JsonSchemaGenerator(mapper, config);
 
             JsonNode schema = generator.generateJsonSchema(type);
             return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(schema);

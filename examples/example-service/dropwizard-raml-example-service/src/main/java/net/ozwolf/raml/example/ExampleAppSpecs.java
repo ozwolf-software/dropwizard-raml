@@ -7,7 +7,7 @@ import net.ozwolf.raml.annotations.security.RamlOAuth2Settings;
         title = "DropWizard Example App",
         description = "An example application documented using the RAML annotations.",
         protocols = "HTTP",
-        baseUri = "http://localhost:8888",
+        baseUri = "http://localhost:9000",
         documentation = {
                 @RamlDocumentation(title = "Summary", content = "apispecs/documentation/summary.md"),
                 @RamlDocumentation(title = "Annotations", content = "apispecs/documentation/annotations.md")

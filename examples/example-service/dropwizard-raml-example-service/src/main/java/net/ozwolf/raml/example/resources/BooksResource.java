@@ -25,12 +25,6 @@ import java.util.List;
 })
 @Path("/books")
 public class BooksResource {
-    private final BookService bookService;
-
-    public BooksResource() {
-        this.bookService = BookService.INSTANCE;
-    }
-
     @RamlDescription("retrieve the list of books")
     @RamlResponses(
             @RamlResponse(
@@ -43,7 +37,7 @@ public class BooksResource {
     @Produces("application/json")
     @Timed
     public BooksResponse getBooks(@QueryParam("genre") List<Genre> genre) {
-        return new BooksResponse(bookService.find(genre));
+        return null;
     }
 
     @RamlDescription("create a new book")
@@ -65,10 +59,7 @@ public class BooksResource {
     @Produces("application/json")
     @Timed
     public Response postBook(@Valid BookRequest request) {
-        BookAndAuthor b = bookService.create(request);
-        return Response.created(UriBuilder.fromResource(BooksResource.class).path(BooksResource.class, "getBook").build(b.getId()))
-                .entity(new BookResponse(b))
-                .build();
+        return null;
     }
 
     @RamlDescription("retrieve a book")
@@ -84,16 +75,17 @@ public class BooksResource {
     @Produces("application/json")
     @Timed
     public BookResponse getBook(@PathParam("id") Integer id) {
-        return bookService.find(id).map(BookResponse::new).orElseThrow(NotFoundException::new);
+        return null;
     }
 
     @RamlDescription("download a book in PDF format")
+    @RamlSecuredBy({"user-token", "oauth2"})
     @Path("/{id}/download")
     @GET
     @Produces("application/pdf")
     @Timed
     @Secured(bearers = false)
     public StreamingOutput getBookDownload(@PathParam("id") Integer id) {
-        return output -> output.write(ExampleServiceApp.getSamplePDF());
+        return null;
     }
 }

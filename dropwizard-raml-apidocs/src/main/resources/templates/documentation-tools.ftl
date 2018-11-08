@@ -8,6 +8,6 @@
     <h1>${item.title}</h1>
 </div>
 <div id="documentation-${documentId}" class="invisible d-none p-3">
-    ${item.contentHtml}
+    ${item.contentHtml?no_esc}
 </div>
 [/#macro]

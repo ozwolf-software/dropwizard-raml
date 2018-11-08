@@ -1,0 +1,27 @@
+{
+  "$schema" : "http://json-schema.org/draft-04/schema#",
+  "title" : "Book Request",
+  "type" : "object",
+  "additionalProperties" : false,
+  "properties" : {
+    "title" : {
+      "type" : "string",
+      "description" : "the title of the book"
+    },
+    "genre" : {
+      "type" : "string",
+      "enum" : [ "Horror", "SciFi", "Fantasy", "Romance", "Action", "NonFiction" ],
+      "description" : "the genre of the book"
+    },
+    "publishDate" : {
+      "type" : "string",
+      "format" : "yyyy-MM-dd",
+      "description" : "the date the book was published"
+    },
+    "authorId" : {
+      "type" : "integer",
+      "description" : "the id of the author"
+    }
+  },
+  "required" : [ "title", "genre", "publishDate", "authorId" ]
+}

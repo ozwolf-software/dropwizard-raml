@@ -16,9 +16,18 @@ public class MarkDownHelper {
         Node node = PARSER.parse(markdown);
 
         String result = HTML_RENDERER.render(node);
-        if (StringUtils.startsWithIgnoreCase(result, "<p>") && StringUtils.endsWithIgnoreCase(result, "</p>\n"))
+        if (isSingleParagraph(result))
             result = StringUtils.stripEnd(StringUtils.stripStart(result, "<p>"), "</p>\n");
 
         return result;
+    }
+
+    private static boolean isSingleParagraph(String value) {
+        boolean startsWith = StringUtils.startsWithIgnoreCase(value, "<p>");
+        boolean endsWith = StringUtils.endsWithIgnoreCase(value, "</p>\n");
+        boolean onlyOneStart = StringUtils.countMatches(value, "<p>") == 1;
+        boolean onlyOneEnd = StringUtils.countMatches(value, "</p>") == 1;
+
+        return startsWith && endsWith && onlyOneStart && onlyOneEnd;
     }
 }

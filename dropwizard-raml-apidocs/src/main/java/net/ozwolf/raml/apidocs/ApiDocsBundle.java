@@ -5,15 +5,9 @@ import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
-import net.ozwolf.raml.apidocs.exception.RamlSpecificationException;
+import net.ozwolf.raml.apidocs.managed.ApiDocsManager;
 import net.ozwolf.raml.apidocs.resources.ApiDocsResource;
-import net.ozwolf.raml.generator.RamlGenerator;
-import net.ozwolf.raml.generator.exception.RamlGenerationException;
 import org.apache.commons.lang3.StringUtils;
-import org.raml.v2.api.RamlModelBuilder;
-import org.raml.v2.api.RamlModelResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <h1>API Docs Bundle</h1>
@@ -33,9 +27,7 @@ public class ApiDocsBundle implements Bundle {
     private String basePackage;
     private String version;
 
-    private RamlModelResult model;
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(ApiDocsBundle.class);
+    private ApiDocsManager manager;
 
     /**
      * Create a new API docs bundle, using source code to generate the specification at runtime.
@@ -66,11 +58,7 @@ public class ApiDocsBundle implements Bundle {
 
     @Override
     public void initialize(Bootstrap<?> bootstrap) {
-        this.model = StringUtils.isBlank(ramlFile) ? fromSource(basePackage, version) : new RamlModelBuilder().buildApi(ramlFile);
-        if (this.model != null && this.model.hasErrors()) {
-            LOGGER.error("RAML model contains errors.", new RamlSpecificationException(this.model.getValidationResults()));
-            this.model = null;
-        }
+        this.manager = StringUtils.isBlank(ramlFile) ? ApiDocsManager.load(basePackage, version) : ApiDocsManager.load(ramlFile);
 
         bootstrap.addBundle(new ViewBundle<>());
         bootstrap.addBundle(new AssetsBundle("/apidocs-assets", "/apidocs/assets", null, "apidocs-view-assets"));
@@ -78,15 +66,8 @@ public class ApiDocsBundle implements Bundle {
 
     @Override
     public void run(Environment environment) {
-        environment.jersey().register(new ApiDocsResource(model));
+        environment.jersey().register(new ApiDocsResource(manager));
     }
 
-    private static RamlModelResult fromSource(String basePackage, String version) {
-        try {
-            return new RamlModelBuilder().buildApi(new RamlGenerator(basePackage, version).generate(), "/");
-        } catch (RamlGenerationException e) {
-            LOGGER.error("Failed to generate RAML specification successfully.", e);
-            return null;
-        }
-    }
+
 }

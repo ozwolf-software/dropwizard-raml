@@ -263,7 +263,7 @@ traits:
         schema: "{\r\n  \"$schema\" : \"http://json-schema.org/draft-04/schema#\"\
           ,\r\n  \"title\" : \"Book Request\",\r\n  \"type\" : \"object\",\r\n  \"\
           additionalProperties\" : false,\r\n  \"properties\" : {\r\n    \"title\"\
-          \ : {\r\n      \"type\" : \"string\",\r\n      \"minLength\" : 1,\r\n  \
+          \ : {\r\n      \"type\" : \"string\",\r\n  \
           \    \"description\" : \"the title of the book\"\r\n    },\r\n    \"genre\"\
           \ : {\r\n      \"type\" : \"string\",\r\n      \"enum\" : [ \"Horror\",\
           \ \"SciFi\", \"Fantasy\", \"Romance\", \"Action\", \"NonFiction\" ],\r\n\

@@ -21,7 +21,7 @@ public class AuthorReferenceResponse {
     private final Integer id;
     private final String name;
 
-    public AuthorReferenceResponse(Author author){
+    public AuthorReferenceResponse(Author author) {
         this.href = UriBuilder.fromResource(AuthorsResource.class).path(AuthorsResource.class, "getAuthor").build(author.getId());
         this.id = author.getId();
         this.name = author.getName();

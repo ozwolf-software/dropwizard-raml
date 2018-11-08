@@ -5,15 +5,11 @@ import net.ozwolf.raml.annotations.*;
 import net.ozwolf.raml.example.api.author.AuthorRequest;
 import net.ozwolf.raml.example.api.author.AuthorResponse;
 import net.ozwolf.raml.example.api.author.AuthorsResponse;
-import net.ozwolf.raml.example.core.domain.Author;
-import net.ozwolf.raml.example.core.service.AuthorService;
-import net.ozwolf.raml.example.core.service.BookService;
 import net.ozwolf.raml.example.security.Secured;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 
 @RamlResource(displayName = "Authors", description = "manage and retrieve authors")
 @RamlSubResources(
@@ -21,14 +17,6 @@ import javax.ws.rs.core.UriBuilder;
 )
 @Path("/authors")
 public class AuthorsResource {
-    private final AuthorService authorService;
-    private final BookService bookService;
-
-    public AuthorsResource() {
-        this.authorService = AuthorService.INSTANCE;
-        this.bookService = BookService.INSTANCE;
-    }
-
     @RamlDescription("retrieve the list of authors")
     @RamlResponses(
             @RamlResponse(status = 200, description = "authors retrieved successfully", bodies = @RamlBody(contentType = "application/json", type = AuthorsResponse.class))
@@ -37,7 +25,7 @@ public class AuthorsResource {
     @Produces("application/json")
     @Timed
     public AuthorsResponse getAuthors() {
-        return new AuthorsResponse(authorService.findAll());
+        return null;
     }
 
     @RamlDescription("create a new author")
@@ -60,10 +48,7 @@ public class AuthorsResource {
     @Timed
     @Secured(users = false)
     public Response postAuthor(@Valid AuthorRequest request) {
-        Author a = authorService.create(request);
-        return Response.created(UriBuilder.fromResource(AuthorsResource.class).path(AuthorsResource.class, "getAuthor").build(a.getId()))
-                .entity(new AuthorResponse(a))
-                .build();
+        return null;
     }
 
     @RamlDescription("retrieve an author")
@@ -76,15 +61,17 @@ public class AuthorsResource {
     )
     @RamlIs("has404")
     @Path("/{id}")
+    @GET
     @Produces("application/json")
     @Timed
     public AuthorResponse getAuthor(@PathParam("id") Integer id) {
-        return authorService.find(id)
-                .map(a -> new AuthorResponse(a, bookService.findByAuthor(a.getId())))
-                .orElseThrow(NotFoundException::new);
+        return null;
     }
 
     @RamlDescription("update an author")
+    @RamlRequests({
+            @RamlBody(contentType = "application/json", type = AuthorRequest.class)
+    })
     @RamlResponses(
             @RamlResponse(
                     status = 200,
@@ -95,14 +82,13 @@ public class AuthorsResource {
     @RamlSecuredBy({"oauth2", "user-token"})
     @RamlIs({"has400", "validated"})
     @Path("/{id}")
+    @PUT
     @Consumes("application/json")
     @Produces("application/json")
     @Timed
     @Secured
     public AuthorResponse putAuthor(@PathParam("id") Integer id,
                                     @Valid AuthorRequest request) {
-        return authorService.update(id, request)
-                .map(a -> new AuthorResponse(a, bookService.findByAuthor(a.getId())))
-                .orElseThrow(NotFoundException::new);
+        return null;
     }
 }

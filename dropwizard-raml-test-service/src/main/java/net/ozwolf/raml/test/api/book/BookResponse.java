@@ -33,7 +33,7 @@ public class BookResponse {
     private final LocalDate publishDate;
     private final AuthorReferenceResponse author;
 
-    public BookResponse(BookAndAuthor book){
+    public BookResponse(BookAndAuthor book) {
         this.self = UriBuilder.fromResource(BooksResource.class).path(BooksResource.class, "getBook").build(book.getId());
         this.download = UriBuilder.fromResource(BooksResource.class).path(BooksResource.class, "getBookDownload").build(book.getId());
         this.id = book.getId();
@@ -88,7 +88,7 @@ public class BookResponse {
     }
 
     @RamlExample
-    public static BookResponse example(){
+    public static BookResponse example() {
         return new BookResponse(
                 new BookAndAuthor(
                         new Book(

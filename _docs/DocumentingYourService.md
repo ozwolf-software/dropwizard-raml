@@ -117,13 +117,7 @@ The `@RamlBody` annotation is used to describe a body entity for a specific cont
 | contentType | yes | The content type of the body payload |
 | type | no | The body class reference (either request or response type) |
 | schema | no | A reference to a resource file or direct text specifying the body schema.  Ignored if `type` is defined. |
-| schema | no | A reference to a resource file or direct text providing a body example.  Ignored if `type` is defined. |
-
-#### @RamlExample Usage
-
-The `@RamlExample` usage can be placed on any static method for a response type and the generation process will use that static method to instantiate an instance of the type and use the appropriate Jackson `ObjectMapper` to generate an example payload.
-
-The method this annotation is attached to must be a zero-argument `static` method.
+| example | no | A reference to a resource file or direct text providing a body example.  Ignored if `type` is defined. |
 
 #### Supported Media Types
 
@@ -133,6 +127,57 @@ The generation process currently supports the following media types:
 | ---------- | :---------------: | :----------------: | ----- |
 | application/json | yes | yes | |
 | text/xml | no | yes | Currently, there is no tooling for an XSD to be easily derived from a Jackson-annotated class |
+
+### @RamlExample
+
+The `@RamlExample` annotation can be placed on a response or request class, a static method on the afore mentioned classes or annotating a header or query parameter in a resource method.
+
+#### Attached To A Class
+
+When the annotation is attached to a class, the generation tools will use the value of that annotation to generate the example document for the API class.  The value can either point at a document file on the classpath or contain a raw value.
+
+```java
+@JsonDeserialize
+@JsonIgnoreProperties(ignoreUnknown = true)
+@RamlExample("apidocs/examples/book-request.json")
+public class BookRequest {
+    // POJO code
+}
+```
+
+#### Attached To A Static Method
+
+If the annotation is attached to a public static, zero-argument method on a response or request class, this method will be executed to generate a serializable instance of the class.
+
+```java
+@JsonDeserialize
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class BookRequest {
+    // Stuff
+    
+    @RamlExample
+    public static BookRequest example() {
+        return new BookRequest(
+                "Something something something dark side",
+                Genre.SciFi,
+                "2018-01-01",
+                1
+        );
+    }
+}
+``` 
+
+#### Attached To A Parameter
+
+When attached to a `@HeaderParam` or `@QueryParam` method parameter, the generator will use the value of the annotation to derive an example of that parameter type.
+
+### @RamlSchema
+
+The `@RamlSchema` annotation is used to point the generation tools at a statically-defined schema definition for a request or response class.
+
+When this annotation is attached to the class, the generation process will use it's contents instead of trying to auto-generate it's schema documentation.
+
+The value of this schema can either reference a documentation file on the classpath or a raw value.
 
 ## Documenting Your Resources
 
@@ -237,6 +282,40 @@ If the return type of the method is a Jackson-annotated object, then the generat
 
 The `@RamlResponses` annotation allows better control over defining the status codes being returned.
 
+### Documentation Generation
+
+#### Json Schema 
+
+This library will use the [Jackson jsonSchema Generator](https://github.com/mbknor/mbknor-jackson-jsonSchema) library to attempt to generate JSON schemas for your POJO request and response objects.
+
+There are limitations to just how much this library can achieve.  As a general rule of thumb, it cannot handle type switching through serializers.  For example, a method signature like:
+
+```java
+@JsonProperty("myField")
+@JsonSerialize(using = ByteToStringSerializer.class)
+public byte[] getMyField() {
+    return myField;
+}
+```
+
+will not be seen as a `string` type (assuming the serializer does something like `new String(value)`), but rather an `array` of `items = integer` when generating the schema.
+
+Try to keep your property types aligned with the actual types of your JSON properties to ensure schema generation is accurate as possible.  
+
 #### XML Schemas
 
 At present, it is not possible to generate XSD documents automatically from Jackson-annotated classes.  You will need to use the `schema` property on the `@RamlBody` annotation to provide a manual XSD document.
+
+#### Request Classes
+
+The generation libraries are somewhat dependent on classes being serializable and traversable by Jackson.  For response classes, this isn't generally a problem because the class is intrinsically designed to be serialized into a JSON representation.
+
+But for request classes, this can become problematic as the class' primary purpose is to deserialize request payloads.  This means for request classes there may be more superfluous Jackson annotations to ensure accuracy.
+
+An example of a documented request object can be found [here](../dropwizard-raml-test-service)
+
+#### Limitations
+
+
+
+If defining a schema for a class becomes too complicated or breaks functionality for the sake of documentation, then you can use the `@RamlSchema` annotation to point the class at a static documentation file.

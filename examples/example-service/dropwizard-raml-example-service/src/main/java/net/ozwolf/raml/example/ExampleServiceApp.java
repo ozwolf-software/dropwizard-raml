@@ -5,6 +5,7 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import net.ozwolf.raml.apidocs.ApiDocsBundle;
+import net.ozwolf.raml.apidocs.util.PropertyUtils;
 import net.ozwolf.raml.example.resources.AuthorsResource;
 import net.ozwolf.raml.example.resources.BooksResource;
 import net.ozwolf.raml.example.resources.filters.SecurityFilter;
@@ -14,7 +15,7 @@ import java.net.URL;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ExampleServiceApp extends Application<ExampleServiceAppConfiguration> {
-    private final static AtomicReference<byte[]> SAMPLE_PDF = new AtomicReference<>();
+    private final static AtomicReference<byte[]> SAMPLE_PDF = new AtomicReference<byte[]>();
 
     @Override
     public String getName() {
@@ -23,11 +24,11 @@ public class ExampleServiceApp extends Application<ExampleServiceAppConfiguratio
 
     @Override
     public void initialize(Bootstrap<ExampleServiceAppConfiguration> bootstrap) {
-        bootstrap.addBundle(new ApiDocsBundle("net.ozwolf.raml."));
+        bootstrap.addBundle(new ApiDocsBundle("net.ozwolf.raml.example", PropertyUtils.getValueFrom("application.properties", "version")));
     }
 
     @Override
-    public void run(ExampleServiceAppConfiguration configuration, Environment environment) throws Exception {
+    public void run(ExampleServiceAppConfiguration configuration, Environment environment) {
         environment.jersey().register(new AuthorsResource());
         environment.jersey().register(new BooksResource());
         environment.jersey().register(new SecurityFilter.Feature());

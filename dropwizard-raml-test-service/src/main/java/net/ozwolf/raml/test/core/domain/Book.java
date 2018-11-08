@@ -23,10 +23,10 @@ public class Book {
     public Book(BookRequest request) {
         this(
                 getNextId(),
-                request.getTitle(),
-                request.getGenre(),
-                request.getPublishDate(),
-                request.getAuthorId()
+                request.getT(),
+                request.getG(),
+                request.getP(),
+                request.getA()
         );
     }
 

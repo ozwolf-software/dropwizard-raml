@@ -18,7 +18,7 @@ public class TestServiceApp extends Application<TestServiceAppConfiguration> {
     }
 
     @Override
-    public void run(TestServiceAppConfiguration configuration, Environment environment) throws Exception {
+    public void run(TestServiceAppConfiguration configuration, Environment environment) {
         environment.jersey().register(new AuthorsResource());
         environment.jersey().register(new BooksResource());
     }

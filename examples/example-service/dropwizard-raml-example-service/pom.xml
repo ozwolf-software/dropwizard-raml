@@ -28,15 +28,14 @@
         <dependency>
             <groupId>net.ozwolf</groupId>
             <artifactId>dropwizard-raml-annotations</artifactId>
-            <version>RELEASE</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>net.ozwolf</groupId>
             <artifactId>dropwizard-raml-apidocs</artifactId>
-            <version>RELEASE</version>
+            <version>1.0.0</version>
         </dependency>
 
-        <!-- Provided -->
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
@@ -55,9 +54,18 @@
         </resources>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${compiler.version}</source>
+                    <target>${compiler.version}</target>
+                    <encoding>${compiler.encoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>net.ozwolf</groupId>
                 <artifactId>dropwizard-raml-maven-plugin</artifactId>
-                <version>RELEASE</version>
+                <version>1.0.0</version>
                 <configuration>
                     <basePackage>net.ozwolf.raml.example</basePackage>
                     <version>${project.version}</version>

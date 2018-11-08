@@ -8,9 +8,12 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import net.ozwolf.raml.annotations.RamlExample;
+import net.ozwolf.raml.annotations.RamlSchema;
 import net.ozwolf.raml.generator.media.FromMethodExampleFactory;
 import net.ozwolf.raml.generator.media.MediaFactory;
 import net.ozwolf.raml.generator.media.json.JsonSchemaFactory;
+import net.ozwolf.raml.generator.util.ClassPathUtils;
 
 import javax.ws.rs.core.MediaType;
 import java.lang.reflect.Constructor;
@@ -51,6 +54,10 @@ public class RamlMedia {
      * @return the (optional) schema definition if available
      */
     public Optional<String> generateSchemaFor(String contentType, Class<?> type) {
+        RamlSchema schemaAnnotation = type.getAnnotation(RamlSchema.class);
+        if (schemaAnnotation != null)
+            return Optional.ofNullable(ClassPathUtils.getResourceAsString(schemaAnnotation.value()));
+
         return toolsFor(contentType)
                 .flatMap(t -> t.schema.create(type, t.mapper));
     }
@@ -63,6 +70,10 @@ public class RamlMedia {
      * @return the (optional) example if available
      */
     public Optional<String> generateExampleFor(String contentType, Class<?> type) {
+        RamlExample exampleAnnotation = type.getAnnotation(RamlExample.class);
+        if (exampleAnnotation != null)
+            return Optional.ofNullable(ClassPathUtils.getResourceAsString(exampleAnnotation.value()));
+
         return toolsFor(contentType)
                 .flatMap(t -> t.example.create(type, t.mapper));
     }

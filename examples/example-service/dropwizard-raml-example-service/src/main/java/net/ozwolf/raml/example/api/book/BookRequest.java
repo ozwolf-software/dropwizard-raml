@@ -1,9 +1,11 @@
 package net.ozwolf.raml.example.api.book;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaFormat;
 import net.ozwolf.raml.annotations.RamlExample;
+import net.ozwolf.raml.annotations.RamlSchema;
 import net.ozwolf.raml.example.api.validation.ValidAuthor;
 import net.ozwolf.raml.example.core.domain.Genre;
 import org.joda.time.LocalDate;
@@ -13,6 +15,8 @@ import javax.validation.constraints.NotNull;
 
 @JsonDeserialize
 @JsonIgnoreProperties(ignoreUnknown = true)
+@RamlSchema("apispecs/resources/requests/schemas/book-request.json")
+@RamlExample("apispecs/resources/requests/examples/book-request.json")
 public class BookRequest {
     @NotEmpty(message = "must be provided")
     private final String title;
@@ -25,20 +29,10 @@ public class BookRequest {
     private final Integer authorId;
 
     @JsonCreator
-    public BookRequest(@JsonProperty(value = "title", required = true)
-                       @JsonPropertyDescription("the title of the book")
-                               String title,
-                       @JsonProperty(value = "genre", required = true)
-                       @JsonPropertyDescription("the genre of the book")
-                               Genre genre,
-                       @JsonProperty(value = "publishDate", required = true)
-                       @JsonPropertyDescription("the date the book was published")
-                       @JsonSchemaFormat("yyyy-MM-dd")
-                       @JsonFormat(pattern = "yyyy-MM-dd")
-                               LocalDate publishDate,
-                       @JsonProperty(value = "authorId", required = true)
-                       @JsonPropertyDescription("the id of the author")
-                               Integer authorId) {
+    public BookRequest(@JsonProperty("title") String title,
+                       @JsonProperty("genre") Genre genre,
+                       @JsonProperty("publishDate") LocalDate publishDate,
+                       @JsonProperty("authorId") Integer authorId) {
         this.title = title;
         this.genre = genre;
         this.publishDate = publishDate;
@@ -59,15 +53,5 @@ public class BookRequest {
 
     public Integer getAuthorId() {
         return authorId;
-    }
-
-    @RamlExample
-    public static BookRequest example() {
-        return new BookRequest(
-                "Beyond the Stars",
-                Genre.SciFi,
-                LocalDate.parse("2017-06-01"),
-                1
-        );
     }
 }

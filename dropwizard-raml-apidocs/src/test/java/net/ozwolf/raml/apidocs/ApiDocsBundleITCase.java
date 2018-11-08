@@ -12,7 +12,7 @@ import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ApiDocsBundleOperationsITCase {
+public class ApiDocsBundleITCase {
     @ClassRule
     public final static DropwizardAppRule<TestServiceAppConfiguration> APP = new DropwizardAppRule<TestServiceAppConfiguration>(
             ApiDocsApp.class,

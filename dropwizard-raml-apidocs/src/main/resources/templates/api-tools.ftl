@@ -42,7 +42,7 @@
             <tr>
                 <th class="text-monospace">${p.name}</th>
                 <td>${p.type}</td>
-                <td>${p.descriptionHtml}</td>
+                <td>${p.descriptionHtml?no_esc}</td>
                 <td class="text-center">
                 [#if p.required]
                     <span class="badge badge-success">Y</span>
@@ -149,7 +149,7 @@
                 </div>
                 [#if response.description?has_content]
                     <div class="row text-secondary font-weight-bold">
-                        ${response.description}
+                        ${response.descriptionHtml?no_esc}
                     </div>
                 [/#if]
             </div>
@@ -184,7 +184,7 @@
             <h3>${item.displayName}</h3>
         </div>
         <div class="row text-secondary">
-            ${item.descriptionHtml}
+            ${item.descriptionHtml?no_esc}
         </div>
     </div>
     [#list item.methods as method]
@@ -219,7 +219,7 @@
                     <div class="col-11 text-left p-2 text-primary font-weight-bold">
                         <div>${path}</div>
                         [#if item.description?has_content]
-                        <div class="text-secondary font-weight-normal">${item.descriptionHtml}</div>
+                        <div class="text-secondary font-weight-normal">${item.descriptionHtml?no_esc}</div>
                         [/#if]
                     </div>
                 </div>

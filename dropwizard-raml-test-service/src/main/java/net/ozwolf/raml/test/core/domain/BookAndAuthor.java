@@ -27,5 +27,7 @@ public class BookAndAuthor {
         return book.getPublishDate();
     }
 
-    public Author getAuthor() { return author; }
+    public Author getAuthor() {
+        return author;
+    }
 }
