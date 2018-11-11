@@ -1,4 +1,4 @@
-[#ftl]
+[#ftl auto_esc=false]
 
 [#import "utility-tools.ftl" as utils/]
 
@@ -42,7 +42,7 @@
             <tr>
                 <th class="text-monospace">${p.name}</th>
                 <td>${p.type}</td>
-                <td>${p.descriptionHtml?no_esc}</td>
+                <td>${p.descriptionHtml}</td>
                 <td class="text-center">
                 [#if p.required]
                     <span class="badge badge-success">Y</span>
@@ -133,7 +133,7 @@
 
 [#macro printRequests methodId requests]
     <h4>Request Body</h4>
-    <div class="container mb-3">
+    <div class="container-fluid mb-3">
         [#list requests as request][@printBody "Request" methodId request/][/#list]
     </div>
 [/#macro]
@@ -141,23 +141,23 @@
 [#macro printResponse methodId response]
     [#assign responseId = utils.makeId(methodId + "-responses-" + response.status)/]
     [#if response.status < 400][#assign color="success"/][#else][#assign color="danger"/][/#if]
-    <div class="container border border-${color} mb-3">
+    <div class="container-fluid border border-${color} mb-3">
         <div class="row p-3 hover-highlight" onclick="toggleVisibility('#${responseId}')">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="row">
                     <h5>${response.status} ${response.statusName}</h5>
                 </div>
                 [#if response.description?has_content]
                     <div class="row text-secondary font-weight-bold">
-                        ${response.descriptionHtml?no_esc}
+                        ${response.descriptionHtml}
                     </div>
                 [/#if]
             </div>
         </div>
         <div id="${responseId}" class="row invisible d-none">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="row p-3 border-top">
-                    <div class="container">
+                    <div class="container-fluid">
                         [#if response.headers?has_content][@printResponseHeaders response.headers/][/#if]
                         [#if response.bodies?has_content]
                             [#list response.bodies as body]
@@ -179,12 +179,12 @@
 [/#macro]
 
 [#macro printResource item]
-    <div class="container mt-3 mb-3">
+    <div class="container-fluid mt-3 mb-3">
         <div class="row">
             <h3>${item.displayName}</h3>
         </div>
         <div class="row text-secondary">
-            ${item.descriptionHtml?no_esc}
+            ${item.descriptionHtml}
         </div>
     </div>
     [#list item.methods as method]
@@ -207,9 +207,9 @@
 [#macro printMethod path item uriParameters]
     [#assign methodId = utils.makeId(item.method + '-' + path)/]
     [#assign methodColour = utils.getMethodColour(item.method)/]
-    <div class="container border shadow-sm mb-3">
+    <div class="container-fluid border shadow-sm mb-3">
         <div class="row">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="row hover-highlight" onclick="toggleVisibility('#${methodId}')">
                     <div class="col-1 bg-${methodColour} text-white p-2 font-weight-bold text-center d-table" style="height: 60px">
                         <div class="d-table-cell align-middle text-center">
@@ -219,7 +219,7 @@
                     <div class="col-11 text-left p-2 text-primary font-weight-bold">
                         <div>${path}</div>
                         [#if item.description?has_content]
-                        <div class="text-secondary font-weight-normal">${item.descriptionHtml?no_esc}</div>
+                        <div class="text-secondary font-weight-normal">${item.descriptionHtml}</div>
                         [/#if]
                     </div>
                 </div>

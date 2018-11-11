@@ -1,4 +1,4 @@
-[#ftl]
+[#ftl auto_esc=false]
 
 [#function makeId value]
     [#return value?replace(" ", "_")?replace("/", "-")?replace("{", "_")?replace("}", "_")/]

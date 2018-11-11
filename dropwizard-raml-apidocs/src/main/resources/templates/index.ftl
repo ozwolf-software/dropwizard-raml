@@ -1,4 +1,4 @@
-[#ftl]
+[#ftl auto_esc=false]
 [#import "documentation-tools.ftl" as documentation/]
 [#import "api-tools.ftl" as api/]
 [#import "utility-tools.ftl" as utils/]
@@ -13,7 +13,7 @@
     </head>
     <body>
         <div class="d-none d-lg-block">
-            <div class="container border bg-primary">
+            <div class="border bg-primary pl-3 pr-3">
                 <div class="row text-light">
                     <div class="col-sm-auto">
                         <h1>${application.title}</h1>
@@ -28,32 +28,133 @@
                     </div>
                 </div>
             </div>
-            [#if application.documentation?has_content]
-            <div class="mt-3">
-                <ul class="nav nav-tabs justify-content-center" id="navTabs" role="tablist">
-                    <li class="nav-item">
-                        <a href="#api" class="nav-link active" id="api-tab" data-toggle="tab" role="tab" aria-controls="documentation" aria-selected="false">API</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#documentation" class="nav-link" id="documentation-tab" data-toggle="tab" role="tab" aria-controls="documentation" aria-selected="false">DOCUMENTATION</a>
-                    </li>
-                </ul>
-            </div>
-            [/#if]
-            <div class="tab-content container" id="navTabsContent">
-                <div id="api" class="tab-pane fade show active" role="tabpanel" aria-labelledby="api-tab">
-                    [#list application.resources as resource][@api.printResource resource/][/#list]
-                </div>
-                [#if application.documentation?has_content]
-                <div id="documentation" class="tab-pane fade" role="tabpanel" aria-labelledby="documentation-tab">
-                    <div class="container mt-3 mb-3">
-                        [#list application.documentation as item]
-                        [@documentation.printDocumentation item/]
-                        [/#list]
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-2 border-right">
+                        <ul class="nav flex-column nav-pills navbar-fixed-top" id="nav-menu" role="tablist">
+                            <li class="nav-item mt-2"><h4 class="border-bottom">API</h4></li>
+                            [#assign firstItem = true/]
+                            [#list application.resources as resource]
+                                [#assign apiId = utils.makeId(resource.displayName)/]
+                                [#if firstItem]
+                                    [#assign className = "nav-link active"/]
+                                [#else]
+                                    [#assign className = "nav-link"/]
+                                [/#if]
+                                <li class="nav-item"><a id="api-${apiId}-link" class="${className}" href="#api-${apiId}" data-toggle="list" role="tab" aria-controls="api-${apiId}">${resource.displayName}</a></li>
+                                [#assign firstItem = false/]
+                            [/#list]
+                            [#if application.documentation?has_content]
+                                <li class="nav-item mt-2"><h4 class="border-bottom">Documentation</h4></li>
+                                [#list application.documentation as document]
+                                    [#assign documentId = utils.makeId(document.title)/]
+                                    <li class="nav-item"><a id="docuemtnation-${documentId}-link" class="nav-link" href="#documentation-${documentId}" data-toggle="list" role="tab" aria-controls="documentation-${documentId}">${document.title}</a></li>
+                                [/#list]
+                            [/#if]
+                        </ul>
+                    </div>
+                    <div class="col-10">
+                        <div class="tab-content" id="nav-content">
+                            [#assign firstItem = true/]
+                            [#list application.resources as resource]
+                                [#assign apiId = utils.makeId(resource.displayName)/]
+                                [#if firstItem]
+                                    [#assign className = "tab-pane fade show active"/]
+                                [#else]
+                                    [#assign className = "tab-pane fade"/]
+                                [/#if]
+                                <div class="${className}" id="api-${apiId}" role="tabpanel" aria-labelledby="api-${apiId}-link">
+                                    [@api.printResource resource/]
+                                </div>
+                                [#assign firstItem = false/]
+                            [/#list]
+                            [#if application.documentation?has_content]
+                                [#list application.documentation as document]
+                                    [#assign documentId = utils.makeId(document.title)/]
+                                    <div class="tab-pane" id="documentation-${documentId}" role="tabpanel" aria-labelledby="documentation-${documentId}-link">
+                                        <h1 class="font-weight-bold border-bottom">${document.title}</h1>
+                                        <div id="${documentId}">
+                                            ${document.contentHtml}
+                                        </div>
+                                    </div>
+                                [/#list]
+                            [/#if]
+                        </div>
                     </div>
                 </div>
-                [/#if]
             </div>
+
+            [#--[#if application.documentation?has_content]--]
+            [#--<div class="mt-3">--]
+                [#--<ul class="nav nav-tabs" id="navTabs" role="tablist">--]
+                    [#--<li class="nav-item">--]
+                        [#--<a href="#api" class="nav-link active" id="api-tab" data-toggle="tab" role="tab" aria-controls="documentation" aria-selected="false">API</a>--]
+                    [#--</li>--]
+                    [#--<li class="nav-item">--]
+                        [#--<a href="#documentation" class="nav-link" id="documentation-tab" data-toggle="tab" role="tab" aria-controls="documentation" aria-selected="false">DOCUMENTATION</a>--]
+                    [#--</li>--]
+                [#--</ul>--]
+            [#--</div>--]
+            [#--[/#if]--]
+            [#--<div class="tab-content " id="navTabsContent">--]
+                [#--<div id="api" class="tab-pane fade show active" role="tabpanel" aria-labelledby="api-tab">--]
+                    [#--<div class="container-fluid">--]
+                        [#--<div class="row">--]
+                            [#--<div class="col-3 pb-3">--]
+                                [#--<h4>Contents</h4>--]
+                                [#--<div class="list-group" id="api-menu" role="tablist">--]
+                                    [#--[#list application.resources as resource]--]
+                                        [#--[#assign apiId = utils.makeId(resource.displayName)/]--]
+                                        [#--<a href=#${apiId} class="list-group-item list-group-item-action" id="${apiId}-list" data-toggle="list" aria-controls="${apiId}">${resource.displayName}</a>--]
+                                    [#--[/#list]--]
+                                [#--</div>--]
+                            [#--</div>--]
+                            [#--<div class="col-9">--]
+                                [#--<div class="tab-content" id="api-contents-tab">--]
+                                [#--[#list application.resources as resource]--]
+                                    [#--[#assign apiId = utils.makeId(resource.displayName)/]--]
+                                    [#--<div class="tab-pane fade" id="${apiId}" role="tabpanel" aria-labelledby="${apiId}-list">--]
+                                        [#--[@api.printResource resource/]--]
+                                    [#--</div>--]
+                                [#--[/#list]--]
+                                [#--</div>--]
+                            [#--</div>--]
+                        [#--</div>--]
+                    [#--</div>--]
+                [#--</div>--]
+                [#--[#if application.documentation?has_content]--]
+                [#--<div id="documentation" class="tab-pane fade" role="tabpanel" aria-labelledby="documentation-tab">--]
+                    [#--<div class="container">--]
+                        [#--<div class="row">--]
+                            [#--<div class="col-3">--]
+                                [#--<h4>Contents</h4>--]
+                                [#--<div class="list-group" id="documentation-menu" role="tablist">--]
+                                    [#--[#list application.documentation as item]--]
+                                    [#--[#assign documentId = utils.makeId(item.title)/]--]
+
+                                    [#--<a href="#${documentId}" class="list-group-item list-group-item-action" id="${documentId}-list" data-toggle="list" aria-controls="${documentId}">${item.title}</a>--]
+                                    [#--[/#list]--]
+                                [#--</div>--]
+                            [#--</div>--]
+                            [#--<div class="col-9">--]
+                                [#--<div class="tab-content" id="documentation-contents-tab">--]
+                                    [#--[#list application.documentation as item]--]
+                                        [#--[#assign documentId = utils.makeId(item.title)/]--]
+                                        [#--<div class="tab-pane fade" id="${documentId}" role="tabpanel" aria-labelledby="${documentId}-list">--]
+                                            [#--<h1 class="font-weight-bold border-bottom">${item.title}</h1>--]
+                                            [#--<div id="${documentId}">--]
+                                                [#--${item.contentHtml}--]
+                                            [#--</div>--]
+                                        [#--</div>--]
+                                    [#--[/#list]--]
+                                [#--</div>--]
+                            [#--</div>--]
+                        [#--</div>--]
+
+                    [#--</div>--]
+                [#--</div>--]
+                [#--[/#if]--]
+            [#--</div>--]
         </div>
         <div class="d-block d-lg-none">
             <div class="container border bg-primary">

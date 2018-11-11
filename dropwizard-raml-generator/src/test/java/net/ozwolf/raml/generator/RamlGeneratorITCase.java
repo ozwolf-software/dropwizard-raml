@@ -30,6 +30,7 @@ public class RamlGeneratorITCase {
         RamlMedia.instance().reset();
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     public void shouldGenerateValidRAML() throws RamlGenerationException, IOException, JSONException {
         RamlGenerator generator = new RamlGenerator("net.ozwolf.raml.test", "1.2.3");
@@ -61,4 +62,6 @@ public class RamlGeneratorITCase {
 
     private static class Raml extends TypeReference<Map<String, Object>> {
     }
+
+
 }

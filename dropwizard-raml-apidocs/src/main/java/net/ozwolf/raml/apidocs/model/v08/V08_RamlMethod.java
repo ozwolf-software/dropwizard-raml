@@ -6,9 +6,11 @@ import org.raml.v2.api.model.v08.system.types.StringType;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
 import static java.util.stream.Collectors.toList;
 
 public class V08_RamlMethod implements RamlMethod {
@@ -50,6 +52,13 @@ public class V08_RamlMethod implements RamlMethod {
 
     @Override
     public List<RamlResponse> getResponses() {
-        return method.responses().stream().map(V08_RamlResponse::new).sorted(Comparator.comparing(V08_RamlResponse::getStatus)).collect(toList());
+        Map<Integer, RamlResponse> responses = newHashMap();
+        method.responses().stream().map(V08_RamlResponse::new).forEach(r -> responses.put(r.getStatus(), r));
+        getSecurity().stream().flatMap(s -> s.getResponses().stream()).forEach(r -> {
+            if (!responses.containsKey(r.getStatus()))
+                responses.put(r.getStatus(), r);
+        });
+
+        return responses.values().stream().sorted(Comparator.comparing(RamlResponse::getStatus)).collect(toList());
     }
 }

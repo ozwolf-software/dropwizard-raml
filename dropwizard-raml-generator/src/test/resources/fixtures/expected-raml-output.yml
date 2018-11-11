@@ -197,6 +197,214 @@ traits:
             example: "{\r\n  \"reference\": \"abcakj1b4197fahb1\",\r\n  \"serviceName\"\
               : \"dropwizard-raml-example-service\",\r\n  \"message\": \"Resource\
               \ was not found\"\r\n}"
+/authors:
+  displayName: "Authors"
+  description: "manage and retrieve authors"
+  post:
+    description: "create a new author"
+    securedBy:
+    - "oauth2"
+    is:
+    - "validated"
+    - "has400"
+    body:
+      application/json:
+        schema: "{\r\n  \"$schema\" : \"http://json-schema.org/draft-04/schema#\"\
+          ,\r\n  \"title\" : \"Author Request\",\r\n  \"type\" : \"object\",\r\n \
+          \ \"additionalProperties\" : false,\r\n  \"description\" : \"a request to\
+          \ create or modify an author\",\r\n  \"properties\" : {\r\n    \"name\"\
+          \ : {\r\n      \"type\" : \"string\",\r\n      \"minLength\" : 1,\r\n  \
+          \    \"description\" : \"the name of the author\"\r\n    }\r\n  },\r\n \
+          \ \"required\" : [ \"name\" ]\r\n}"
+        example: "{\r\n  \"name\" : \"Tom Clancy\"\r\n}"
+    responses:
+      201:
+        description: "authors created successfully"
+        body:
+          application/json:
+            schema: "{\r\n  \"$schema\" : \"http://json-schema.org/draft-04/schema#\"\
+              ,\r\n  \"title\" : \"Author Response\",\r\n  \"type\" : \"object\",\r\
+              \n  \"additionalProperties\" : false,\r\n  \"description\" : \"an author\"\
+              ,\r\n  \"properties\" : {\r\n    \"self\" : {\r\n      \"type\" : \"\
+              string\",\r\n      \"description\" : \"the reference to this resource\"\
+              \r\n    },\r\n    \"id\" : {\r\n      \"type\" : \"integer\",\r\n  \
+              \    \"description\" : \"the author unique identifier\"\r\n    },\r\n\
+              \    \"name\" : {\r\n      \"type\" : \"string\",\r\n      \"description\"\
+              \ : \"the author's name\"\r\n    },\r\n    \"firstPublished\" : {\r\n\
+              \      \"oneOf\" : [ {\r\n        \"type\" : \"null\",\r\n        \"\
+              title\" : \"Not included\"\r\n      }, {\r\n        \"type\" : \"string\"\
+              ,\r\n        \"format\" : \"yyyy-MM-dd\"\r\n      } ],\r\n      \"description\"\
+              \ : \"the date the author was first published\"\r\n    },\r\n    \"\
+              bibliography\" : {\r\n      \"type\" : \"array\",\r\n      \"items\"\
+              \ : {\r\n        \"$ref\" : \"#/definitions/BookReferenceResponse\"\r\
+              \n      },\r\n      \"description\" : \"the bibliography of the author\"\
+              \r\n    }\r\n  },\r\n  \"required\" : [ \"self\", \"id\", \"name\",\
+              \ \"bibliography\" ],\r\n  \"definitions\" : {\r\n    \"BookReferenceResponse\"\
+              \ : {\r\n      \"type\" : \"object\",\r\n      \"additionalProperties\"\
+              \ : false,\r\n      \"description\" : \"a reference to an author resource\"\
+              ,\r\n      \"title\" : \"Book Reference Response\",\r\n      \"properties\"\
+              \ : {\r\n        \"href\" : {\r\n          \"type\" : \"string\",\r\n\
+              \          \"description\" : \"the reference to the book resource\"\r\
+              \n        },\r\n        \"id\" : {\r\n          \"type\" : \"integer\"\
+              ,\r\n          \"description\" : \"the book's id\"\r\n        },\r\n\
+              \        \"title\" : {\r\n          \"type\" : \"string\",\r\n     \
+              \     \"description\" : \"the book's title\"\r\n        }\r\n      },\r\
+              \n      \"required\" : [ \"href\", \"id\", \"title\" ]\r\n    }\r\n\
+              \  }\r\n}"
+            example: "{\r\n  \"self\" : \"/authors/1\",\r\n  \"id\" : 1,\r\n  \"name\"\
+              \ : \"John Smith\",\r\n  \"firstPublished\" : \"2018-01-01\",\r\n  \"\
+              bibliography\" : [ {\r\n    \"href\" : \"/books/1\",\r\n    \"id\" :\
+              \ 1,\r\n    \"title\" : \"My First Book\"\r\n  }, {\r\n    \"href\"\
+              \ : \"/books/2\",\r\n    \"id\" : 2,\r\n    \"title\" : \"Beyond\"\r\
+              \n  } ]\r\n}"
+        headers:
+          Location:
+            description: "the location of the newly created resource"
+            type: "string"
+            required: true
+  /{id}:
+    description: "retrieve and update an author"
+    uriParameters:
+      id:
+        description: "the author id"
+        type: "integer"
+        required: true
+    put:
+      description: "update an author"
+      securedBy:
+      - "oauth2"
+      - "user-token"
+      is:
+      - "validated"
+      - "has400"
+      body:
+        application/json:
+          schema: "{\r\n  \"$schema\" : \"http://json-schema.org/draft-04/schema#\"\
+            ,\r\n  \"title\" : \"Author Request\",\r\n  \"type\" : \"object\",\r\n\
+            \  \"additionalProperties\" : false,\r\n  \"description\" : \"a request\
+            \ to create or modify an author\",\r\n  \"properties\" : {\r\n    \"name\"\
+            \ : {\r\n      \"type\" : \"string\",\r\n      \"minLength\" : 1,\r\n\
+            \      \"description\" : \"the name of the author\"\r\n    }\r\n  },\r\
+            \n  \"required\" : [ \"name\" ]\r\n}"
+          example: "{\r\n  \"name\" : \"Tom Clancy\"\r\n}"
+      responses:
+        200:
+          description: "authors updated successfully"
+          body:
+            application/json:
+              schema: "{\r\n  \"$schema\" : \"http://json-schema.org/draft-04/schema#\"\
+                ,\r\n  \"title\" : \"Author Response\",\r\n  \"type\" : \"object\"\
+                ,\r\n  \"additionalProperties\" : false,\r\n  \"description\" : \"\
+                an author\",\r\n  \"properties\" : {\r\n    \"self\" : {\r\n     \
+                \ \"type\" : \"string\",\r\n      \"description\" : \"the reference\
+                \ to this resource\"\r\n    },\r\n    \"id\" : {\r\n      \"type\"\
+                \ : \"integer\",\r\n      \"description\" : \"the author unique identifier\"\
+                \r\n    },\r\n    \"name\" : {\r\n      \"type\" : \"string\",\r\n\
+                \      \"description\" : \"the author's name\"\r\n    },\r\n    \"\
+                firstPublished\" : {\r\n      \"oneOf\" : [ {\r\n        \"type\"\
+                \ : \"null\",\r\n        \"title\" : \"Not included\"\r\n      },\
+                \ {\r\n        \"type\" : \"string\",\r\n        \"format\" : \"yyyy-MM-dd\"\
+                \r\n      } ],\r\n      \"description\" : \"the date the author was\
+                \ first published\"\r\n    },\r\n    \"bibliography\" : {\r\n    \
+                \  \"type\" : \"array\",\r\n      \"items\" : {\r\n        \"$ref\"\
+                \ : \"#/definitions/BookReferenceResponse\"\r\n      },\r\n      \"\
+                description\" : \"the bibliography of the author\"\r\n    }\r\n  },\r\
+                \n  \"required\" : [ \"self\", \"id\", \"name\", \"bibliography\"\
+                \ ],\r\n  \"definitions\" : {\r\n    \"BookReferenceResponse\" : {\r\
+                \n      \"type\" : \"object\",\r\n      \"additionalProperties\" :\
+                \ false,\r\n      \"description\" : \"a reference to an author resource\"\
+                ,\r\n      \"title\" : \"Book Reference Response\",\r\n      \"properties\"\
+                \ : {\r\n        \"href\" : {\r\n          \"type\" : \"string\",\r\
+                \n          \"description\" : \"the reference to the book resource\"\
+                \r\n        },\r\n        \"id\" : {\r\n          \"type\" : \"integer\"\
+                ,\r\n          \"description\" : \"the book's id\"\r\n        },\r\
+                \n        \"title\" : {\r\n          \"type\" : \"string\",\r\n  \
+                \        \"description\" : \"the book's title\"\r\n        }\r\n \
+                \     },\r\n      \"required\" : [ \"href\", \"id\", \"title\" ]\r\
+                \n    }\r\n  }\r\n}"
+              example: "{\r\n  \"self\" : \"/authors/1\",\r\n  \"id\" : 1,\r\n  \"\
+                name\" : \"John Smith\",\r\n  \"firstPublished\" : \"2018-01-01\"\
+                ,\r\n  \"bibliography\" : [ {\r\n    \"href\" : \"/books/1\",\r\n\
+                \    \"id\" : 1,\r\n    \"title\" : \"My First Book\"\r\n  }, {\r\n\
+                \    \"href\" : \"/books/2\",\r\n    \"id\" : 2,\r\n    \"title\"\
+                \ : \"Beyond\"\r\n  } ]\r\n}"
+    get:
+      description: "retrieve an author"
+      is:
+      - "has404"
+      responses:
+        200:
+          description: "author retrieved successfully"
+          body:
+            application/json:
+              schema: "{\r\n  \"$schema\" : \"http://json-schema.org/draft-04/schema#\"\
+                ,\r\n  \"title\" : \"Author Response\",\r\n  \"type\" : \"object\"\
+                ,\r\n  \"additionalProperties\" : false,\r\n  \"description\" : \"\
+                an author\",\r\n  \"properties\" : {\r\n    \"self\" : {\r\n     \
+                \ \"type\" : \"string\",\r\n      \"description\" : \"the reference\
+                \ to this resource\"\r\n    },\r\n    \"id\" : {\r\n      \"type\"\
+                \ : \"integer\",\r\n      \"description\" : \"the author unique identifier\"\
+                \r\n    },\r\n    \"name\" : {\r\n      \"type\" : \"string\",\r\n\
+                \      \"description\" : \"the author's name\"\r\n    },\r\n    \"\
+                firstPublished\" : {\r\n      \"oneOf\" : [ {\r\n        \"type\"\
+                \ : \"null\",\r\n        \"title\" : \"Not included\"\r\n      },\
+                \ {\r\n        \"type\" : \"string\",\r\n        \"format\" : \"yyyy-MM-dd\"\
+                \r\n      } ],\r\n      \"description\" : \"the date the author was\
+                \ first published\"\r\n    },\r\n    \"bibliography\" : {\r\n    \
+                \  \"type\" : \"array\",\r\n      \"items\" : {\r\n        \"$ref\"\
+                \ : \"#/definitions/BookReferenceResponse\"\r\n      },\r\n      \"\
+                description\" : \"the bibliography of the author\"\r\n    }\r\n  },\r\
+                \n  \"required\" : [ \"self\", \"id\", \"name\", \"bibliography\"\
+                \ ],\r\n  \"definitions\" : {\r\n    \"BookReferenceResponse\" : {\r\
+                \n      \"type\" : \"object\",\r\n      \"additionalProperties\" :\
+                \ false,\r\n      \"description\" : \"a reference to an author resource\"\
+                ,\r\n      \"title\" : \"Book Reference Response\",\r\n      \"properties\"\
+                \ : {\r\n        \"href\" : {\r\n          \"type\" : \"string\",\r\
+                \n          \"description\" : \"the reference to the book resource\"\
+                \r\n        },\r\n        \"id\" : {\r\n          \"type\" : \"integer\"\
+                ,\r\n          \"description\" : \"the book's id\"\r\n        },\r\
+                \n        \"title\" : {\r\n          \"type\" : \"string\",\r\n  \
+                \        \"description\" : \"the book's title\"\r\n        }\r\n \
+                \     },\r\n      \"required\" : [ \"href\", \"id\", \"title\" ]\r\
+                \n    }\r\n  }\r\n}"
+              example: "{\r\n  \"self\" : \"/authors/1\",\r\n  \"id\" : 1,\r\n  \"\
+                name\" : \"John Smith\",\r\n  \"firstPublished\" : \"2018-01-01\"\
+                ,\r\n  \"bibliography\" : [ {\r\n    \"href\" : \"/books/1\",\r\n\
+                \    \"id\" : 1,\r\n    \"title\" : \"My First Book\"\r\n  }, {\r\n\
+                \    \"href\" : \"/books/2\",\r\n    \"id\" : 2,\r\n    \"title\"\
+                \ : \"Beyond\"\r\n  } ]\r\n}"
+  get:
+    description: "retrieve the list of authors"
+    responses:
+      200:
+        description: "authors retrieved successfully"
+        body:
+          application/json:
+            schema: "{\r\n  \"$schema\" : \"http://json-schema.org/draft-04/schema#\"\
+              ,\r\n  \"title\" : \"Authors Response\",\r\n  \"type\" : \"object\"\
+              ,\r\n  \"additionalProperties\" : false,\r\n  \"description\" : \"the\
+              \ collection of authors on record\",\r\n  \"properties\" : {\r\n   \
+              \ \"self\" : {\r\n      \"type\" : \"string\",\r\n      \"description\"\
+              \ : \"the reference to this resource\"\r\n    },\r\n    \"authors\"\
+              \ : {\r\n      \"type\" : \"array\",\r\n      \"items\" : {\r\n    \
+              \    \"$ref\" : \"#/definitions/AuthorReferenceResponse\"\r\n      },\r\
+              \n      \"description\" : \"the list of all authors\"\r\n    }\r\n \
+              \ },\r\n  \"required\" : [ \"self\", \"authors\" ],\r\n  \"definitions\"\
+              \ : {\r\n    \"AuthorReferenceResponse\" : {\r\n      \"type\" : \"\
+              object\",\r\n      \"additionalProperties\" : false,\r\n      \"description\"\
+              \ : \"a reference to an author resource\",\r\n      \"title\" : \"Author\
+              \ Resource Reference\",\r\n      \"properties\" : {\r\n        \"href\"\
+              \ : {\r\n          \"type\" : \"string\",\r\n          \"description\"\
+              \ : \"the reference to the author resource\"\r\n        },\r\n     \
+              \   \"id\" : {\r\n          \"type\" : \"integer\",\r\n          \"\
+              description\" : \"the author identifier\"\r\n        },\r\n        \"\
+              name\" : {\r\n          \"type\" : \"string\",\r\n          \"description\"\
+              \ : \"the name of the author\"\r\n        }\r\n      },\r\n      \"\
+              required\" : [ \"href\", \"id\", \"name\" ]\r\n    }\r\n  }\r\n}"
+            example: "{\r\n  \"self\" : \"/authors\",\r\n  \"authors\" : [ {\r\n \
+              \   \"href\" : \"/authors/1\",\r\n    \"id\" : 1,\r\n    \"name\" :\
+              \ \"John Smith\"\r\n  }, {\r\n    \"href\" : \"/authors/2\",\r\n   \
+              \ \"id\" : 2,\r\n    \"name\" : \"Joan Valiant\"\r\n  } ]\r\n}"
 /books:
   displayName: "Books"
   description: "manage books"
@@ -263,16 +471,16 @@ traits:
         schema: "{\r\n  \"$schema\" : \"http://json-schema.org/draft-04/schema#\"\
           ,\r\n  \"title\" : \"Book Request\",\r\n  \"type\" : \"object\",\r\n  \"\
           additionalProperties\" : false,\r\n  \"properties\" : {\r\n    \"title\"\
-          \ : {\r\n      \"type\" : \"string\",\r\n  \
-          \    \"description\" : \"the title of the book\"\r\n    },\r\n    \"genre\"\
-          \ : {\r\n      \"type\" : \"string\",\r\n      \"enum\" : [ \"Horror\",\
-          \ \"SciFi\", \"Fantasy\", \"Romance\", \"Action\", \"NonFiction\" ],\r\n\
-          \      \"description\" : \"the genre of the book\"\r\n    },\r\n    \"publishDate\"\
-          \ : {\r\n      \"type\" : \"string\",\r\n      \"format\" : \"yyyy-MM-dd\"\
-          ,\r\n      \"description\" : \"the date the book was published\"\r\n   \
-          \ },\r\n    \"authorId\" : {\r\n      \"type\" : \"integer\",\r\n      \"\
-          description\" : \"the id of the author\"\r\n    }\r\n  },\r\n  \"required\"\
-          \ : [ \"title\", \"genre\", \"publishDate\", \"authorId\" ]\r\n}"
+          \ : {\r\n      \"type\" : \"string\",\r\n      \"description\" : \"the title\
+          \ of the book\"\r\n    },\r\n    \"genre\" : {\r\n      \"type\" : \"string\"\
+          ,\r\n      \"enum\" : [ \"Horror\", \"SciFi\", \"Fantasy\", \"Romance\"\
+          , \"Action\", \"NonFiction\" ],\r\n      \"description\" : \"the genre of\
+          \ the book\"\r\n    },\r\n    \"publishDate\" : {\r\n      \"type\" : \"\
+          string\",\r\n      \"format\" : \"yyyy-MM-dd\",\r\n      \"description\"\
+          \ : \"the date the book was published\"\r\n    },\r\n    \"authorId\" :\
+          \ {\r\n      \"type\" : \"integer\",\r\n      \"description\" : \"the id\
+          \ of the author\"\r\n    }\r\n  },\r\n  \"required\" : [ \"title\", \"genre\"\
+          , \"publishDate\", \"authorId\" ]\r\n}"
         example: "{\r\n  \"title\" : \"Beyond the Stars\",\r\n  \"genre\" : \"SciFi\"\
           ,\r\n  \"publishDate\" : \"2017-06-01\",\r\n  \"authorId\" : 1\r\n}"
     responses:
@@ -375,102 +583,11 @@ traits:
         required: true
     get:
       description: "download a book in PDF format"
+      securedBy:
+      - "oauth2"
+      - "user-token"
       responses:
         200:
           description: "auto generated responses"
           body:
             application/pdf: {}
-/authors:
-  displayName: "Authors"
-  description: "manage and retrieve authors"
-  post:
-    description: "create a new author"
-    securedBy:
-    - "oauth2"
-    is:
-    - "validated"
-    - "has400"
-    body:
-      application/json:
-        schema: "{\r\n  \"$schema\" : \"http://json-schema.org/draft-04/schema#\"\
-          ,\r\n  \"title\" : \"Author Request\",\r\n  \"type\" : \"object\",\r\n \
-          \ \"additionalProperties\" : false,\r\n  \"description\" : \"a request to\
-          \ create or modify an author\",\r\n  \"properties\" : {\r\n    \"name\"\
-          \ : {\r\n      \"type\" : \"string\",\r\n      \"minLength\" : 1,\r\n      \"description\" : \"the name\
-          \ of the author\"\r\n    }\r\n  },\r\n  \"required\" : [ \"name\" ]\r\n}"
-        example: "{\r\n  \"name\" : \"Tom Clancy\"\r\n}"
-    responses:
-      201:
-        description: "authors created successfully"
-        body:
-          application/json:
-            schema: "{\r\n  \"$schema\" : \"http://json-schema.org/draft-04/schema#\"\
-              ,\r\n  \"title\" : \"Author Response\",\r\n  \"type\" : \"object\",\r\
-              \n  \"additionalProperties\" : false,\r\n  \"description\" : \"an author\"\
-              ,\r\n  \"properties\" : {\r\n    \"self\" : {\r\n      \"type\" : \"\
-              string\",\r\n      \"description\" : \"the reference to this resource\"\
-              \r\n    },\r\n    \"id\" : {\r\n      \"type\" : \"integer\",\r\n  \
-              \    \"description\" : \"the author unique identifier\"\r\n    },\r\n\
-              \    \"name\" : {\r\n      \"type\" : \"string\",\r\n      \"description\"\
-              \ : \"the author's name\"\r\n    },\r\n    \"firstPublished\" : {\r\n\
-              \      \"type\" : \"string\",\r\n      \"format\" : \"yyyy-MM-dd\",\r\
-              \n      \"description\" : \"the date the author was first published\"\
-              \r\n    },\r\n    \"bibliography\" : {\r\n      \"type\" : \"array\"\
-              ,\r\n      \"items\" : {\r\n        \"$ref\" : \"#/definitions/BookReferenceResponse\"\
-              \r\n      },\r\n      \"description\" : \"the bibliography of the author\"\
-              \r\n    }\r\n  },\r\n  \"required\" : [ \"self\", \"id\", \"name\",\
-              \ \"bibliography\" ],\r\n  \"definitions\" : {\r\n    \"BookReferenceResponse\"\
-              \ : {\r\n      \"type\" : \"object\",\r\n      \"additionalProperties\"\
-              \ : false,\r\n      \"description\" : \"a reference to an author resource\"\
-              ,\r\n      \"title\" : \"Book Reference Response\",\r\n      \"properties\"\
-              \ : {\r\n        \"href\" : {\r\n          \"type\" : \"string\",\r\n\
-              \          \"description\" : \"the reference to the book resource\"\r\
-              \n        },\r\n        \"id\" : {\r\n          \"type\" : \"integer\"\
-              ,\r\n          \"description\" : \"the book's id\"\r\n        },\r\n\
-              \        \"title\" : {\r\n          \"type\" : \"string\",\r\n     \
-              \     \"description\" : \"the book's title\"\r\n        }\r\n      },\r\
-              \n      \"required\" : [ \"href\", \"id\", \"title\" ]\r\n    }\r\n\
-              \  }\r\n}"
-            example: "{\r\n  \"self\" : \"/authors/1\",\r\n  \"id\" : 1,\r\n  \"name\"\
-              \ : \"John Smith\",\r\n  \"firstPublished\" : \"2018-01-01\",\r\n  \"\
-              bibliography\" : [ {\r\n    \"href\" : \"/books/1\",\r\n    \"id\" :\
-              \ 1,\r\n    \"title\" : \"My First Book\"\r\n  }, {\r\n    \"href\"\
-              \ : \"/books/2\",\r\n    \"id\" : 2,\r\n    \"title\" : \"Beyond\"\r\
-              \n  } ]\r\n}"
-        headers:
-          Location:
-            description: "the location of the newly created resource"
-            type: "string"
-            required: true
-  get:
-    description: "retrieve the list of authors"
-    responses:
-      200:
-        description: "authors retrieved successfully"
-        body:
-          application/json:
-            schema: "{\r\n  \"$schema\" : \"http://json-schema.org/draft-04/schema#\"\
-              ,\r\n  \"title\" : \"Authors Response\",\r\n  \"type\" : \"object\"\
-              ,\r\n  \"additionalProperties\" : false,\r\n  \"description\" : \"the\
-              \ collection of authors on record\",\r\n  \"properties\" : {\r\n   \
-              \ \"self\" : {\r\n      \"type\" : \"string\",\r\n      \"description\"\
-              \ : \"the reference to this resource\"\r\n    },\r\n    \"authors\"\
-              \ : {\r\n      \"type\" : \"array\",\r\n      \"items\" : {\r\n    \
-              \    \"$ref\" : \"#/definitions/AuthorReferenceResponse\"\r\n      },\r\
-              \n      \"description\" : \"the list of all authors\"\r\n    }\r\n \
-              \ },\r\n  \"required\" : [ \"self\", \"authors\" ],\r\n  \"definitions\"\
-              \ : {\r\n    \"AuthorReferenceResponse\" : {\r\n      \"type\" : \"\
-              object\",\r\n      \"additionalProperties\" : false,\r\n      \"description\"\
-              \ : \"a reference to an author resource\",\r\n      \"title\" : \"Author\
-              \ Resource Reference\",\r\n      \"properties\" : {\r\n        \"href\"\
-              \ : {\r\n          \"type\" : \"string\",\r\n          \"description\"\
-              \ : \"the reference to the author resource\"\r\n        },\r\n     \
-              \   \"id\" : {\r\n          \"type\" : \"integer\",\r\n          \"\
-              description\" : \"the author identifier\"\r\n        },\r\n        \"\
-              name\" : {\r\n          \"type\" : \"string\",\r\n          \"description\"\
-              \ : \"the name of the author\"\r\n        }\r\n      },\r\n      \"\
-              required\" : [ \"href\", \"id\", \"name\" ]\r\n    }\r\n  }\r\n}"
-            example: "{\r\n  \"self\" : \"/authors\",\r\n  \"authors\" : [ {\r\n \
-              \   \"href\" : \"/authors/1\",\r\n    \"id\" : 1,\r\n    \"name\" :\
-              \ \"John Smith\"\r\n  }, {\r\n    \"href\" : \"/authors/2\",\r\n   \
-              \ \"id\" : 2,\r\n    \"name\" : \"Joan Valiant\"\r\n  } ]\r\n}"
