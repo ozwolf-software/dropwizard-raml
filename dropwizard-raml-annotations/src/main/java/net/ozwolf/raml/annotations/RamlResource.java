@@ -26,4 +26,13 @@ public @interface RamlResource {
      * @return the resource description
      */
     String description();
+
+    /**
+     * Define a display order for your documentation.
+     *
+     * If resources are found with the same display order, they will be sorted alphabetically in the API docs view.
+     *
+     * @return the resource display order
+     */
+    int displayOrder() default 999999;
 }

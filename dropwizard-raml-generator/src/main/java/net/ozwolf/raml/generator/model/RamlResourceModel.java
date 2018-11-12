@@ -15,6 +15,7 @@ public class RamlResourceModel {
     private final String path;
     private final String displayName;
     private final String description;
+    private final int displayOrder;
     private final Map<String, RamlParameterModel> uriParameters;
     private final Map<String, RamlMethodModel> methods;
     private final Map<String, RamlResourceModel> resources;
@@ -22,10 +23,12 @@ public class RamlResourceModel {
     public RamlResourceModel(String path,
                              String displayName,
                              String description,
+                             int displayOrder,
                              Map<String, RamlParameterModel> uriParameters) {
         this.path = path;
         this.displayName = displayName;
         this.description = description;
+        this.displayOrder = displayOrder;
         this.uriParameters = uriParameters;
         this.methods = newHashMap();
         this.resources = newHashMap();
@@ -44,6 +47,11 @@ public class RamlResourceModel {
     @JsonProperty("description")
     public String getDescription() {
         return description;
+    }
+
+    @JsonIgnore
+    public int getDisplayOrder() {
+        return displayOrder;
     }
 
     @JsonProperty("uriParameters")

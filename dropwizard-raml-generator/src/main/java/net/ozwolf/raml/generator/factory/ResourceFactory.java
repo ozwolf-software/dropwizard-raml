@@ -47,7 +47,7 @@ public class ResourceFactory {
         Map<String, RamlParameterModel> uriParameters = newHashMap();
         parametersFactory.getUriParameters(resource, p -> uriParameters.put(p.getName(), p), e);
 
-        RamlResourceModel model = new RamlResourceModel(path.value(), annotation.displayName(), annotation.description(), uriParameters);
+        RamlResourceModel model = new RamlResourceModel(path.value(), annotation.displayName(), annotation.description(), annotation.displayOrder(), uriParameters);
 
         Map<Path, List<Method>> methods = newHashMap();
         Arrays.stream(resource.getMethods())
@@ -82,7 +82,7 @@ public class ResourceFactory {
         Map<String, RamlParameterModel> uriParameters = newHashMap();
         parametersFactory.getUriParameters(resource, path, p -> uriParameters.put(p.getName(), p), e);
 
-        RamlResourceModel model = new RamlResourceModel(path.value(), null, description, uriParameters);
+        RamlResourceModel model = new RamlResourceModel(path.value(), null, description, 999999, uriParameters);
 
         methods.forEach(m -> methodFactory.getMethod(m, model::addMethod, e));
 

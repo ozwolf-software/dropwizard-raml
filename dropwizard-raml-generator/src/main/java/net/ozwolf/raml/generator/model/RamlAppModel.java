@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.ozwolf.raml.annotations.RamlApp;
 import net.ozwolf.raml.annotations.RamlSecurityScheme;
 import net.ozwolf.raml.annotations.RamlTrait;
-import net.ozwolf.raml.generator.exception.RamlGenerationError;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Maps.newLinkedHashMap;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -36,9 +35,7 @@ public class RamlAppModel {
     private final Map<String, RamlSecurityModel> securitySchemes;
     private final Map<String, RamlDescribedByModel> traits;
 
-    private final Map<String, RamlResourceModel> resources;
-
-    private final List<RamlGenerationError> errors;
+    private final List<RamlResourceModel> resources;
 
     public RamlAppModel(String version,
                         RamlApp annotation) {
@@ -51,9 +48,7 @@ public class RamlAppModel {
         this.securitySchemes = Arrays.stream(annotation.security()).collect(toMap(RamlSecurityScheme::key, RamlSecurityModel::new));
         this.traits = Arrays.stream(annotation.traits()).collect(toMap(RamlTrait::key, a -> new RamlDescribedByModel(a.describedBy())));
 
-        this.resources = newHashMap();
-
-        this.errors = newArrayList();
+        this.resources = newArrayList();
     }
 
     @JsonProperty("title")
@@ -98,10 +93,22 @@ public class RamlAppModel {
 
     @JsonAnyGetter
     public Map<String, RamlResourceModel> getResources() {
-        return resources;
+        Map<String, RamlResourceModel> result = newLinkedHashMap();
+
+        this.resources.stream()
+                .sorted((r1, r2) -> {
+                    int c1 = r1.getDisplayOrder() - r2.getDisplayOrder();
+                    if (c1 != 0)
+                        return c1;
+
+                    return r1.getDisplayName().compareTo(r2.getDisplayName());
+                })
+                .forEach(r -> result.put(r.getPath(), r));
+
+        return result;
     }
 
-    public void addResource(RamlResourceModel model){
-        this.resources.put(model.getPath(), model);
+    public void addResource(RamlResourceModel model) {
+        this.resources.add(model);
     }
 }

@@ -18,7 +18,7 @@
                     </button>
                 </div>
                 <div class="modal-body p-3">
-                    <pre class="border border-secondary p-1">${content}</pre>
+                    <pre class="border border-secondary p-1">${content?esc}</pre>
                 </div>
             </div>
         </div>
