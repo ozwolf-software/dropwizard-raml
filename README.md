@@ -8,7 +8,7 @@ During this time, this private project expanded with tools and plugins that were
 
 ## Documentation
 
-Please refer to the [documentation](./_docs) for information on using the tools in this project.
+Please refer to the [wiki](./wiki) for information on using the tools in this project.
 
 **Note:** The documentation of this project is an ongoing task.  If you feel something is fundamentally missing from it, please raise an issue with a suggestion.
 
