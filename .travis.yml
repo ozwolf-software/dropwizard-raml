@@ -14,6 +14,7 @@ env:
     - secure: GA2ipT8YgyYl/Xjv05dqbQ6k/sBdA+fEGQSJcIZc655mEdZtZrXr/iKcZ1CH/P5CsjXw+j/syw7xUDn60YgqjiD+lqqKjNQKJHKlQ/i1QW6hEDPYGmXU1HdnK/uR0Yj7cdHCCFZGC69H75ZIsfmGY3yNCy04wjmyF7lLwOShCtrMbnzNWYUU8bA2rqJvKJ+OHAILy7T+AhweXMT7f4qWzXadiIOsTGYToEx+OVZfOda8svwq4Qe7FC8nxxoFS3rLO97Bfvvxe90wLvi3UCe99pak5PpjrX4Y2rThXURDlwuZAqHmpMpAsvaqVqtqRcnS4dn+x04ktQruvxQJyNe34SjZsbmm9Hg24/QXTvwh84BNxYOTyYVUShEdjQ0Hckiu4mfLVMFtxDEDOKFjwfg+I7m2UTXnbpqUNLAJEM/CJvFljwNcyEe31/eLh8UOdrMYBj1yEg4JsnjbCTKZryb5D6yqtSzZdCPiVLRKT8CafjhsRBR0mlCohPqEcerWyR8/w+sEEOP8ozXXc84l9qoI1bpBrZ0caWFGc13qyudG2fk7hysT4Ln8wm3YKVc53NDV484YdrXvscGzbqFvkLI31Pv69nN5nQGGXBOG/co4b9ybfQjd5k4N4AJdvTqo/gn82rmBeDC2LUddyvNwf0MYDCf5DKXxX2R4+xbuBe8Ly0M=
 
 before_script:
+  - echo "$ENCRYPTION_PASSWORD"
   - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/pubring.gpg.enc -out $GPG_DIR/pubring.gpg -d
   - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/secring.gpg.enc -out $GPG_DIR/secring.gpg -d
 script:
