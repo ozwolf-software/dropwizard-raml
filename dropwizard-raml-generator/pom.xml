@@ -5,7 +5,7 @@
     <parent>
         <artifactId>dropwizard-raml</artifactId>
         <groupId>net.ozwolf</groupId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -25,15 +25,11 @@
         </dependency>
         <dependency>
             <groupId>com.kjetland</groupId>
-            <artifactId>mbknor-jackson-jsonschema_2.12</artifactId>
+            <artifactId>mbknor-jackson-jsonschema_2.11</artifactId>
         </dependency>
         <dependency>
             <groupId>org.raml</groupId>
             <artifactId>raml-parser-2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.validation</groupId>
