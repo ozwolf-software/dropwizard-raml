@@ -8,6 +8,10 @@ This project started as a way to better learn how [RAML](https://raml.org) and J
 
 During this time, this private project expanded with tools and plugins that were suitable for integrating RAML specification generating and usage with a DropWizard micro service.
 
+## DropWizard Compatibility
+
++ `1.0.0+` - DropWizard 1.3+
+
 ## Documentation
 
 Please refer to the [wiki](https://github.com/ozwolf-software/dropwizard-raml/wiki) for information on using the tools in this project.
