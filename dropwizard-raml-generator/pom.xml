@@ -91,4 +91,47 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/javadoc</directory>
+                <filtering>true</filtering>
+                <targetPath>../javadoc</targetPath>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${javadoc.plugin.version}</version>
+                <configuration>
+                    <doclet>ch.raffael.mddoclet.MarkdownDoclet</doclet>
+                    <docletArtifact>
+                        <groupId>ch.raffael.markdown-doclet</groupId>
+                        <artifactId>markdown-doclet</artifactId>
+                        <version>1.4</version>
+                    </docletArtifact>
+                    <useStandardDocletOptions>true</useStandardDocletOptions>
+                    <doctitle>DropWizard RAML Generator (Version ${project.version})</doctitle>
+                    <windowtitle>DropWizard RAML Generator (Version ${project.version})</windowtitle>
+                    <version>true</version>
+                    <overview>${basedir}/target/javadoc/overview.md</overview>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>javadoc</id>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

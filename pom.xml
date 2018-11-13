@@ -238,6 +238,11 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
+            <resource>
+                <directory>src/main/javadoc</directory>
+                <filtering>true</filtering>
+                <targetPath>../javadoc</targetPath>
+            </resource>
         </resources>
         <plugins>
             <plugin>
@@ -281,6 +286,10 @@
                         <version>1.4</version>
                     </docletArtifact>
                     <useStandardDocletOptions>true</useStandardDocletOptions>
+                    <doctitle>DropWizard RAML (Version ${project.version})</doctitle>
+                    <windowtitle>DropWizard RAML (Version ${project.version})</windowtitle>
+                    <version>true</version>
+                    <overview>${basedir}/target/javadoc/overview.md</overview>
                 </configuration>
                 <executions>
                     <execution>

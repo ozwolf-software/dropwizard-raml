@@ -16,9 +16,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * This bundle will add the following resources under your service:
  *
- * + `/apidocs` - the machine-output of your RAML specification
- * + `GET application/json` - will return an easily parseable JSON format of the specification
- * + `GET text/yaml` - will return the full RAML specification
+ * + `/apidocs` - the human-readable of your RAML specification
  *
  * The RAML can either be read from a specific YAML file or generated from source by providing a package and a version number.
  */
