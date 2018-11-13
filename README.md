@@ -1,5 +1,7 @@
 # DropWizard RAML
 
+[![Travis](https://img.shields.io/travis/ozwolf-software/dropwizard-raml.svg?style=flat-square)](https://travis-ci.org/ozwolf-software/dropwizard-raml)
+[![Maven Central](https://img.shields.io/maven-central/v/net.ozwolf/dropwizard-raml.svg?style=flat-square)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22net.ozwolf%22%20AND%20a%3A%22dropwizard-raml%22)
 [![Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](LICENSE)
 
 This project started as a way to better learn how [RAML](https://raml.org) and JAX-RS could integrate together (before MuleSoft released the [RAML for JAX-RS](https://github.com/mulesoft-labs/raml-for-jax-rs) project).

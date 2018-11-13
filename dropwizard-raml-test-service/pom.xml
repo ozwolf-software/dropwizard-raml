@@ -13,6 +13,10 @@
     <name>DropWizard RAML Example Service</name>
     <description>An example DropWizard service with full RAML specification annotations.</description>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>net.ozwolf</groupId>

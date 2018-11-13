@@ -13,10 +13,6 @@
     <name>DropWizard RAML Generator</name>
     <description>Library to generat RAML documentation from a DropWizard JAX-RS application.</description>
 
-    <properties>
-        <maven.deploy.skip>false</maven.deploy.skip>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>net.ozwolf</groupId>

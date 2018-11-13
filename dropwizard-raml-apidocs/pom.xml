@@ -14,7 +14,6 @@
     <description>DropWizard bundle designed for displaying RAML API documentation in a human-readable format.</description>
 
     <properties>
-        <maven.deploy.skip>false</maven.deploy.skip>
         <code.coverage>0.40</code.coverage>
     </properties>
 

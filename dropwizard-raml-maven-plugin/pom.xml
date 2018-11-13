@@ -15,7 +15,6 @@
     <description>A Maven plugin for generating RAML specifications from code during the Maven build pipeline.</description>
 
     <properties>
-        <maven.deploy.skip>false</maven.deploy.skip>
         <code.coverage>0.40</code.coverage>
     </properties>
 
