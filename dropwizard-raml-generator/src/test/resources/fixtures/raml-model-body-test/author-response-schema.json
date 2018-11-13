@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Author Response",
+  "type": "object",
+  "additionalProperties": false,
+  "description": "an author",
+  "properties": {
+    "self": {
+      "type": "string",
+      "description": "the reference to this resource"
+    },
+    "id": {
+      "type": "integer",
+      "description": "the author unique identifier"
+    },
+    "name": {
+      "type": "string",
+      "description": "the author's name"
+    },
+    "firstPublished": {
+      "oneOf": [
+        {
+          "type": "null",
+          "title": "Not included"
+        },
+        {
+          "type": "string",
+          "format": "yyyy-MM-dd"
+        }
+      ],
+      "description": "the date the author was first published"
+    },
+    "bibliography": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BookReferenceResponse"
+      },
+      "description": "the bibliography of the author"
+    }
+  },
+  "required": [
+    "self",
+    "id",
+    "name",
+    "bibliography"
+  ],
+  "definitions": {
+    "BookReferenceResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "a reference to an author resource",
+      "title": "Book Reference Response",
+      "properties": {
+        "href": {
+          "type": "string",
+          "description": "the reference to the book resource"
+        },
+        "id": {
+          "type": "integer",
+          "description": "the book's id"
+        },
+        "title": {
+          "type": "string",
+          "description": "the book's title"
+        }
+      },
+      "required": [
+        "href",
+        "id",
+        "title"
+      ]
+    }
+  }
+}

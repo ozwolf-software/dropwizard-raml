@@ -1,0 +1,13 @@
+{
+  "self": "/books/1",
+  "download": "/books/1/download",
+  "id": 1,
+  "title": "Book 1: How to RAML",
+  "genre": "NonFiction",
+  "publishDate": "2018-05-20",
+  "author": {
+    "href": "/authors/1",
+    "id": 1,
+    "name": "John Smith"
+  }
+}

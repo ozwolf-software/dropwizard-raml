@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Book Response",
+  "type": "object",
+  "additionalProperties": false,
+  "description": "a book",
+  "properties": {
+    "self": {
+      "type": "string",
+      "description": "the reference to this resource"
+    },
+    "download": {
+      "type": "string",
+      "description": "the reference to the download resource"
+    },
+    "id": {
+      "type": "integer",
+      "description": "the book unique id"
+    },
+    "title": {
+      "type": "string",
+      "description": "the title of the book"
+    },
+    "genre": {
+      "type": "string",
+      "enum": [
+        "Horror",
+        "SciFi",
+        "Fantasy",
+        "Romance",
+        "Action",
+        "NonFiction"
+      ],
+      "description": "the book genre"
+    },
+    "publishDate": {
+      "type": "string",
+      "format": "yyyy-MM-dd",
+      "description": "the date the book was published"
+    },
+    "author": {
+      "$ref": "#/definitions/AuthorReferenceResponse",
+      "description": "the author of the book"
+    }
+  },
+  "required": [
+    "self",
+    "download",
+    "id",
+    "title",
+    "genre",
+    "publishDate",
+    "author"
+  ],
+  "definitions": {
+    "AuthorReferenceResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "a reference to an author resource",
+      "title": "Author Resource Reference",
+      "properties": {
+        "href": {
+          "type": "string",
+          "description": "the reference to the author resource"
+        },
+        "id": {
+          "type": "integer",
+          "description": "the author identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "the name of the author"
+        }
+      },
+      "required": [
+        "href",
+        "id",
+        "name"
+      ]
+    }
+  }
+}

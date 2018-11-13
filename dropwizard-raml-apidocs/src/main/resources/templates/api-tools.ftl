@@ -1,4 +1,4 @@
-[#ftl auto_esc=false]
+[#ftl output_format="HTML" auto_esc=false]
 
 [#import "utility-tools.ftl" as utils/]
 
@@ -18,7 +18,7 @@
                     </button>
                 </div>
                 <div class="modal-body p-3">
-                    <pre class="border border-secondary p-1">${content?esc}</pre>
+                    <pre class="border border-secondary p-1">[#autoesc]${content}[/#autoesc]</pre>
                 </div>
             </div>
         </div>

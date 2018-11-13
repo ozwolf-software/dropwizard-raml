@@ -2,8 +2,6 @@
 
 A library to provide a common set of annotations to help extend the describing of a Jersey + Jackson JAX-RS service with extra descriptors, security schemes and traits.
 
-This library does not specifically need DropWizard.
-
 ## Dependency
 
 ### Maven
@@ -24,4 +22,4 @@ compile 'net.ozwolf:dropwizard-raml-annotations:1.0.0'
 
 ## Usage
 
-Please refer to the [documentation](../_docs) or the [example service](../dropwizard-raml-example-service) for usage. 
+Please refer to the [wiki](https://github.com/ozwolf-software/dropwizard-raml/wiki) or the [example service](../examples/example-service/dropwizard-raml-example-service) for usage. 
