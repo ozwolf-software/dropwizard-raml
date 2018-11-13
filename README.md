@@ -24,8 +24,8 @@ Please refer to the [wiki](https://github.com/ozwolf-software/dropwizard-raml/wi
 + [RAML Generator](./dropwizard-raml-generator) - the library that contains the logic to investigate your project and derive a RAML specification
 + [Maven Plugin](./dropwizard-raml-maven-plugin) - a Maven plugin that can be used to generate a RAML specification file during the build process
 + [API Docs](./dropwizard-raml-apidocs) - a configured bundle that provides a readable endpoint on services explaining the API
-+ [Monitor](./dropwizard-raml-monitor) - a runtime library that monitors incoming and outgoing requests, logging if successful request/response chains do not adhere to the API specification
-+ [Tester](./dropwizard-raml-tester) - a testing library that allows DropWizard testing to verify RAML specifications
++ Monitor (TBA) - a runtime library that monitors incoming and outgoing requests, logging if successful request/response chains do not adhere to the API specification
++ Tester (TBA) - a testing library that allows DropWizard testing to verify RAML specifications
 + [Example Service](./examples/example-service/dropwizard-raml-example-service) - an example DropWizard JAX-RS service showcasing all the tools available in this project
 
 ## Scala Dependency
