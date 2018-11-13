@@ -10,14 +10,14 @@ A library to provide a common set of annotations to help extend the describing o
 <dependency>
     <groupId>net.ozwolf</groupId>
     <artifactId>dropwizard-raml-annotations</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```gradle
-compile 'net.ozwolf:dropwizard-raml-annotations:1.0.0'
+compile 'net.ozwolf:dropwizard-raml-annotations:1.0.1'
 ```
 
 ## Usage

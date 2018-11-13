@@ -16,14 +16,14 @@ It will not cause the application from starting.
 <dependency>
     <groupId>net.ozwolf</groupId>
     <artifactId>dropwizard-raml-apidocs</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```gradle
-compile 'net.ozwolf:dropwizard-raml-generator:1.0.0'
+compile 'net.ozwolf:dropwizard-raml-generator:1.0.1'
 ```
 
 ## Example Usage
