@@ -15,7 +15,7 @@ public class V08_RamlParameter implements RamlParameter {
 
     public V08_RamlParameter(Parameter parameter) {
         this.parameter = parameter;
-        this.multiple = parameter.repeat();
+        this.multiple = parameter.repeat() != null && parameter.repeat();
     }
 
     @Override
@@ -45,17 +45,17 @@ public class V08_RamlParameter implements RamlParameter {
 
     @Override
     public String getExample() {
-        return parameter.example();
+        return Optional.ofNullable(parameter.example()).orElse("");
     }
 
     @Override
     public String getDefault() {
-        return parameter.defaultValue();
+        return Optional.ofNullable(parameter.defaultValue()).orElse("");
     }
 
     @Override
     public boolean isRequired() {
-        return parameter.required();
+        return Optional.ofNullable(parameter.required()).orElse(false);
     }
 
     @Override
