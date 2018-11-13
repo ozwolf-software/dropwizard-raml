@@ -142,7 +142,13 @@
                         <goals>
                             <goal>javadoc</goal>
                         </goals>
-                        <phase>package</phase>
+                        <phase>compile</phase>
+                    </execution>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
