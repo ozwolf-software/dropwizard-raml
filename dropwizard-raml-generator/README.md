@@ -12,14 +12,14 @@ The resulting output of the `RamlGenerator.generate()` command is a `String` rep
 <dependency>
     <groupId>net.ozwolf</groupId>
     <artifactId>dropwizard-raml-generator</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```gradle
-compile 'net.ozwolf:dropwizard-raml-generator:1.0.1'
+compile 'net.ozwolf:dropwizard-raml-generator:1.0.3'
 ```
 
 ## Schema and Example Generation

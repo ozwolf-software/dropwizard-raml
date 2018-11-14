@@ -6,9 +6,9 @@
     <span class="badge badge-light"><span class="font-weight-bold">${label}</span>[#if value?has_content]: <span class="text-monospace">${value}</span>[/#if]</span>
 [/#macro]
 
-[#macro printCodeDialog id scope type content]
-    <a href="#" data-toggle="modal" data-target="#${id}">${type}</a>
-    <div class="modal fade" id="${id}" tabindex="-1" role="dialog">
+[#macro printCodeDialog modalId scope type content]
+    <a href="#" data-toggle="modal" data-target="#${modalId}">${type}</a>
+    <div class="modal fade" id="${modalId}" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
