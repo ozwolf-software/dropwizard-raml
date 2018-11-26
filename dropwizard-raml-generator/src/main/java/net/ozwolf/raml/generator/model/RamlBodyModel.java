@@ -31,8 +31,8 @@ public class RamlBodyModel {
 
     RamlBodyModel(String contentType, Class<?> type) {
         this.contentType = contentType;
-        this.schema = RamlMedia.instance().generateSchemaFor(contentType, type).orElse(null);
-        this.example = RamlMedia.instance().generateExampleFor(contentType, type).orElse(null);
+        this.schema = RamlMedia.instance().generateSchemaFor(contentType, type, Iterable.class.isAssignableFrom(type)).orElse(null);
+        this.example = RamlMedia.instance().generateExampleFor(contentType, type, Iterable.class.isAssignableFrom(type)).orElse(null);
     }
 
     @JsonIgnore
@@ -54,7 +54,7 @@ public class RamlBodyModel {
         if (annotation.type() == RamlBody.NotDefinedReturnType.class)
             return ClassPathUtils.getResourceAsString(annotation.schema());
 
-        return RamlMedia.instance().generateSchemaFor(annotation.contentType(), annotation.type())
+        return RamlMedia.instance().generateSchemaFor(annotation.contentType(), annotation.type(), annotation.isCollection())
                 .orElseGet(() -> ClassPathUtils.getResourceAsString(annotation.schema()));
     }
 
@@ -62,7 +62,7 @@ public class RamlBodyModel {
         if (annotation.type() == RamlBody.NotDefinedReturnType.class)
             return ClassPathUtils.getResourceAsString(annotation.example());
 
-        return RamlMedia.instance().generateExampleFor(annotation.contentType(), annotation.type())
+        return RamlMedia.instance().generateExampleFor(annotation.contentType(), annotation.type(), annotation.isCollection())
                 .orElseGet(() -> ClassPathUtils.getResourceAsString(annotation.example()));
     }
 }

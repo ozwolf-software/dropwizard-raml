@@ -51,15 +51,16 @@ public class RamlMedia {
      *
      * @param contentType the content type to generate a schema for
      * @param type        the type to generate the schema from
+     * @param collection  flag indiciating if the type is wrapped in a collection
      * @return the (optional) schema definition if available
      */
-    public Optional<String> generateSchemaFor(String contentType, Class<?> type) {
+    public Optional<String> generateSchemaFor(String contentType, Class<?> type, boolean collection) {
         RamlSchema schemaAnnotation = type.getAnnotation(RamlSchema.class);
         if (schemaAnnotation != null)
             return Optional.ofNullable(ClassPathUtils.getResourceAsString(schemaAnnotation.value()));
 
         return toolsFor(contentType)
-                .flatMap(t -> t.schema.create(type, t.mapper));
+                .flatMap(t -> t.schema.create(type, collection, t.mapper));
     }
 
     /**
@@ -67,15 +68,16 @@ public class RamlMedia {
      *
      * @param contentType the content type to generate an example for
      * @param type        the type to generate the example from
+     * @param collection  flag indiciating if the type is wrapped in a collection
      * @return the (optional) example if available
      */
-    public Optional<String> generateExampleFor(String contentType, Class<?> type) {
+    public Optional<String> generateExampleFor(String contentType, Class<?> type, boolean collection) {
         RamlExample exampleAnnotation = type.getAnnotation(RamlExample.class);
         if (exampleAnnotation != null)
             return Optional.ofNullable(ClassPathUtils.getResourceAsString(exampleAnnotation.value()));
 
         return toolsFor(contentType)
-                .flatMap(t -> t.example.create(type, t.mapper));
+                .flatMap(t -> t.example.create(type, collection, t.mapper));
     }
 
     /**
@@ -168,7 +170,7 @@ public class RamlMedia {
                 "text/xml",
                 new MediaTools(
                         defaultXmlMapper(),
-                        (t, m) -> Optional.empty(),
+                        (t, m, e) -> Optional.empty(),
                         new FromMethodExampleFactory()
                 )
         );

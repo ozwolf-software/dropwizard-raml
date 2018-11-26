@@ -1,0 +1,102 @@
+{
+  "$schema" : "http://json-schema.org/draft-04/schema#",
+  "title" : "Json Test Response []",
+  "type" : "array",
+  "items" : {
+    "$ref" : "#/definitions/JsonTestResponse"
+  },
+  "definitions" : {
+    "JsonTestResponse" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "description" : "the test response",
+      "title" : "Test Response",
+      "properties" : {
+        "self" : {
+          "type" : "string",
+          "description" : "the reference to this resource"
+        },
+        "id" : {
+          "type" : "integer",
+          "description" : "the response id"
+        },
+        "name" : {
+          "type" : "string",
+          "description" : "the name"
+        },
+        "startDate" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "the start date"
+        },
+        "endDate" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "the end date"
+        },
+        "people" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Person"
+          },
+          "description" : "the people for this response"
+        }
+      },
+      "required" : [ "self", "id", "name", "startDate", "endDate", "people" ]
+    },
+    "Person" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "description" : "a person entity",
+      "title" : "Person Response",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "description" : "the identifier of the person"
+        },
+        "lastName" : {
+          "type" : "string",
+          "description" : "the person's last name"
+        },
+        "givenNames" : {
+          "type" : "string",
+          "description" : "the person's given names"
+        },
+        "address" : {
+          "$ref" : "#/definitions/Address",
+          "description" : "the person's address"
+        }
+      },
+      "required" : [ "id", "lastName", "givenNames", "address" ]
+    },
+    "Address" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "description" : "a postal or street address",
+      "title" : "Address Response",
+      "properties" : {
+        "street" : {
+          "type" : "string",
+          "description" : "the street number and name"
+        },
+        "suburb" : {
+          "type" : "string",
+          "description" : "the suburb"
+        },
+        "state" : {
+          "type" : "string",
+          "description" : "the state"
+        },
+        "postCode" : {
+          "type" : "string",
+          "description" : "the post code"
+        },
+        "country" : {
+          "type" : "string",
+          "description" : "the country"
+        }
+      },
+      "required" : [ "street", "suburb", "state", "postCode", "country" ]
+    }
+  }
+}

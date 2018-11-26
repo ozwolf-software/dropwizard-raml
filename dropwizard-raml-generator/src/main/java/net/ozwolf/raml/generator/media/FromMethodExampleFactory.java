@@ -10,9 +10,11 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Optional;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 public class FromMethodExampleFactory implements MediaFactory {
     @Override
-    public Optional<String> create(Class<?> type, ObjectMapper mapper) {
+    public Optional<String> create(Class<?> type, boolean collection, ObjectMapper mapper) {
         Method method = Arrays.stream(type.getMethods())
                 .filter(m -> m.isAnnotationPresent(RamlExample.class))
                 .findFirst()
@@ -26,6 +28,8 @@ public class FromMethodExampleFactory implements MediaFactory {
 
         try {
             Object example = method.invoke(type);
+            if (collection)
+                example = newArrayList(example);
 
             return Optional.ofNullable(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(example));
         } catch (IllegalAccessException | InvocationTargetException e) {

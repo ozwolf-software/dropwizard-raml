@@ -21,14 +21,21 @@ public class FromMethodExampleFactoryTest {
 
     @Test
     public void shouldCreateJsonExample() throws JSONException {
-        String example = new FromMethodExampleFactory().create(JsonTestResponse.class, TestMappers.json()).orElse(null);
+        String example = new FromMethodExampleFactory().create(JsonTestResponse.class, false, TestMappers.json()).orElse(null);
 
         JSONAssert.assertEquals(fixture("fixtures/media/json/example.json"), example, true);
     }
 
     @Test
+    public void shouldCreateJsonArrayExample() throws JSONException {
+        String example = new FromMethodExampleFactory().create(JsonTestResponse.class, true, TestMappers.json()).orElse(null);
+
+        JSONAssert.assertEquals(fixture("fixtures/media/json/array-example.json"), example, true);
+    }
+
+    @Test
     public void shouldCreateXmlExample() throws IOException {
-        String example = new FromMethodExampleFactory().create(XmlTestResponse.class, TestMappers.xml()).orElse(null);
+        String example = new FromMethodExampleFactory().create(XmlTestResponse.class, false, TestMappers.xml()).orElse(null);
 
         Map<String, Object> expected = XML_MAPPER.readValue(fixture("fixtures/media/xml/example.xml"), new JacksonDocument());
         Map<String, Object> actual = XML_MAPPER.readValue(example, new JacksonDocument());

@@ -34,6 +34,15 @@ public @interface RamlBody {
     Class<?> type() default NotDefinedReturnType.class;
 
     /**
+     * Indicate that the returned type is a collection of the provided type.
+     *
+     * Defaulted to `false`, assuming that the return types for the most part are single documents rather than collections.
+     *
+     * @return the flag indicating if the response is an collection of `type()`
+     */
+    boolean isCollection() default false;
+
+    /**
      * The schema for this body type.  The value in here can make reference to a classpath resource _or_ a direct text entry.
      *
      * This will be used to supply a schema in the RAML specification _if_ the `type()` property has not be defined.
