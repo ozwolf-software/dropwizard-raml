@@ -61,7 +61,7 @@ public class ResourceFactory {
                 .filter(m -> MethodUtils.getAction(m) != null)
                 .forEach(m -> methods.computeIfAbsent(m.getAnnotation(Path.class), k -> newArrayList()).add(m));
 
-        methods.get(path).forEach(m -> methodFactory.getMethod(m, model::addMethod, e));
+        Optional.ofNullable(methods.get(path)).ifPresent(method -> method.forEach(m -> methodFactory.getMethod(m, model::addMethod, e)));
         methods.entrySet()
                 .stream()
                 .filter(r -> !r.getKey().equals(path))
