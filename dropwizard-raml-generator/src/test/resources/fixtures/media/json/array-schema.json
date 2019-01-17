@@ -85,7 +85,8 @@
         },
         "state" : {
           "type" : "string",
-          "description" : "the state"
+          "description" : "the state",
+          "enum": [ "ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"]
         },
         "postCode" : {
           "type" : "string",

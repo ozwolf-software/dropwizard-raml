@@ -9,6 +9,8 @@ import net.ozwolf.raml.apidocs.util.PropertyUtils;
 import net.ozwolf.raml.example.resources.AuthorsResource;
 import net.ozwolf.raml.example.resources.BooksResource;
 import net.ozwolf.raml.example.resources.filters.SecurityFilter;
+import net.ozwolf.raml.example.core.exception.WebApplicationExceptionMapper;
+import net.ozwolf.raml.example.core.exception.UnhandledExceptionMapper;
 
 import java.io.IOException;
 import java.net.URL;
@@ -29,6 +31,9 @@ public class ExampleServiceApp extends Application<ExampleServiceAppConfiguratio
 
     @Override
     public void run(ExampleServiceAppConfiguration configuration, Environment environment) {
+        environment.jersey().register(new WebApplicationExceptionMapper());
+        environment.jersey().register(new UnhandledExceptionMapper());
+
         environment.jersey().register(new AuthorsResource());
         environment.jersey().register(new BooksResource());
         environment.jersey().register(new SecurityFilter.Feature());

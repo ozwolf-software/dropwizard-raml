@@ -1,0 +1,14 @@
+[ POST /books (application/json) 201 ]
+	[ request ]
+		[ security ]
+			[ oauth2 ]
+				[ headers ]
+					[ Authorization ]
+						[ pattern ] - must match pattern [ Bearer (.+) ]
+	[ response ]
+		[ 201 ]
+			[ headers ]
+				[ Location ]
+					[ required ] - must be provided
+			[ body ]
+				[ application/json ] - object has missing required properties (["author","download","genre","id","publishDate","self","title"])

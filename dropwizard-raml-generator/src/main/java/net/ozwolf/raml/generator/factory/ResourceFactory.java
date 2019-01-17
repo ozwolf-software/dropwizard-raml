@@ -1,13 +1,11 @@
 package net.ozwolf.raml.generator.factory;
 
 import com.google.common.annotations.VisibleForTesting;
-import net.ozwolf.raml.annotations.RamlIgnore;
-import net.ozwolf.raml.annotations.RamlResource;
-import net.ozwolf.raml.annotations.RamlSubResource;
-import net.ozwolf.raml.annotations.RamlSubResources;
+import net.ozwolf.raml.annotations.*;
 import net.ozwolf.raml.generator.exception.RamlGenerationError;
 import net.ozwolf.raml.generator.model.RamlParameterModel;
 import net.ozwolf.raml.generator.model.RamlResourceModel;
+import net.ozwolf.raml.generator.model.RamlResponseModel;
 import net.ozwolf.raml.generator.util.MethodUtils;
 
 import javax.ws.rs.Path;
@@ -30,7 +28,10 @@ public class ResourceFactory {
         this.methodFactory = new MethodFactory();
     }
 
-    public void getResource(Class<?> resource, Consumer<RamlResourceModel> onSuccess, Consumer<RamlGenerationError> onError) {
+    public void getResource(Class<?> resource,
+                            Map<Integer, RamlResponseModel> globalResponses,
+                            Consumer<RamlResourceModel> onSuccess,
+                            Consumer<RamlGenerationError> onError) {
         Path path = resource.getAnnotation(Path.class);
         RamlResource annotation = resource.getAnnotation(RamlResource.class);
 
@@ -61,17 +62,17 @@ public class ResourceFactory {
                 .filter(m -> MethodUtils.getAction(m) != null)
                 .forEach(m -> methods.computeIfAbsent(m.getAnnotation(Path.class), k -> newArrayList()).add(m));
 
-        Optional.ofNullable(methods.get(path)).ifPresent(method -> method.forEach(m -> methodFactory.getMethod(m, model::addMethod, e)));
+        Optional.ofNullable(methods.get(path)).ifPresent(method -> method.forEach(m -> methodFactory.getMethod(m, globalResponses, model::addMethod, e)));
         methods.entrySet()
                 .stream()
                 .filter(r -> !r.getKey().equals(path))
-                .forEach(r -> getSubResource(resource, r.getKey(), r.getValue(), model::addSubResource, e));
+                .forEach(r -> getSubResource(resource, globalResponses, r.getKey(), r.getValue(), model::addSubResource, e));
 
         if (!e.isInError())
             onSuccess.accept(model);
     }
 
-    private void getSubResource(Class<?> resource, Path path, List<Method> methods, Consumer<RamlResourceModel> onSuccess, Consumer<RamlGenerationError> onError) {
+    private void getSubResource(Class<?> resource, Map<Integer, RamlResponseModel> globalResponses, Path path, List<Method> methods, Consumer<RamlResourceModel> onSuccess, Consumer<RamlGenerationError> onError) {
         RamlSubResource information = Optional.ofNullable(resource.getAnnotation(RamlSubResources.class))
                 .map(a -> Arrays.stream(a.value()).filter(p -> p.path().equals(path)).findFirst().orElse(null))
                 .orElse(null);
@@ -84,7 +85,7 @@ public class ResourceFactory {
 
         RamlResourceModel model = new RamlResourceModel(path.value(), null, description, 999999, uriParameters);
 
-        methods.forEach(m -> methodFactory.getMethod(m, model::addMethod, e));
+        methods.forEach(m -> methodFactory.getMethod(m, globalResponses, model::addMethod, e));
 
         if (!e.isInError())
             onSuccess.accept(model);

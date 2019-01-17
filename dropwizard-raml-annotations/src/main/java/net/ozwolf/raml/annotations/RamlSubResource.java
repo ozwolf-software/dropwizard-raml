@@ -30,11 +30,4 @@ public @interface RamlSubResource {
      * @return the sub-resource description
      */
     String description() default "";
-
-    /**
-     * The URI parameters associated with the sub-resource path.
-     *
-     * @return the sub-resource URI parameters
-     */
-    RamlParameter[] uriParameters() default {};
 }

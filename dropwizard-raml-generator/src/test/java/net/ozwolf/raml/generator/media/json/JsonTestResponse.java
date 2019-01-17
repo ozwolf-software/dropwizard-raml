@@ -5,12 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
-import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaFormat;
-import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
+import com.kjetland.jackson.jsonSchema.annotations.*;
 import net.ozwolf.raml.annotations.RamlExample;
 import org.joda.time.LocalDate;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
@@ -189,6 +188,7 @@ public class JsonTestResponse {
 
         @JsonProperty(value = "state", required = true)
         @JsonPropertyDescription("the state")
+        @JsonSchemaInject(jsonSupplier = StateEnumProvider.class)
         public String getState() {
             return state;
         }
@@ -201,8 +201,25 @@ public class JsonTestResponse {
 
         @JsonProperty(value = "country", required = true)
         @JsonPropertyDescription("the country")
+        @JsonSchemaInject(
+                strings = @JsonSchemaString(path = "type", value = "string")
+        )
         public String getCountry() {
             return country;
         }
+    }
+
+    public enum State {
+        ACT,
+        NSW,
+        NT,
+        QLD,
+        SA,
+        TAS,
+        VIC,
+        WA
+    }
+
+    public static class StateEnumProvider extends JsonSchemaEnumTypeSupplier<State> {
     }
 }

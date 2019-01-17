@@ -79,6 +79,12 @@ public class RamlGeneratorITCase {
                                                                                 .withExample(fixture("fixtures/raml-model-body-test/author-response-example.json"))
                                                                 )
                                                 )
+                                                .withResponse(
+                                                        new ResponseCondition(500, "an internal server error occurred")
+                                                                .withBody(
+                                                                        new BodyCondition("application/json")
+                                                                )
+                                                )
                                 )
                 )
                 .areAtLeastOne(

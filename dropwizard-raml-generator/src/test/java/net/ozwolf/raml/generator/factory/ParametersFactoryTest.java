@@ -42,7 +42,7 @@ public class ParametersFactoryTest {
 
         assertThat(errors)
                 .hasSize(1)
-                .areAtLeastOne(errorOf("TestResource2 : has URI parameters but is missing [ @" + RamlUriParameters.class.getSimpleName() + " ] annotation"));
+                .areAtLeastOne(errorOf("TestResource2 : /test/{testParameter} : has URI parameters but resource is missing [ @" + RamlUriParameters.class.getSimpleName() + " ] annotation"));
     }
 
     @Test
@@ -53,9 +53,8 @@ public class ParametersFactoryTest {
         factory.getUriParameters(TestResource3.class, null, errors::add);
 
         assertThat(errors)
-                .hasSize(2)
-                .areAtLeastOne(errorOf("TestResource3 : /test/{testParameter} : parameter [ testParameter ] has no [ @" + RamlParameter.class.getSimpleName() + " ] definition"))
-                .areAtLeastOne(errorOf("TestResource3 : /test/{testParameter} : parameter [ unknownParameter ] described but is not in path"));
+                .hasSize(1)
+                .areAtLeastOne(errorOf("TestResource3 : /test/{testParameter} : parameter [ testParameter ] has no [ @" + RamlParameter.class.getSimpleName() + " ] definition"));
     }
 
     @Test
@@ -131,7 +130,7 @@ public class ParametersFactoryTest {
 
         assertThat(errors)
                 .hasSize(1)
-                .areAtLeastOne(errorOf("TestResource2 : /{otherParameter} : has URI parameters but resource is missing [ @" + RamlSubResources.class.getSimpleName() + " ] entry"));
+                .areAtLeastOne(errorOf("TestResource2 : /test/{testParameter}/{otherParameter} : has URI parameters but resource is missing [ @" + RamlUriParameters.class.getSimpleName() + " ] annotation"));
     }
 
     @Test
@@ -144,9 +143,8 @@ public class ParametersFactoryTest {
         factory.getUriParameters(TestResource3.class, path, null, errors::add);
 
         assertThat(errors)
-                .hasSize(2)
-                .areAtLeastOne(errorOf("TestResource3 : /{otherParameter} : parameter [ otherParameter ] has no [ @" + RamlParameter.class.getSimpleName() + " ] definition"))
-                .areAtLeastOne(errorOf("TestResource3 : /{otherParameter} : parameter [ unknownParameter ] described but is not in path"));
+                .hasSize(1)
+                .areAtLeastOne(errorOf("TestResource3 : /test/{testParameter}/{otherParameter} : parameter [ otherParameter ] has no [ @" + RamlParameter.class.getSimpleName() + " ] definition"));
     }
 
     private static Condition<RamlParameterModel> parameterOf(String name, String type, String description) {
@@ -163,11 +161,12 @@ public class ParametersFactoryTest {
     }
 
     @RamlResource(displayName = "Test Resource 1", description = "test resource 1")
-    @RamlUriParameters(
-            @RamlParameter(name = "testParameter", type = "string", description = "test parameter")
-    )
+    @RamlUriParameters({
+            @RamlParameter(name = "testParameter", type = "string", description = "test parameter"),
+            @RamlParameter(name = "otherParameter", type = "string", description = "test parameter")
+    })
     @RamlSubResources(
-            @RamlSubResource(path = @Path("/{otherParameter}"), uriParameters = @RamlParameter(name = "otherParameter", type = "string", description = "test parameter"))
+            @RamlSubResource(path = @Path("/{otherParameter}"))
     )
     @Path("/test/{testParameter}")
     public static class TestResource1 {
@@ -201,12 +200,7 @@ public class ParametersFactoryTest {
         }
     }
 
-    @RamlUriParameters(
-            @RamlParameter(name = "unknownParameter", type = "string", description = "an unknown parameter")
-    )
-    @RamlSubResources(
-            @RamlSubResource(path = @Path("/{otherParameter}"), uriParameters = @RamlParameter(name = "unknownParameter", type = "string", description = "an unknown parameter"))
-    )
+    @RamlUriParameters({})
     @Path("/test/{testParameter}")
     public static class TestResource3 {
         @Path("/{otherParameter}")

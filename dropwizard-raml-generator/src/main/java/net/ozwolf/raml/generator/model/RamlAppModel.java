@@ -1,11 +1,9 @@
 package net.ozwolf.raml.generator.model;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.ozwolf.raml.annotations.RamlApp;
+import net.ozwolf.raml.annotations.RamlResponse;
 import net.ozwolf.raml.annotations.RamlSecurityScheme;
 import net.ozwolf.raml.annotations.RamlTrait;
 
@@ -34,6 +32,7 @@ public class RamlAppModel {
     private final List<RamlDocumentationModel> documentation;
     private final Map<String, RamlSecurityModel> securitySchemes;
     private final Map<String, RamlDescribedByModel> traits;
+    private final Map<Integer, RamlResponseModel> globalResponses;
 
     private final List<RamlResourceModel> resources;
 
@@ -47,6 +46,7 @@ public class RamlAppModel {
         this.documentation = Arrays.stream(annotation.documentation()).map(RamlDocumentationModel::new).collect(toList());
         this.securitySchemes = Arrays.stream(annotation.security()).collect(toMap(RamlSecurityScheme::key, RamlSecurityModel::new));
         this.traits = Arrays.stream(annotation.traits()).collect(toMap(RamlTrait::key, a -> new RamlDescribedByModel(a.describedBy())));
+        this.globalResponses = Arrays.stream(annotation.globalResponses()).collect(toMap(RamlResponse::status, RamlResponseModel::new));
 
         this.resources = newArrayList();
     }
@@ -89,6 +89,11 @@ public class RamlAppModel {
     @JsonProperty("traits")
     public Map<String, RamlDescribedByModel> getTraits() {
         return nullIfEmpty(traits);
+    }
+
+    @JsonIgnore
+    public Map<Integer, RamlResponseModel> getGlobalResponses() {
+        return globalResponses;
     }
 
     @JsonAnyGetter

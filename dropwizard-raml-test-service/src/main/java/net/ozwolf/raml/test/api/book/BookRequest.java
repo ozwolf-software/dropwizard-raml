@@ -1,14 +1,15 @@
 package net.ozwolf.raml.test.api.book;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaFormat;
 import net.ozwolf.raml.annotations.RamlExample;
 import net.ozwolf.raml.annotations.RamlSchema;
 import net.ozwolf.raml.test.core.domain.Genre;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @JsonDeserialize

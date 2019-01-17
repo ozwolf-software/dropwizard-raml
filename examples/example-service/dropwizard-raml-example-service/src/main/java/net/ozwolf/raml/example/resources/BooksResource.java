@@ -19,9 +19,12 @@ import javax.ws.rs.core.UriBuilder;
 import java.util.List;
 
 @RamlResource(displayName = "Books", description = "manage books")
+@RamlUriParameters(
+        @RamlParameter(name = "id", description = "the author id", type = "integer")
+)
 @RamlSubResources({
-        @RamlSubResource(path = @Path("/{id}"), description = "retrieve and update a book", uriParameters = @RamlParameter(name = "id", description = "the book id", type = "integer")),
-        @RamlSubResource(path = @Path("/{id}/download"), description = "download a book", uriParameters = @RamlParameter(name = "id", description = "the book id", type = "integer"))
+        @RamlSubResource(path = @Path("/{id}"), description = "retrieve and update a book"),
+        @RamlSubResource(path = @Path("/{id}/download"), description = "download a book")
 })
 @Path("/books")
 public class BooksResource {

@@ -1,0 +1,16 @@
+[ PUT /authors (application/json) 201 ]
+	[ request ]
+		[ security ]
+			[ oauth2 ]
+				[ headers ]
+					[ Authorization ]
+						[ pattern ] - must match pattern [ Bearer (.+) ]
+		[ body ]
+			[ application/json ] - object has missing required properties (["name"])
+	[ response ]
+		[ 201 ]
+			[ headers ]
+				[ Location ]
+					[ required ] - must be provided
+			[ body ]
+				[ application/json ] - object has missing required properties (["bibliography"])

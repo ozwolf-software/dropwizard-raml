@@ -84,7 +84,7 @@ public class RamlGenerator {
             reflections.getTypesAnnotatedWith(Path.class)
                     .stream()
                     .filter(r -> !r.isAnnotationPresent(RamlIgnore.class))
-                    .forEach(r -> resourceFactory.getResource(r, model::addResource, onError));
+                    .forEach(r -> resourceFactory.getResource(r, model.getGlobalResponses(), model::addResource, onError));
 
             if (!errors.isEmpty())
                 throw new RamlGenerationException(errors);

@@ -69,4 +69,11 @@ public @interface RamlApp {
      * @return the application's traits
      */
     RamlTrait[] traits() default {};
+
+    /**
+     * Define global response definitions.  If a resource method does not explicitly define the status code of one of these responses, it will automatically be added.
+     *
+     * @return the default response definitions
+     */
+    RamlResponse[] globalResponses() default {};
 }

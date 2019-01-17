@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<request>
+    <title>Test Book</title>
+    <genre>SciFi</genre>
+    <publishDate>2018-12-01</publishDate>
+    <authorId>123</authorId>
+</request>

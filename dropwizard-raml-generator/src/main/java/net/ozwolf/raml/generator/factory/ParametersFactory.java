@@ -36,11 +36,12 @@ class ParametersFactory {
             return;
 
         if (annotation == null) {
-            onError.accept(new RamlGenerationError(resource, "has URI parameters but is missing [ @" + RamlUriParameters.class.getSimpleName() + " ] annotation"));
+            onError.accept(new RamlGenerationError(resource, template.getTemplate() + " : has URI parameters but resource is missing [ @" + RamlUriParameters.class.getSimpleName() + " ] annotation"));
             return;
         }
 
         getUriParameters(
+                template,
                 template,
                 annotation.value(),
                 onSuccess,
@@ -49,22 +50,23 @@ class ParametersFactory {
     }
 
     void getUriParameters(Class<?> resource, Path path, Consumer<RamlParameterModel> onSuccess, Consumer<RamlGenerationError> onError) {
-        RamlSubResource information = Optional.ofNullable(resource.getAnnotation(RamlSubResources.class))
-                .map(a -> Arrays.stream(a.value()).filter(p -> p.path().equals(path)).findFirst().orElse(null))
-                .orElse(null);
+        RamlUriParameters annotation = resource.getAnnotation(RamlUriParameters.class);
+
+        UriTemplate resourceTemplate = new UriTemplate(resource.getAnnotation(Path.class).value() + path.value());
 
         UriTemplate template = new UriTemplate(path.value());
         if (template.getNumberOfTemplateVariables() == 0)
             return;
 
-        if (information == null) {
-            onError.accept(new RamlGenerationError(resource, path.value() + " : has URI parameters but resource is missing [ @" + RamlSubResources.class.getSimpleName() + " ] entry"));
+        if (annotation == null) {
+            onError.accept(new RamlGenerationError(resource, resourceTemplate.getTemplate() + " : has URI parameters but resource is missing [ @" + RamlUriParameters.class.getSimpleName() + " ] annotation"));
             return;
         }
 
         getUriParameters(
+                resourceTemplate,
                 template,
-                information.uriParameters(),
+                annotation.value(),
                 onSuccess,
                 m -> onError.accept(new RamlGenerationError(resource, m))
         );
@@ -115,13 +117,16 @@ class ParametersFactory {
         );
     }
 
-    private static void getUriParameters(UriTemplate template,
+    private static void getUriParameters(UriTemplate resourceTemplate,
+                                         UriTemplate template,
                                          RamlParameter[] descriptions,
                                          Consumer<RamlParameterModel> onSuccess,
                                          Consumer<String> onError) {
 
 
-        Map<String, RamlParameterModel> parameters = Arrays.stream(descriptions).collect(toMap(RamlParameter::name, RamlParameterModel::new));
+        Map<String, RamlParameterModel> parameters = Arrays.stream(descriptions)
+                .filter(d -> template.getTemplateVariables().stream().anyMatch(t -> t.equals(d.name())))
+                .collect(toMap(RamlParameter::name, RamlParameterModel::new));
 
         List<String> errors = newArrayList();
 
@@ -129,12 +134,7 @@ class ParametersFactory {
         templateVariables
                 .stream()
                 .filter(v -> !parameters.containsKey(v))
-                .forEach(v -> errors.add(template.getTemplate() + " : parameter [ " + v + " ] has no [ @" + RamlParameter.class.getSimpleName() + " ] definition"));
-
-        parameters.keySet()
-                .stream()
-                .filter(k -> !templateVariables.contains(k))
-                .forEach(k -> errors.add(template.getTemplate() + " : parameter [ " + k + " ] described but is not in path"));
+                .forEach(v -> errors.add(resourceTemplate.getTemplate() + " : parameter [ " + v + " ] has no [ @" + RamlParameter.class.getSimpleName() + " ] definition"));
 
         if (errors.isEmpty()) {
             parameters.values().forEach(onSuccess);

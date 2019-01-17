@@ -1,0 +1,27 @@
+server:
+  maxThreads: 30
+  applicationConnectors:
+    - type: http
+      port: 9443
+  adminConnectors:
+    - type: http
+      port: 9446
+  registerDefaultExceptionMappers: false
+logging:
+  level: INFO
+  appenders:
+    - type: file
+      timeZone: Australia/Melbourne
+      currentLogFilename: target/logs/test-app.log
+      archivedLogFilenamePattern: target/logs/archive/test-app-%d.log.gz
+      archivedFileCount: 1
+  loggers:
+    "raml-monitor":
+      level: INFO
+      additive: false
+      appenders:
+        - type: file
+          timeZone: Australia/Melbourne
+          currentLogFilename: target/logs/raml-monitor.log
+          archivedLogFilenamePattern: target/logs/archive/raml-monitor-%d.log.gz
+          archivedFileCount: 30

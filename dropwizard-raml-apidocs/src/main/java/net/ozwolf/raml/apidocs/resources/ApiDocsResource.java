@@ -1,10 +1,10 @@
 package net.ozwolf.raml.apidocs.resources;
 
 import com.codahale.metrics.annotation.Timed;
-import net.ozwolf.raml.apidocs.managed.ApiDocsManager;
-import net.ozwolf.raml.apidocs.model.v08.V08_RamlApplication;
-import net.ozwolf.raml.apidocs.model.v10.V10_RamlApplication;
+import net.ozwolf.raml.common.model.v08.V08_RamlApplication;
+import net.ozwolf.raml.common.model.v10.V10_RamlApplication;
 import net.ozwolf.raml.apidocs.views.ApiDocsView;
+import net.ozwolf.raml.generator.RamlSpecification;
 import org.raml.v2.api.RamlModelResult;
 
 import javax.ws.rs.GET;
@@ -15,19 +15,18 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/apidocs")
 public class ApiDocsResource {
-    private final ApiDocsManager manager;
+    private final RamlSpecification specification;
 
-    public ApiDocsResource(ApiDocsManager manager) {
-        this.manager = manager;
+    public ApiDocsResource(RamlSpecification specification) {
+        this.specification = specification;
     }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Timed
     public ApiDocsView getApplication() {
-        RamlModelResult model = manager.getModel();
-        if (model == null)
-            throw new ServiceUnavailableException("API specifications are currently unavailable.  Check logs for details.");
+        RamlModelResult model = specification.getModel()
+                .orElseThrow(() -> new ServiceUnavailableException("API specifications are currently unavailable.  Check logs for details."));
 
         if (model.isVersion10())
             return new ApiDocsView(new V10_RamlApplication(model.getApiV10()));

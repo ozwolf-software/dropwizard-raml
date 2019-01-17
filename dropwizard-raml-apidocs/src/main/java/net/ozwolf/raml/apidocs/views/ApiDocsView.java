@@ -1,7 +1,7 @@
 package net.ozwolf.raml.apidocs.views;
 
 import io.dropwizard.views.View;
-import net.ozwolf.raml.apidocs.model.RamlApplication;
+import net.ozwolf.raml.common.model.RamlApplication;
 
 public class ApiDocsView extends View {
     private final RamlApplication application;

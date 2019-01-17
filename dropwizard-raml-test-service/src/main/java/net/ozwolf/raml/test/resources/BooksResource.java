@@ -5,8 +5,10 @@ import net.ozwolf.raml.annotations.*;
 import net.ozwolf.raml.test.api.book.BookRequest;
 import net.ozwolf.raml.test.api.book.BookResponse;
 import net.ozwolf.raml.test.api.book.BooksResponse;
+import net.ozwolf.raml.test.core.domain.Book;
 import net.ozwolf.raml.test.core.domain.Genre;
 import net.ozwolf.raml.test.security.Secured;
+import org.joda.time.LocalDate;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -14,10 +16,15 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 @RamlResource(displayName = "Books", description = "manage books")
+@RamlUriParameters(
+        @RamlParameter(name = "id", description = "the book id", type = "integer")
+)
 @RamlSubResources({
-        @RamlSubResource(path = @Path("/{id}"), description = "retrieve and update a book", uriParameters = @RamlParameter(name = "id", description = "the book id", type = "integer")),
-        @RamlSubResource(path = @Path("/{id}/download"), description = "download a book", uriParameters = @RamlParameter(name = "id", description = "the book id", type = "integer"))
+        @RamlSubResource(path = @Path("/{id}"), description = "retrieve and update a book"),
+        @RamlSubResource(path = @Path("/{id}/download"), description = "download a book")
 })
 @Path("/books")
 public class BooksResource {
@@ -33,7 +40,12 @@ public class BooksResource {
     @Produces("application/json")
     @Timed
     public BooksResponse getBooks(@QueryParam("genre") List<Genre> genre) {
-        return null;
+        return new BooksResponse(
+                newArrayList(
+                        new Book(1, "Supernova", Genre.SciFi, LocalDate.parse("2018-12-11"), 1),
+                        new Book(2, "The Life and Times of Stephen Hawking", Genre.NonFiction, LocalDate.parse("2018-12-18"), 2)
+                )
+        );
     }
 
     @RamlDescription("create a new book")
@@ -55,7 +67,7 @@ public class BooksResource {
     @Produces("application/json")
     @Timed
     public Response postBook(@Valid BookRequest request) {
-        return null;
+        return Response.status(201).entity("{}").build();
     }
 
     @RamlDescription("retrieve a book")

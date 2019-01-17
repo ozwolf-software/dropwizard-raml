@@ -152,7 +152,16 @@ import net.ozwolf.raml.annotations.security.RamlOAuth2Settings;
                                 )
                         )
                 )
-        }
+        },
+        globalResponses = @RamlResponse(
+                status = 500,
+                description = "an internal server error occurred",
+                bodies = @RamlBody(
+                        contentType = "application/json",
+                        schema = "apispecs/resources/errors/schemas/standard-error-response.json",
+                        example = "apispecs/resources/errors/examples/internal-server-error-response.json"
+                )
+        )
 )
 public class ExampleAppSpecs {
 }

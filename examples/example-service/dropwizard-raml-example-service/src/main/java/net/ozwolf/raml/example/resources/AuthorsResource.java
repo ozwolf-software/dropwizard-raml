@@ -12,8 +12,11 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 @RamlResource(displayName = "Authors", description = "manage and retrieve authors")
+@RamlUriParameters(
+        @RamlParameter(name = "id", description = "the author id", type = "integer")
+)
 @RamlSubResources(
-        @RamlSubResource(path = @Path("/{id}"), description = "retrieve and update an author", uriParameters = @RamlParameter(name = "id", description = "the author id", type = "integer"))
+        @RamlSubResource(path = @Path("/{id}"), description = "retrieve and update an author")
 )
 @Path("/authors")
 public class AuthorsResource {

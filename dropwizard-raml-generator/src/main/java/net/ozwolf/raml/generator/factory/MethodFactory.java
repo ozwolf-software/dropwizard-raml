@@ -42,7 +42,7 @@ class MethodFactory {
      * @param onSuccess the on success handler
      * @param onError   the on error handler
      */
-    void getMethod(Method method, Consumer<RamlMethodModel> onSuccess, Consumer<RamlGenerationError> onError) {
+    void getMethod(Method method, Map<Integer, RamlResponseModel> globalResponses, Consumer<RamlMethodModel> onSuccess, Consumer<RamlGenerationError> onError) {
         String action = MethodUtils.getAction(method);
         if (action == null) {
             onError.accept(new RamlGenerationError(method.getDeclaringClass(), method, "unsupported action"));
@@ -80,7 +80,7 @@ class MethodFactory {
                             formParameters,
                             requests,
                             responses
-                    )
+                    ).apply(globalResponses)
             );
     }
 

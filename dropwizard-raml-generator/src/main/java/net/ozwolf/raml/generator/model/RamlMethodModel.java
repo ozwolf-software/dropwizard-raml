@@ -90,4 +90,9 @@ public class RamlMethodModel {
     public Map<Integer, RamlResponseModel> getResponses() {
         return responses;
     }
+
+    public RamlMethodModel apply(Map<Integer, RamlResponseModel> globalResponses) {
+        globalResponses.forEach(responses::putIfAbsent);
+        return this;
+    }
 }

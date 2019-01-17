@@ -3,6 +3,7 @@ package net.ozwolf.raml.test;
 import net.ozwolf.raml.annotations.*;
 import net.ozwolf.raml.annotations.security.RamlOAuth2Settings;
 
+@SuppressWarnings("unused")
 @RamlApp(
         title = "DropWizard Example App",
         description = "An example application documented using the RAML annotations.",
@@ -126,14 +127,14 @@ import net.ozwolf.raml.annotations.security.RamlOAuth2Settings;
                         description = "some requests may result in a not found",
                         describedBy = @RamlDescribedBy(
                                 responses = @RamlResponse(
-                                                status = 404,
-                                                description = "resource could not be found",
-                                                bodies = @RamlBody(
-                                                        contentType = "application/json",
-                                                        schema = "apispecs/resources/errors/schemas/standard-error-response.json",
-                                                        example = "apispecs/resources/errors/examples/not-found-response.json"
-                                                )
+                                        status = 404,
+                                        description = "resource could not be found",
+                                        bodies = @RamlBody(
+                                                contentType = "application/json",
+                                                schema = "apispecs/resources/errors/schemas/standard-error-response.json",
+                                                example = "apispecs/resources/errors/examples/not-found-response.json"
                                         )
+                                )
                         )
                 ),
                 @RamlTrait(
@@ -152,7 +153,16 @@ import net.ozwolf.raml.annotations.security.RamlOAuth2Settings;
                                 )
                         )
                 )
-        }
+        },
+        globalResponses = @RamlResponse(
+                status = 500,
+                description = "an internal server error occurred",
+                bodies = @RamlBody(
+                        contentType = "application/json",
+                        schema = "apispecs/resources/errors/schemas/standard-error-response.json",
+                        example = "apispecs/resources/errors/examples/internal-server-error-response.json"
+                )
+        )
 )
 public class TestAppSpecs {
 }

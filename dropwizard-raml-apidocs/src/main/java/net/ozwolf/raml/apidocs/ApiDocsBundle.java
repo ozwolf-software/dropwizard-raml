@@ -1,13 +1,12 @@
 package net.ozwolf.raml.apidocs;
 
-import io.dropwizard.Bundle;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
-import net.ozwolf.raml.apidocs.managed.ApiDocsManager;
 import net.ozwolf.raml.apidocs.resources.ApiDocsResource;
-import org.apache.commons.lang3.StringUtils;
+import net.ozwolf.raml.common.AbstractRamlBundle;
+import net.ozwolf.raml.generator.RamlSpecification;
 
 /**
  * <h1>API Docs Bundle</h1>
@@ -20,52 +19,36 @@ import org.apache.commons.lang3.StringUtils;
  *
  * The RAML can either be read from a specific YAML file or generated from source by providing a package and a version number.
  */
-public class ApiDocsBundle implements Bundle {
-    private String ramlFile;
-    private String basePackage;
-    private String version;
-
-    private ApiDocsManager manager;
-
+public class ApiDocsBundle extends AbstractRamlBundle {
     /**
-     * Create a new API docs bundle, using source code to generate the specification at runtime.
-     *
-     * @param basePackage the base package to scan from for documentation generation.
-     * @param version     the application version to be shown
-     * @throws IllegalArgumentException if either argument is empty or null
+     * @inheritDocs
      */
-    public ApiDocsBundle(String basePackage, String version) {
-        if (StringUtils.isBlank(basePackage) || StringUtils.isBlank(version))
-            throw new IllegalArgumentException("Both a base package to scan and an application version number needs to be provided.");
-
-        this.basePackage = basePackage;
-        this.version = version;
+    public ApiDocsBundle(RamlSpecification specification) {
+        super(specification);
     }
 
     /**
-     * Create a new API docs bundle that uses a specific RAML file as it's source.
-     *
-     * @param ramlFile the RAML file to read
-     * @throws IllegalArgumentException if the argument is empty or null
+     * @inheritDocs
+     */
+    public ApiDocsBundle(String basePackage, String version) {
+        super(basePackage, version);
+    }
+
+    /**
+     * @inheritDocs
      */
     public ApiDocsBundle(String ramlFile) {
-        if (StringUtils.isBlank(ramlFile))
-            throw new IllegalArgumentException("You must provide a RAML file to read.");
-        this.ramlFile = ramlFile;
+        super(ramlFile);
     }
 
     @Override
     public void initialize(Bootstrap<?> bootstrap) {
-        this.manager = StringUtils.isBlank(ramlFile) ? ApiDocsManager.load(basePackage, version) : ApiDocsManager.load(ramlFile);
-
         bootstrap.addBundle(new ViewBundle<>());
         bootstrap.addBundle(new AssetsBundle("/apidocs-assets", "/apidocs/assets", null, "apidocs-view-assets"));
     }
 
     @Override
-    public void run(Environment environment) {
-        environment.jersey().register(new ApiDocsResource(manager));
+    protected void postInitialization(Environment environment) {
+        environment.jersey().register(new ApiDocsResource(getSpecification()));
     }
-
-
 }

@@ -1,13 +1,11 @@
 package net.ozwolf.raml.generator.factory;
 
-import net.ozwolf.raml.annotations.RamlParameter;
-import net.ozwolf.raml.annotations.RamlSubResource;
-import net.ozwolf.raml.annotations.RamlSubResources;
-import net.ozwolf.raml.annotations.RamlResource;
+import net.ozwolf.raml.annotations.*;
 import net.ozwolf.raml.generator.exception.RamlGenerationError;
 import net.ozwolf.raml.generator.model.RamlMethodModel;
 import net.ozwolf.raml.generator.model.RamlParameterModel;
 import net.ozwolf.raml.generator.model.RamlResourceModel;
+import net.ozwolf.raml.generator.model.RamlResponseModel;
 import org.junit.Test;
 import org.mockito.stubbing.Answer;
 
@@ -16,25 +14,27 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static jersey.repackaged.com.google.common.collect.Maps.newHashMap;
 import static net.ozwolf.raml.generator.matchers.RamlGeneratorErrorMatchers.errorOf;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
+@SuppressWarnings("SameParameterValue")
 public class ResourceFactoryTest {
     private final ParametersFactory parametersFactory = mock(ParametersFactory.class);
     private final MethodFactory methodFactory = mock(MethodFactory.class);
+
+    private final static Map<Integer, RamlResponseModel> GLOBAL_RESPONSES = newHashMap();
 
     @Test
     public void shouldGenerateResourceModelIncludingSubResources() throws NoSuchMethodException {
@@ -57,7 +57,7 @@ public class ResourceFactoryTest {
         factory.setParametersFactory(parametersFactory);
 
         AtomicReference<RamlResourceModel> result = new AtomicReference<>();
-        factory.getResource(CorrectResource.class, result::set, null);
+        factory.getResource(CorrectResource.class, GLOBAL_RESPONSES, result::set, null);
 
         RamlResourceModel model = result.get();
         assertThat(model).isNotNull();
@@ -89,11 +89,11 @@ public class ResourceFactoryTest {
     }
 
     @Test
-    public void shouldRaiseErrorThatResourceIsMissingRamlResourceAnnotation(){
+    public void shouldRaiseErrorThatResourceIsMissingRamlResourceAnnotation() {
         ResourceFactory factory = new ResourceFactory();
 
         List<RamlGenerationError> errors = newArrayList();
-        factory.getResource(MissingAnnotationResource.class, null, errors::add);
+        factory.getResource(MissingAnnotationResource.class, GLOBAL_RESPONSES, null, errors::add);
 
         assertThat(errors)
                 .hasSize(2)
@@ -123,7 +123,7 @@ public class ResourceFactoryTest {
 
         List<RamlGenerationError> errors = newArrayList();
 
-        factory.getResource(CorrectResource.class, null, errors::add);
+        factory.getResource(CorrectResource.class, GLOBAL_RESPONSES, null, errors::add);
 
         assertThat(errors)
                 .hasSize(6)
@@ -137,33 +137,33 @@ public class ResourceFactoryTest {
                 );
     }
 
-    private RamlMethodModel methodOnSuccess(String action, Method method){
+    private RamlMethodModel methodOnSuccess(String action, Method method) {
         RamlMethodModel model = mock(RamlMethodModel.class);
         when(model.getAction()).thenReturn(action);
 
         Answer<Void> answer = i -> {
-            Consumer<RamlMethodModel> onSuccess = i.getArgument(1);
+            Consumer<RamlMethodModel> onSuccess = i.getArgument(2);
             onSuccess.accept(model);
             return null;
         };
 
-        doAnswer(answer).when(methodFactory).getMethod(eq(method), any(), any());
+        doAnswer(answer).when(methodFactory).getMethod(eq(method), eq(GLOBAL_RESPONSES), any(), any());
         return model;
     }
 
-    private RamlGenerationError methodOnError(Class<?> resource, Method method, String message){
+    private RamlGenerationError methodOnError(Class<?> resource, Method method, String message) {
         RamlGenerationError error = new RamlGenerationError(resource, method, message);
         Answer<Void> answer = i -> {
-            Consumer<RamlGenerationError> onError = i.getArgument(2);
+            Consumer<RamlGenerationError> onError = i.getArgument(3);
             onError.accept(error);
             return null;
         };
 
-        doAnswer(answer).when(methodFactory).getMethod(eq(method), any(), any());
+        doAnswer(answer).when(methodFactory).getMethod(eq(method), eq(GLOBAL_RESPONSES), any(), any());
         return error;
     }
 
-    private RamlParameterModel uriParameterOnSuccess(Class<?> resource, String path, String name){
+    private RamlParameterModel uriParameterOnSuccess(Class<?> resource, String path, String name) {
         RamlParameterModel model = mock(RamlParameterModel.class);
         when(model.getName()).thenReturn(name);
 
@@ -177,7 +177,7 @@ public class ResourceFactoryTest {
         return model;
     }
 
-    private RamlGenerationError uriParameterOnError(Class<?> resource, String path, String message){
+    private RamlGenerationError uriParameterOnError(Class<?> resource, String path, String message) {
         RamlGenerationError error = new RamlGenerationError(resource, message);
 
         Answer<Void> answer = i -> {
@@ -190,11 +190,11 @@ public class ResourceFactoryTest {
         return error;
     }
 
-
     @RamlResource(displayName = "Correct", description = "a correct resource")
+    @RamlUriParameters(@RamlParameter(name = "id", type = "string", description = "the sub-resource id"))
     @RamlSubResources({
             @RamlSubResource(path = @Path("/sub-resource"), description = "a sub resource"),
-            @RamlSubResource(path = @Path("/sub-resource/{id}"), uriParameters = @RamlParameter(name = "id", type = "string", description = "the sub-resource id"))
+            @RamlSubResource(path = @Path("/sub-resource/{id}"))
     })
     @Path("/correct")
     public class CorrectResource {
@@ -228,5 +228,6 @@ public class ResourceFactoryTest {
         }
     }
 
-    public class MissingAnnotationResource{}
+    private class MissingAnnotationResource {
+    }
 }

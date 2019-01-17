@@ -14,10 +14,12 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
 import static net.ozwolf.raml.generator.matchers.RamlGeneratorErrorMatchers.errorOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -46,6 +48,12 @@ public class MethodFactoryTest {
         RamlResponseModel response = mock(RamlResponseModel.class);
         when(response.getStatus()).thenReturn(200);
 
+        RamlResponseModel global500Response = mock(RamlResponseModel.class);
+        when(global500Response.getStatus()).thenReturn(500);
+
+        Map<Integer, RamlResponseModel> globalResponses = newHashMap();
+        globalResponses.put(500, global500Response);
+
         RamlBodyModel request = mock(RamlBodyModel.class);
         when(request.getContentType()).thenReturn("application/json");
 
@@ -68,7 +76,7 @@ public class MethodFactoryTest {
 
         AtomicReference<RamlMethodModel> result = new AtomicReference<>();
 
-        factory.getMethod(method, result::set, null);
+        factory.getMethod(method, globalResponses, result::set, null);
 
         assertThat(result.get()).isNotNull();
 
@@ -88,8 +96,9 @@ public class MethodFactoryTest {
                 .containsEntry("test-form", formParameter);
 
         assertThat(model.getResponses())
-                .hasSize(1)
-                .containsEntry(200, response);
+                .hasSize(2)
+                .containsEntry(200, response)
+                .containsEntry(500, global500Response);
 
         assertThat(model.getRequests())
                 .hasSize(1)
@@ -104,7 +113,7 @@ public class MethodFactoryTest {
         Consumer<RamlGenerationError> onError = errors::add;
 
         MethodFactory factory = new MethodFactory();
-        factory.getMethod(method, null, onError);
+        factory.getMethod(method, newHashMap(), null, onError);
 
         assertThat(errors)
                 .hasSize(1)
@@ -139,7 +148,7 @@ public class MethodFactoryTest {
         factory.setRequestFactory(requestFactory);
 
         List<RamlGenerationError> errors = newArrayList();
-        factory.getMethod(method, null, errors::add);
+        factory.getMethod(method, newHashMap(), null, errors::add);
 
         assertThat(errors)
                 .hasSize(5)
