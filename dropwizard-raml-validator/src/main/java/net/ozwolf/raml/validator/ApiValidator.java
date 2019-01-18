@@ -32,4 +32,14 @@ public class ApiValidator {
             violations.addAll(responseValidator.validate(node.createChild("response"), response));
         return violations;
     }
+
+    public List<SpecificationViolation> validate(ApiRequest request, ApiResponse response){
+        String nodeName = request.getMethod().toUpperCase() + " " + request.getPath();
+        nodeName += request.getMediaType() == null ? "" : " (" + request.getMediaType() + ")";
+        nodeName += " " + response.getStatus();
+
+        Node node = new Node(nodeName);
+
+        return validate(node, request, response);
+    }
 }

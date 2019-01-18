@@ -59,7 +59,7 @@ When a request/response pair generates validation errors, indicating that the be
 
 ```
 [ /authors ]
-  [ put->application/json->201 ]
+  [ PUT (application/json) 201 ]
     [ request ]
       [ security ]
         [ oauth2 ]

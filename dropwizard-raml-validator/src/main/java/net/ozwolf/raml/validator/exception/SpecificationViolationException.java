@@ -13,6 +13,11 @@ public class SpecificationViolationException extends RuntimeException {
         this.violations = violations;
     }
 
+    @Override
+    public String getMessage() {
+        return super.getMessage() + "\n" + getPrintedViolationsMessage();
+    }
+
     public List<SpecificationViolation> getViolations() {
         return violations;
     }
