@@ -10,14 +10,14 @@ This Maven plugin is designed to generate a service's RAML specifications during
 <dependency>
     <groupId>net.ozwolf</groupId>
     <artifactId>dropwizard-raml-maven-plugin</artifactId>
-    <version>1.1.1</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```gradle
-compile 'net.ozwolf:dropwizard-raml-maven-plugin:1.1.1'
+compile 'net.ozwolf:dropwizard-raml-maven-plugin:2.0.0'
 ``` 
 
 ## Usage
@@ -40,7 +40,7 @@ The RAML plugin takes three configuration properties:
 <plugin>
     <groupId>net.ozwolf</groupId>
     <artifactId>dropwizard-raml-maven-plugin</artifactId>
-    <version>1.1.1</version>
+    <version>2.0.0</version>
     <configuration>
         <basePackage>net.ozwolf.raml.example</basePackage>
     </configuration>
