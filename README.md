@@ -35,6 +35,8 @@ This project has a dependency on `org.scala-lang:scala-library:2.11.*`.  As a tr
 
 ## Using In Non-DropWizard Jersey JAX-RS Projects
 
+**Note**: There are plans to remove DropWizard as a dependency from components that don't fundamentally _require_ it for it's role (ie. the RAML generator).
+
 The [Annotations](./dropwizard-raml-annotations) and [RAML Generator](./dropwizard-raml-generator) components _can_ be used in non-DropWizard Jersey JAX-RS projects that utilise Jackson.
 
 This would allow a RAML specification to be generated from such a service.
