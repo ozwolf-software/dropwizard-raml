@@ -1,5 +1,6 @@
 # DropWizard RAML
 
+[![Status](https://img.shields.io/badge/status-active-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/status-active-brightgreen.svg)
 [![Travis](https://img.shields.io/travis/ozwolf-software/dropwizard-raml.svg?style=flat-square)](https://travis-ci.org/ozwolf-software/dropwizard-raml)
 [![Maven Central](https://img.shields.io/maven-central/v/net.ozwolf/dropwizard-raml.svg?style=flat-square)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22net.ozwolf%22%20AND%20a%3A%22dropwizard-raml%22)
 [![Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](LICENSE)
@@ -34,6 +35,8 @@ Please refer to the [wiki](https://github.com/ozwolf-software/dropwizard-raml/wi
 This project has a dependency on `org.scala-lang:scala-library:2.11.*`.  As a transient depdendency, this may cause conflicts with other libraries.
 
 ## Using In Non-DropWizard Jersey JAX-RS Projects
+
+**Note**: There are plans to remove DropWizard as a dependency from components that don't fundamentally _require_ it for it's role (ie. the RAML generator).
 
 The [Annotations](./dropwizard-raml-annotations) and [RAML Generator](./dropwizard-raml-generator) components _can_ be used in non-DropWizard Jersey JAX-RS projects that utilise Jackson.
 
