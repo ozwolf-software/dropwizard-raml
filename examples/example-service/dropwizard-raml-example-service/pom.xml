@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.ozwolf</groupId>
     <artifactId>dropwizard-raml-example-service</artifactId>
-    <version>2.0.0</version>
+    <version>2.1.0</version>
     <name>DropWizard RAML Example Service</name>
     <description>An example DropWizard service with full RAML specification annotations.</description>
 

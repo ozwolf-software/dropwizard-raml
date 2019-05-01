@@ -10,14 +10,14 @@ This library contains an API validator that will accept information about a HTTP
 <dependency>
     <groupId>net.ozwolf</groupId>
     <artifactId>dropwizard-raml-validator</artifactId>
-    <version>2.0.0</version>
+    <version>2.1.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```gradle
-compile 'net.ozwolf:dropwizard-raml-validator:2.0.0'
+compile 'net.ozwolf:dropwizard-raml-validator:2.1.0'
 ```
 
 ## Example Usage
