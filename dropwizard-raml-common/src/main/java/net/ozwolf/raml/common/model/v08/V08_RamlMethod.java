@@ -1,5 +1,6 @@
 package net.ozwolf.raml.common.model.v08;
 
+import net.ozwolf.raml.annotations.RamlDeprecated;
 import net.ozwolf.raml.common.model.*;
 import org.raml.v2.api.model.v08.methods.Method;
 import org.raml.v2.api.model.v08.system.types.StringType;
@@ -18,6 +19,7 @@ import static java.util.stream.Collectors.toList;
  *
  * A 0.8 definition of an API method
  */
+@SuppressWarnings("Duplicates")
 public class V08_RamlMethod implements RamlMethod {
     private final Method method;
 
@@ -76,6 +78,14 @@ public class V08_RamlMethod implements RamlMethod {
     @Override
     public List<RamlBody> getRequests() {
         return method.body() == null ? newArrayList() : method.body().stream().map(V08_RamlBody::new).collect(toList());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public boolean isDeprecated() {
+        return method.is() != null && method.is().stream().anyMatch(t -> t.trait().name().equalsIgnoreCase(RamlDeprecated.FLAG));
     }
 
     /**

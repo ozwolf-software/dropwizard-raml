@@ -1,6 +1,7 @@
 package net.ozwolf.raml.generator.factory;
 
 import com.google.common.annotations.VisibleForTesting;
+import net.ozwolf.raml.annotations.RamlDeprecated;
 import net.ozwolf.raml.annotations.RamlDescription;
 import net.ozwolf.raml.annotations.RamlIs;
 import net.ozwolf.raml.annotations.RamlSecuredBy;
@@ -14,6 +15,7 @@ import net.ozwolf.raml.generator.util.MethodUtils;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import static com.google.common.collect.Maps.newHashMap;
@@ -74,7 +76,7 @@ class MethodFactory {
                             action,
                             Optional.ofNullable(method.getAnnotation(RamlDescription.class)).map(RamlDescription::value).orElse(null),
                             Optional.ofNullable(method.getAnnotation(RamlSecuredBy.class)).map(v -> newHashSet(v.value())).orElse(newHashSet()),
-                            Optional.ofNullable(method.getAnnotation(RamlIs.class)).map(v -> newHashSet(v.value())).orElse(newHashSet()),
+                            getTraits(method),
                             queryParameters,
                             headers,
                             formParameters,
@@ -82,6 +84,16 @@ class MethodFactory {
                             responses
                     ).apply(globalResponses)
             );
+    }
+
+    private Set<String> getTraits(Method method) {
+        Set<String> traits = newHashSet();
+        if (method.isAnnotationPresent(RamlDeprecated.class))
+            traits.add(RamlDeprecated.FLAG);
+
+        if (method.isAnnotationPresent(RamlIs.class))
+            traits.addAll(newHashSet(method.getAnnotation(RamlIs.class).value()));
+        return traits;
     }
 
     @VisibleForTesting

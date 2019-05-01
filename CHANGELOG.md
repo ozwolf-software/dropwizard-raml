@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.1.0
+
++ Added `@RamlDeprecated` annotation.  By adding this to a resource method, it will add the `deprecated` trait to the RAML specification.  In turn, the API docs page will show a `DEPRECATED` flag on the resource.
+
 ## 2.0.0
 
 + Added ability to validate requests and responses against a RAML specification.

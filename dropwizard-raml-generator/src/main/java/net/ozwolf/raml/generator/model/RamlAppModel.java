@@ -2,15 +2,10 @@ package net.ozwolf.raml.generator.model;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import net.ozwolf.raml.annotations.RamlApp;
-import net.ozwolf.raml.annotations.RamlResponse;
-import net.ozwolf.raml.annotations.RamlSecurityScheme;
-import net.ozwolf.raml.annotations.RamlTrait;
+import net.ozwolf.raml.annotations.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.lang.annotation.Annotation;
+import java.util.*;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newLinkedHashMap;
@@ -46,6 +41,7 @@ public class RamlAppModel {
         this.documentation = Arrays.stream(annotation.documentation()).map(RamlDocumentationModel::new).collect(toList());
         this.securitySchemes = Arrays.stream(annotation.security()).collect(toMap(RamlSecurityScheme::key, RamlSecurityModel::new));
         this.traits = Arrays.stream(annotation.traits()).collect(toMap(RamlTrait::key, a -> new RamlDescribedByModel(a.describedBy())));
+        this.traits.put("deprecated", deprecatedModel());
         this.globalResponses = Arrays.stream(annotation.globalResponses()).collect(toMap(RamlResponse::status, RamlResponseModel::new));
 
         this.resources = newArrayList();
@@ -101,13 +97,7 @@ public class RamlAppModel {
         Map<String, RamlResourceModel> result = newLinkedHashMap();
 
         this.resources.stream()
-                .sorted((r1, r2) -> {
-                    int c1 = r1.getDisplayOrder() - r2.getDisplayOrder();
-                    if (c1 != 0)
-                        return c1;
-
-                    return r1.getDisplayName().compareTo(r2.getDisplayName());
-                })
+                .sorted(Comparator.comparingInt(RamlResourceModel::getDisplayOrder).thenComparing(RamlResourceModel::getDisplayName))
                 .forEach(r -> result.put(r.getPath(), r));
 
         return result;
@@ -115,5 +105,31 @@ public class RamlAppModel {
 
     public void addResource(RamlResourceModel model) {
         this.resources.add(model);
+    }
+
+    private static RamlDescribedByModel deprecatedModel(){
+        return new RamlDescribedByModel(
+                new RamlDescribedBy(){
+                    @Override
+                    public RamlParameter[] headers() {
+                        return new RamlParameter[0];
+                    }
+
+                    @Override
+                    public RamlParameter[] queryParameters() {
+                        return new RamlParameter[0];
+                    }
+
+                    @Override
+                    public RamlResponse[] responses() {
+                        return new RamlResponse[0];
+                    }
+
+                    @Override
+                    public Class<? extends Annotation> annotationType() {
+                        return RamlDescribedBy.class;
+                    }
+                }
+        );
     }
 }

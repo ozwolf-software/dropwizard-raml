@@ -217,7 +217,7 @@
                         </div>
                     </div>
                     <div class="col-11 text-left p-2 text-primary font-weight-bold">
-                        <div>${path}</div>
+                        <div>${path}[#if item.deprecated]&nbsp;<span class="badge badge-warning">DEPRECATED</span>[/#if]</div>
                         [#if item.description?has_content]
                         <div class="text-secondary font-weight-normal">${item.descriptionHtml}</div>
                         [/#if]

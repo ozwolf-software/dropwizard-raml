@@ -71,6 +71,12 @@ public interface RamlMethod {
     List<RamlSecurity> getSecurity();
 
     /**
+     * Flags the method as deprecated.
+     * @return the deprecated flag
+     */
+    boolean isDeprecated();
+
+    /**
      * Returns a request body definition for the provided content type
      *
      * @param mediaType the media type wanted
