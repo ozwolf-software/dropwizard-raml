@@ -35,7 +35,7 @@ import static com.google.common.collect.Maps.newHashMap;
 public class RamlMedia {
     private Map<String, MediaTools> tools;
 
-    private final static AtomicReference<RamlMedia> INSTANCE = new AtomicReference<>(null);
+    private final static Instance INSTANCE = new Instance();
 
     private final static List<Consumer<RamlMedia>> APPLICATORS = newArrayList();
     private final static Map<String, MediaTools> TOOLS = newHashMap();
@@ -49,7 +49,7 @@ public class RamlMedia {
      * @see RamlMedia#initialize(String)
      */
     public static RamlMedia instance() {
-        return Optional.ofNullable(INSTANCE.get()).orElseThrow(() -> new IllegalStateException("RAML media instance is not initialized."));
+        return INSTANCE.get();
     }
 
     /**
@@ -72,7 +72,7 @@ public class RamlMedia {
      * Destroys the static references used by the RamlMedia instance.  This is necessary to ensure reflection class loaders can be garbage collected.
      */
     public static void destroy() {
-        INSTANCE.set(null);
+        INSTANCE.clear();
     }
 
     /**
@@ -244,6 +244,25 @@ public class RamlMedia {
             this.mapper = mapper;
             this.schema = schema;
             this.example = example;
+        }
+    }
+
+    private static class Instance {
+        private RamlMedia value;
+
+        private Instance(){}
+
+        private RamlMedia get(){
+            return Optional.ofNullable(value).orElseThrow(() -> new IllegalStateException("RAML media instance is not initialized."));
+        }
+
+        private void set(RamlMedia media){
+            this.value = media;
+        }
+
+        private void clear(){
+            this.value = null;
+            System.gc();
         }
     }
 }
