@@ -13,8 +13,14 @@ import java.util.Optional;
 import static com.google.common.collect.Lists.newArrayList;
 
 public class FromMethodExampleFactory implements MediaFactory {
+    private final ObjectMapper mapper;
+
+    public FromMethodExampleFactory(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
+
     @Override
-    public Optional<String> create(Class<?> type, boolean collection, ObjectMapper mapper) {
+    public Optional<String> create(Class<?> type, boolean collection) {
         Method method = Arrays.stream(type.getMethods())
                 .filter(m -> m.isAnnotationPresent(RamlExample.class))
                 .findFirst()

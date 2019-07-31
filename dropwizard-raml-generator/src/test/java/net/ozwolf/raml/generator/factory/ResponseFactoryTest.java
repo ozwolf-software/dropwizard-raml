@@ -7,6 +7,9 @@ import net.ozwolf.raml.annotations.RamlBody;
 import net.ozwolf.raml.annotations.RamlResponse;
 import net.ozwolf.raml.annotations.RamlResponses;
 import net.ozwolf.raml.generator.model.RamlResponseModel;
+import net.ozwolf.raml.generator.util.RamlMediaRule;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 
 import javax.ws.rs.Produces;
@@ -18,6 +21,9 @@ import static com.google.common.collect.Maps.newHashMap;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ResponseFactoryTest {
+    @ClassRule
+    public final static RamlMediaRule RAML_MEDIA = new RamlMediaRule();
+
     @Test
     public void shouldGenerateResponsesBasedOnAnnotation() throws NoSuchMethodException {
         Method method = ResponseFactoryTest.class.getMethod("getAnnotatedMethod");

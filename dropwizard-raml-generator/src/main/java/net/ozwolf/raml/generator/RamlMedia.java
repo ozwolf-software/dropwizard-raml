@@ -18,32 +18,75 @@ import net.ozwolf.raml.generator.util.ClassPathUtils;
 import javax.ws.rs.core.MediaType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 
 /**
  * <h1>Raml Media</h1>
- *
+ * <p>
  * A class for managing media handlers.
  */
 public class RamlMedia {
     private Map<String, MediaTools> tools;
 
-    private final static RamlMedia INSTANCE = new RamlMedia();
+    private final static AtomicReference<RamlMedia> INSTANCE = new AtomicReference<>(null);
+
+    private final static List<Consumer<RamlMedia>> APPLICATORS = newArrayList();
+    private final static Map<String, MediaTools> TOOLS = newHashMap();
+    private final static AtomicReference<Runnable> RESETTER = new AtomicReference<>(null);
 
     /**
      * Retrieve the instance of media mappers.
      *
      * @return the media mappers instance
+     * @throws IllegalStateException if the media has not been initialized yet.
+     * @see RamlMedia#initialize(String)
      */
     public static RamlMedia instance() {
-        return INSTANCE;
+        return Optional.ofNullable(INSTANCE.get()).orElseThrow(() -> new IllegalStateException("RAML media instance is not initialized."));
     }
 
-    private RamlMedia() {
-        this.tools = defaultTools();
+    /**
+     * Initialize the RamlMedia class.  This then allows the static instance to be available.
+     *
+     * @param basePackage the base package for class scanning.  Reduced reflection footprint.
+     */
+    public static void initialize(String basePackage) {
+        RamlMedia media = new RamlMedia(basePackage);
+        APPLICATORS.forEach(c -> c.accept(media));
+        media.tools.putAll(TOOLS);
+        INSTANCE.set(media);
+        RESETTER.set(() -> {
+            destroy();
+            initialize(basePackage);
+        });
+    }
+
+    /**
+     * Destroys the static references used by the RamlMedia instance.  This is necessary to ensure reflection class loaders can be garbage collected.
+     */
+    public static void destroy() {
+        INSTANCE.set(null);
+    }
+
+    /**
+     * Reset the RAML media back to a defined state.
+     *
+     * @throws IllegalStateException if the media has not been initialized yet.
+     * @see RamlMedia#initialize(String)
+     */
+    public static void reset() {
+        Optional.ofNullable(RESETTER.get()).orElseThrow(() -> new IllegalStateException("RamlMedia must be initialized first.")).run();
+    }
+
+    private RamlMedia(String basePackage) {
+        this.tools = defaultTools(basePackage);
     }
 
     /**
@@ -51,7 +94,7 @@ public class RamlMedia {
      *
      * @param contentType the content type to generate a schema for
      * @param type        the type to generate the schema from
-     * @param collection  flag indiciating if the type is wrapped in a collection
+     * @param collection  flag indicating if the type is wrapped in a collection
      * @return the (optional) schema definition if available
      */
     public Optional<String> generateSchemaFor(String contentType, Class<?> type, boolean collection) {
@@ -60,7 +103,7 @@ public class RamlMedia {
             return Optional.ofNullable(ClassPathUtils.getResourceAsString(schemaAnnotation.value()));
 
         return toolsFor(contentType)
-                .flatMap(t -> t.schema.create(type, collection, t.mapper));
+                .flatMap(t -> t.schema.create(type, collection));
     }
 
     /**
@@ -77,7 +120,7 @@ public class RamlMedia {
             return Optional.ofNullable(ClassPathUtils.getResourceAsString(exampleAnnotation.value()));
 
         return toolsFor(contentType)
-                .flatMap(t -> t.example.create(type, collection, t.mapper));
+                .flatMap(t -> t.example.create(type, collection));
     }
 
     /**
@@ -88,8 +131,8 @@ public class RamlMedia {
      * @param schemaFactory  the factory implementation for generating schemas from the given type
      * @param exampleFactory the factory implementation for generating examples from the given type
      */
-    public void registerToolsFor(String contentType, ObjectMapper mapper, MediaFactory schemaFactory, MediaFactory exampleFactory) {
-        this.tools.put(contentType.toLowerCase(), new MediaTools(mapper, schemaFactory, exampleFactory));
+    public static void registerToolsFor(String contentType, ObjectMapper mapper, MediaFactory schemaFactory, MediaFactory exampleFactory) {
+        TOOLS.put(contentType.toLowerCase(), new MediaTools(mapper, schemaFactory, exampleFactory));
     }
 
     /**
@@ -99,17 +142,19 @@ public class RamlMedia {
      * @param module      the Jackson module to register
      * @throws IllegalArgumentException if no mapper available for media type
      */
-    public void registerModuleFor(String contentType, Module module) {
-        toolsFor(contentType)
-                .map(t -> t.mapper.registerModule(module))
-                .orElseThrow(() -> new IllegalStateException("No media tools defined for [ " + contentType + " ] content type."));
+    public static void registerModuleFor(String contentType, Module module) {
+        APPLICATORS.add(media -> {
+            media.toolsFor(contentType)
+                    .map(t -> t.mapper.registerModule(module))
+                    .orElseThrow(() -> new IllegalStateException("No media tools defined for [ " + contentType + " ] content type."));
+        });
     }
 
     /**
      * Register a Jackson module via the class name string.
-     *
+     * <p>
      * This option is used when driving the generator from a configuration file (such as through the Maven plugin).
-     *
+     * <p>
      * The class _must_ have a default constructor.
      *
      * @param contentType the content type mapper to register with
@@ -118,32 +163,27 @@ public class RamlMedia {
      * @throws IllegalStateException    if the class could not be instantiated
      */
     @SuppressWarnings("unchecked")
-    public void registerModuleFor(String contentType, String className) {
-        try {
-            ObjectMapper mapper = toolsFor(contentType).map(t -> t.mapper).orElseThrow(() -> new IllegalArgumentException("No media tools defined for [ " + contentType + " ] content type."));
+    public static void registerModuleFor(String contentType, String className) {
+        APPLICATORS.add(media -> {
+            try {
+                ObjectMapper mapper = media.toolsFor(contentType).map(t -> t.mapper).orElseThrow(() -> new IllegalArgumentException("No media tools defined for [ " + contentType + " ] content type."));
 
-            Class<?> module = Class.forName(className);
-            if (!Module.class.isAssignableFrom(module))
-                throw new IllegalArgumentException("Class [ " + className + " ] does not implement [ " + Module.class.getName() + " ]");
+                Class<?> module = Class.forName(className);
+                if (!Module.class.isAssignableFrom(module))
+                    throw new IllegalArgumentException("Class [ " + className + " ] does not implement [ " + Module.class.getName() + " ]");
 
-            Constructor<? extends Module> constructor = ((Class<? extends Module>) module).getConstructor();
+                Constructor<? extends Module> constructor = ((Class<? extends Module>) module).getConstructor();
 
-            Module instance = constructor.newInstance();
-            mapper.registerModule(instance);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException("Module [ " + className + " ] does not have a default constructor.", e);
-        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            throw new IllegalStateException("Could not instantiate instance of [ " + className + " ] module.", e);
-        } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("Module [ " + className + " ] could not be found.", e);
-        }
-    }
-
-    /**
-     * Resets the media configuration back to the default state, removing all modules and custom toolsets.
-     */
-    public void reset() {
-        this.tools = defaultTools();
+                Module instance = constructor.newInstance();
+                mapper.registerModule(instance);
+            } catch (NoSuchMethodException e) {
+                throw new IllegalArgumentException("Module [ " + className + " ] does not have a default constructor.", e);
+            } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+                throw new IllegalStateException("Could not instantiate instance of [ " + className + " ] module.", e);
+            } catch (ClassNotFoundException e) {
+                throw new IllegalArgumentException("Module [ " + className + " ] could not be found.", e);
+            }
+        });
     }
 
     private Optional<MediaTools> toolsFor(String contentType) {
@@ -154,24 +194,27 @@ public class RamlMedia {
                 .map(k -> tools.get(k));
     }
 
-    private static Map<String, MediaTools> defaultTools() {
+    private static Map<String, MediaTools> defaultTools(String basePackage) {
         Map<String, MediaTools> tools = newHashMap();
 
+        ObjectMapper jsonMapper = defaultJsonMapper();
         tools.put(
                 "application/json",
                 new MediaTools(
-                        defaultJsonMapper(),
-                        new JsonSchemaFactory(),
-                        new FromMethodExampleFactory()
+                        jsonMapper,
+                        new JsonSchemaFactory(basePackage, jsonMapper),
+                        new FromMethodExampleFactory(jsonMapper)
                 )
         );
+
+        ObjectMapper xmlMapper = defaultXmlMapper();
 
         tools.put(
                 "text/xml",
                 new MediaTools(
-                        defaultXmlMapper(),
-                        (t, m, e) -> Optional.empty(),
-                        new FromMethodExampleFactory()
+                        xmlMapper,
+                        (t, c) -> Optional.empty(),
+                        new FromMethodExampleFactory(xmlMapper)
                 )
         );
 
@@ -193,9 +236,9 @@ public class RamlMedia {
     }
 
     private static class MediaTools {
-        private ObjectMapper mapper;
-        private MediaFactory schema;
-        private MediaFactory example;
+        private final ObjectMapper mapper;
+        private final MediaFactory schema;
+        private final MediaFactory example;
 
         private MediaTools(ObjectMapper mapper, MediaFactory schema, MediaFactory example) {
             this.mapper = mapper;

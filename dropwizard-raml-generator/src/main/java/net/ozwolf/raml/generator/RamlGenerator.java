@@ -3,12 +3,14 @@ package net.ozwolf.raml.generator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.google.common.annotations.VisibleForTesting;
+import com.kjetland.jackson.jsonSchema.JsonSchemaGenerator;
 import net.ozwolf.raml.annotations.RamlApp;
 import net.ozwolf.raml.annotations.RamlIgnore;
 import net.ozwolf.raml.generator.exception.RamlGenerationError;
 import net.ozwolf.raml.generator.exception.RamlGenerationException;
 import net.ozwolf.raml.generator.exception.RamlGenerationUnhandledException;
 import net.ozwolf.raml.generator.factory.ResourceFactory;
+import net.ozwolf.raml.generator.media.json.JsonSchemaFactory;
 import net.ozwolf.raml.generator.model.RamlAppModel;
 import org.reflections.Reflections;
 import org.reflections.scanners.*;
@@ -29,6 +31,7 @@ import static com.google.common.collect.Lists.newArrayList;
  */
 public class RamlGenerator {
     private final String version;
+    private final String basePackage;
     private final Reflections reflections;
     private ResourceFactory resourceFactory;
 
@@ -45,6 +48,7 @@ public class RamlGenerator {
      */
     public RamlGenerator(String basePackage, String version) {
         this.version = version;
+        this.basePackage = basePackage;
         this.reflections = new Reflections(
                 basePackage,
                 new MethodParameterScanner(),
@@ -65,6 +69,7 @@ public class RamlGenerator {
      */
     public String generate() throws RamlGenerationException {
         try {
+            RamlMedia.initialize(basePackage);
             Set<Class<?>> apps = reflections.getTypesAnnotatedWith(RamlApp.class);
 
             if (apps.isEmpty())
@@ -93,6 +98,8 @@ public class RamlGenerator {
             throw e;
         } catch (Exception e) {
             throw new RamlGenerationUnhandledException(e);
+        } finally {
+            RamlMedia.destroy();
         }
     }
 

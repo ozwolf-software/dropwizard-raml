@@ -21,21 +21,21 @@ public class FromMethodExampleFactoryTest {
 
     @Test
     public void shouldCreateJsonExample() throws JSONException {
-        String example = new FromMethodExampleFactory().create(JsonTestResponse.class, false, TestMappers.json()).orElse(null);
+        String example = new FromMethodExampleFactory(TestMappers.json()).create(JsonTestResponse.class, false).orElse(null);
 
         JSONAssert.assertEquals(fixture("fixtures/media/json/example.json"), example, true);
     }
 
     @Test
     public void shouldCreateJsonArrayExample() throws JSONException {
-        String example = new FromMethodExampleFactory().create(JsonTestResponse.class, true, TestMappers.json()).orElse(null);
+        String example = new FromMethodExampleFactory(TestMappers.json()).create(JsonTestResponse.class, true).orElse(null);
 
         JSONAssert.assertEquals(fixture("fixtures/media/json/array-example.json"), example, true);
     }
 
     @Test
     public void shouldCreateXmlExample() throws IOException {
-        String example = new FromMethodExampleFactory().create(XmlTestResponse.class, false, TestMappers.xml()).orElse(null);
+        String example = new FromMethodExampleFactory(TestMappers.xml()).create(XmlTestResponse.class, false).orElse(null);
 
         Map<String, Object> expected = XML_MAPPER.readValue(fixture("fixtures/media/xml/example.xml"), new JacksonDocument());
         Map<String, Object> actual = XML_MAPPER.readValue(example, new JacksonDocument());
@@ -43,6 +43,6 @@ public class FromMethodExampleFactoryTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    private static class JacksonDocument extends TypeReference<Map<String, Object>>{
+    private static class JacksonDocument extends TypeReference<Map<String, Object>> {
     }
 }

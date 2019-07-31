@@ -3,7 +3,9 @@ package net.ozwolf.raml.generator;
 import com.google.common.base.Joiner;
 import net.ozwolf.raml.generator.conditions.*;
 import net.ozwolf.raml.generator.exception.RamlGenerationException;
+import net.ozwolf.raml.generator.util.RamlMediaRule;
 import org.junit.After;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.raml.v2.api.RamlModelBuilder;
 import org.raml.v2.api.RamlModelResult;
@@ -17,10 +19,8 @@ import static io.dropwizard.testing.FixtureHelpers.fixture;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RamlGeneratorITCase {
-    @After
-    public void tearDown() {
-        RamlMedia.instance().reset();
-    }
+    @ClassRule
+    public final static RamlMediaRule RAML_MEDIA = new RamlMediaRule();
 
     @SuppressWarnings("ConstantConditions")
     @Test
