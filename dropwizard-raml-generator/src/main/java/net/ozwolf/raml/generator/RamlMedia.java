@@ -40,8 +40,13 @@ public class RamlMedia {
 
     private final static List<Consumer<RamlMedia>> APPLICATORS = newArrayList();
     private final static Map<String, MediaTools> TOOLS = newHashMap();
-    private final static Map<String, ObjectMapper> MAPPERS = newHashMap();
+    private final static Map<String, ObjectMapper> DEFAULT_MAPPERS = newHashMap();
     private final static AtomicReference<Runnable> RESETTER = new AtomicReference<>(null);
+
+    static {
+        DEFAULT_MAPPERS.put("json", defaultJsonMapper());
+        DEFAULT_MAPPERS.put("xml", defaultXmlMapper());
+    }
 
     /**
      * Retrieve the instance of media mappers.
@@ -63,11 +68,6 @@ public class RamlMedia {
         RamlMedia media = new RamlMedia(basePackage);
         APPLICATORS.forEach(c -> c.accept(media));
         media.tools.putAll(TOOLS);
-        MAPPERS.forEach((contentType, mapper) -> {
-            if (!media.tools.containsKey(contentType.toLowerCase()))
-                throw new IllegalStateException("No media tools defined for [ " + contentType + " ].  Cannot apply mapper.");
-            media.tools.get(contentType.toLowerCase()).assign(mapper);
-        });
         INSTANCE.set(media);
         RESETTER.set(() -> {
             destroy();
@@ -205,6 +205,22 @@ public class RamlMedia {
         });
     }
 
+    /**
+     * Register the default mapper to use for the included JSON functionality.
+     * @param mapper the JSON default mapper to use
+     */
+    public static void registerDefaultJsonMapper(ObjectMapper mapper){
+        DEFAULT_MAPPERS.put("json", mapper);
+    }
+
+    /**
+     * Register the default mapper to use for the included XML functionality.
+     * @param mapper the XML default mapper to use
+     */
+    public static void registerDefaultXmlMapper(ObjectMapper mapper){
+        DEFAULT_MAPPERS.put("xml", mapper);
+    }
+
     private Optional<MediaTools> toolsFor(String contentType) {
         return tools.keySet()
                 .stream()
@@ -216,7 +232,7 @@ public class RamlMedia {
     private static Map<String, MediaTools> defaultTools(String basePackage) {
         Map<String, MediaTools> tools = newHashMap();
 
-        ObjectMapper jsonMapper = defaultJsonMapper();
+        ObjectMapper jsonMapper = DEFAULT_MAPPERS.get("json");
         tools.put(
                 "application/json",
                 new MediaTools(
@@ -226,7 +242,7 @@ public class RamlMedia {
                 )
         );
 
-        ObjectMapper xmlMapper = defaultXmlMapper();
+        ObjectMapper xmlMapper = DEFAULT_MAPPERS.get("xml");
 
         tools.put(
                 "text/xml",
