@@ -13,6 +13,7 @@ import net.ozwolf.raml.test.resources.BooksResource;
 import org.joda.time.LocalDate;
 
 import javax.ws.rs.core.UriBuilder;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
@@ -53,14 +54,16 @@ public class BooksResponse {
                                 "Book 1: How to RAML",
                                 Genre.NonFiction,
                                 LocalDate.parse("2018-01-01"),
-                                1
+                                1,
+                                new BigDecimal("49.99")
                         ),
                         new Book(
                                 1,
                                 "Humanity Lost",
                                 Genre.SciFi,
                                 LocalDate.parse("2018-01-01"),
-                                1
+                                1,
+                                new BigDecimal("19.99")
                         )
                 )
         );

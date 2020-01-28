@@ -41,6 +41,10 @@
     "author": {
       "$ref": "#/definitions/AuthorReferenceResponse",
       "description": "the author of the book"
+    },
+    "rrp": {
+      "type": "string",
+      "description": "the recommended retail price"
     }
   },
   "required": [
@@ -50,7 +54,8 @@
     "title",
     "genre",
     "publishDate",
-    "author"
+    "author",
+    "rrp"
   ],
   "definitions": {
     "AuthorReferenceResponse": {

@@ -18,6 +18,7 @@ import net.ozwolf.raml.generator.util.ClassPathUtils;
 import javax.ws.rs.core.MediaType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,10 +36,11 @@ import static com.google.common.collect.Maps.newHashMap;
 public class RamlMedia {
     private Map<String, MediaTools> tools;
 
-    private final static Instance INSTANCE = new Instance();
+    private final static AtomicReference<RamlMedia> INSTANCE = new AtomicReference<>(null);
 
     private final static List<Consumer<RamlMedia>> APPLICATORS = newArrayList();
     private final static Map<String, MediaTools> TOOLS = newHashMap();
+    private final static Map<String, ObjectMapper> MAPPERS = newHashMap();
     private final static AtomicReference<Runnable> RESETTER = new AtomicReference<>(null);
 
     /**
@@ -49,7 +51,7 @@ public class RamlMedia {
      * @see RamlMedia#initialize(String)
      */
     public static RamlMedia instance() {
-        return INSTANCE.get();
+        return Optional.ofNullable(INSTANCE.get()).orElseThrow(() -> new IllegalStateException("RAML media has not been initialized yet."));
     }
 
     /**
@@ -61,6 +63,11 @@ public class RamlMedia {
         RamlMedia media = new RamlMedia(basePackage);
         APPLICATORS.forEach(c -> c.accept(media));
         media.tools.putAll(TOOLS);
+        MAPPERS.forEach((contentType, mapper) -> {
+            if (!media.tools.containsKey(contentType.toLowerCase()))
+                throw new IllegalStateException("No media tools defined for [ " + contentType + " ].  Cannot apply mapper.");
+            media.tools.get(contentType.toLowerCase()).assign(mapper);
+        });
         INSTANCE.set(media);
         RESETTER.set(() -> {
             destroy();
@@ -72,7 +79,8 @@ public class RamlMedia {
      * Destroys the static references used by the RamlMedia instance.  This is necessary to ensure reflection class loaders can be garbage collected.
      */
     public static void destroy() {
-        INSTANCE.clear();
+        INSTANCE.set(null);
+        System.gc();
     }
 
     /**
@@ -148,6 +156,17 @@ public class RamlMedia {
                     .map(t -> t.mapper.registerModule(module))
                     .orElseThrow(() -> new IllegalStateException("No media tools defined for [ " + contentType + " ] content type."));
         });
+    }
+
+    /**
+     * Register a Jackson modules with the mapper for the given media type.
+     *
+     * @param contentType the content type mapper to register with
+     * @param modules     the Jackson module to register
+     * @throws IllegalArgumentException if no mapper available for media type
+     */
+    public static void registerModulesFor(String contentType, Module... modules) {
+        Arrays.stream(modules).forEach(m -> registerModuleFor(contentType, m));
     }
 
     /**
@@ -236,33 +255,20 @@ public class RamlMedia {
     }
 
     private static class MediaTools {
-        private final ObjectMapper mapper;
+        private ObjectMapper mapper;
         private final MediaFactory schema;
         private final MediaFactory example;
 
-        private MediaTools(ObjectMapper mapper, MediaFactory schema, MediaFactory example) {
+        private MediaTools(ObjectMapper mapper,
+                           MediaFactory schema,
+                           MediaFactory example) {
             this.mapper = mapper;
             this.schema = schema;
             this.example = example;
         }
-    }
 
-    private static class Instance {
-        private RamlMedia value;
-
-        private Instance(){}
-
-        private RamlMedia get(){
-            return Optional.ofNullable(value).orElseThrow(() -> new IllegalStateException("RAML media instance is not initialized."));
-        }
-
-        private void set(RamlMedia media){
-            this.value = media;
-        }
-
-        private void clear(){
-            this.value = null;
-            System.gc();
+        private void assign(ObjectMapper mapper) {
+            this.mapper = mapper;
         }
     }
 }

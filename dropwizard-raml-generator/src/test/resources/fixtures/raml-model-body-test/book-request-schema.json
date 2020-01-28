@@ -28,12 +28,17 @@
     "authorId": {
       "type": "integer",
       "description": "the id of the author"
+    },
+    "rrp": {
+      "type": "string",
+      "description": "the recommended retail price"
     }
   },
   "required": [
     "title",
     "genre",
     "publishDate",
-    "authorId"
+    "authorId",
+    "rrp"
   ]
 }

@@ -17,6 +17,7 @@ import net.ozwolf.raml.test.resources.AuthorsResource;
 import org.joda.time.LocalDate;
 
 import javax.ws.rs.core.UriBuilder;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
@@ -92,14 +93,16 @@ public class AuthorResponse {
                                 "My First Book",
                                 Genre.Action,
                                 LocalDate.parse("2018-01-01"),
-                                1
+                                1,
+                                new BigDecimal("4.99")
                         ),
                         new Book(
                                 2,
                                 "Beyond",
                                 Genre.SciFi,
                                 LocalDate.parse("2018-05-20"),
-                                1
+                                1,
+                                new BigDecimal("19.99")
                         )
                 )
         );

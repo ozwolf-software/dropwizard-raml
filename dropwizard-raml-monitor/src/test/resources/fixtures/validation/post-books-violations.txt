@@ -11,4 +11,4 @@
 				[ Location ]
 					[ required ] - must be provided
 			[ body ]
-				[ application/json ] - object has missing required properties (["author","download","genre","id","publishDate","self","title"])
+				[ application/json ] - object has missing required properties (["author","download","genre","id","publishDate","rrp","self","title"])

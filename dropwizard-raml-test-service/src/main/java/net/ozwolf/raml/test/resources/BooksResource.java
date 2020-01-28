@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import java.math.BigDecimal;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -42,8 +43,8 @@ public class BooksResource {
     public BooksResponse getBooks(@QueryParam("genre") List<Genre> genre) {
         return new BooksResponse(
                 newArrayList(
-                        new Book(1, "Supernova", Genre.SciFi, LocalDate.parse("2018-12-11"), 1),
-                        new Book(2, "The Life and Times of Stephen Hawking", Genre.NonFiction, LocalDate.parse("2018-12-18"), 2)
+                        new Book(1, "Supernova", Genre.SciFi, LocalDate.parse("2018-12-11"), 1, new BigDecimal("19.99")),
+                        new Book(2, "The Life and Times of Stephen Hawking", Genre.NonFiction, LocalDate.parse("2018-12-18"), 2, new BigDecimal("49.99"))
                 )
         );
     }

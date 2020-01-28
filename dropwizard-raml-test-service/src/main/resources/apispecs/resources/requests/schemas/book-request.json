@@ -21,7 +21,12 @@
     "authorId" : {
       "type" : "integer",
       "description" : "the id of the author"
+    },
+    "rrp": {
+      "type": "string",
+      "description": "the recommended retail price",
+      "pattern": "^\\d+\\.\\d{2}$"
     }
   },
-  "required" : [ "title", "genre", "publishDate", "authorId" ]
+  "required" : [ "title", "genre", "publishDate", "authorId", "rrp" ]
 }

@@ -2,6 +2,8 @@ package net.ozwolf.raml.test.core.domain;
 
 import org.joda.time.LocalDate;
 
+import java.math.BigDecimal;
+
 public class BookAndAuthor {
     private final Book book;
     private final Author author;
@@ -30,4 +32,6 @@ public class BookAndAuthor {
     public Author getAuthor() {
         return author;
     }
+
+    public BigDecimal getRrp() { return book.getRrp(); }
 }

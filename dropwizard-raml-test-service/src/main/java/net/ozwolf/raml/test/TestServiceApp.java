@@ -6,6 +6,7 @@ import io.dropwizard.setup.Environment;
 import net.ozwolf.raml.test.core.exception.ConstraintViolationExceptionMapper;
 import net.ozwolf.raml.test.core.exception.UnhandledExceptionMapper;
 import net.ozwolf.raml.test.core.exception.WebApplicationExceptionMapper;
+import net.ozwolf.raml.test.jackson.BigDecimalModule;
 import net.ozwolf.raml.test.resources.AuthorsResource;
 import net.ozwolf.raml.test.resources.BooksResource;
 
@@ -17,7 +18,7 @@ public class TestServiceApp extends Application<TestServiceAppConfiguration> {
 
     @Override
     public void initialize(Bootstrap<TestServiceAppConfiguration> bootstrap) {
-
+        bootstrap.getObjectMapper().registerModule(new BigDecimalModule());
     }
 
     @Override

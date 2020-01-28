@@ -14,17 +14,32 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import static com.google.common.collect.Maps.newHashMap;
+import static net.ozwolf.raml.generator.util.ScalaUtils.convertToJava;
+import static net.ozwolf.raml.generator.util.ScalaUtils.convertToScala;
+
+/**
+ * <h1>JSON Schema Factory</h1>
+ *
+ * The provided media factory for generating JSON schemas from Jackson-annotated objects.
+ *
+ * To configure the ObjectMapper instance utilised by this class, use the RamlMedia instance helper values.
+ */
 public class JsonSchemaFactory implements MediaFactory {
     private final ObjectMapper mapper;
     private final JsonSchemaGenerator generator;
 
-    public JsonSchemaFactory(ObjectMapper mapper){
+    private final static Map<Class<?>, Class<?>> REMAPPERS = newHashMap();
+
+    public JsonSchemaFactory(ObjectMapper mapper) {
         this(null, mapper);
     }
 
-    public JsonSchemaFactory(String baseResolverPackage, ObjectMapper mapper) {
+    public JsonSchemaFactory(String baseResolverPackage,
+                             ObjectMapper mapper) {
         this.mapper = mapper;
         this.generator = generator(baseResolverPackage, mapper);
     }
@@ -32,6 +47,18 @@ public class JsonSchemaFactory implements MediaFactory {
     @Override
     public Optional<String> create(Class<?> type, boolean collection) {
         return Optional.of(toJsonSchema(type, collection));
+    }
+
+    /**
+     * Register a remapped type.  This is useful for representing one datatype as another you know it will be converted to.
+     *
+     * For example, if you serialize BigDecimal values as String, you can register this remapping.
+     *
+     * @param from the class to remap from
+     * @param to the class the remap is mapped to
+     */
+    public static void registerRemappedType(Class<?> from, Class<?> to){
+        REMAPPERS.put(from, to);
     }
 
     private String toJsonSchema(Class<?> type, boolean collection) {
@@ -56,7 +83,27 @@ public class JsonSchemaFactory implements MediaFactory {
         if (StringUtils.isNotBlank(basePackage))
             config = config.withSubclassesResolver(resolver(basePackage));
 
-        return config;
+        Map<Class<?>, Class<?>> remapping = convertToJava(config.classTypeReMapping());
+        remapping.putAll(REMAPPERS);
+
+        return config.copy(
+                config.autoGenerateTitleForProperties(),
+                config.defaultArrayFormat(),
+                config.useOneOfForOption(),
+                config.useOneOfForNullables(),
+                config.usePropertyOrdering(),
+                config.hidePolymorphismTypeProperty(),
+                config.disableWarnings(),
+                config.useMinLengthForNotNull(),
+                config.useTypeIdForDefinitionName(),
+                config.customType2FormatMapping(),
+                config.useMultipleEditorSelectViaProperty(),
+                config.uniqueItemClasses(),
+                convertToScala(remapping),
+                config.jsonSuppliers(),
+                config.subclassesResolver(),
+                config.failOnUnknownProperties()
+        );
     }
 
     private static SubclassesResolver resolver(String basePackage) {

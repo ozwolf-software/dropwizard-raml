@@ -84,6 +84,7 @@ public class ApiMonitorBundleITCase {
         request.put("genre", "SciFi");
         request.put("publishDate", "2018-12-20");
         request.put("authorId", 1);
+        request.put("rrp", "19.99");
         return request;
     }
 

@@ -11,6 +11,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 @JsonDeserialize
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -29,15 +30,20 @@ public class BookRequest {
     @NotNull(message = "must be provided")
     private final Integer authorId;
 
+    @NotNull(message = "must be provided")
+    private final String rrp;
+
     @JsonCreator
     public BookRequest(@JsonProperty("title") String title,
                        @JsonProperty("genre") Genre genre,
                        @JsonProperty("publishDate") LocalDate publishDate,
-                       @JsonProperty("authorId") Integer authorId) {
+                       @JsonProperty("authorId") Integer authorId,
+                       @JsonProperty("rrp") String rrp) {
         this.title = title;
         this.genre = genre;
         this.publishDate = publishDate;
         this.authorId = authorId;
+        this.rrp = rrp;
     }
 
     public String getT() {
@@ -56,13 +62,16 @@ public class BookRequest {
         return authorId;
     }
 
+    public BigDecimal getR() { return new BigDecimal(rrp); }
+
     @RamlExample
     public static BookRequest example() {
         return new BookRequest(
                 "Beyond the Stars",
                 Genre.SciFi,
                 LocalDate.parse("2017-06-01"),
-                1
+                1,
+                "19.99"
         );
     }
 }
