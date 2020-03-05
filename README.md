@@ -32,7 +32,7 @@ Please refer to the [wiki](https://github.com/ozwolf-software/dropwizard-raml/wi
 
 ## Scala Dependency
 
-This project has a dependency on `org.scala-lang:scala-library:2.11.*`.  As a transient depdendency, this may cause conflicts with other libraries.
+This project has a dependency on `org.scala-lang:scala-library:2.12.*`.  As a transient depdendency, this may cause conflicts with other libraries.
 
 ## Using In Non-DropWizard Jersey JAX-RS Projects
 
