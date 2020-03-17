@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.4.0
+
++ Change Scala version to more commonly-used `2.12.x`. 
+
 ## 2.1.0
 
 + Added `@RamlDeprecated` annotation.  By adding this to a resource method, it will add the `deprecated` trait to the RAML specification.  In turn, the API docs page will show a `DEPRECATED` flag on the resource.
