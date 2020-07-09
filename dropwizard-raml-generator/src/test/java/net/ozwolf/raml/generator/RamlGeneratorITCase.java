@@ -1,14 +1,11 @@
 package net.ozwolf.raml.generator;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
-import io.dropwizard.jackson.Jackson;
 import net.ozwolf.raml.generator.conditions.*;
 import net.ozwolf.raml.generator.exception.RamlGenerationException;
 import net.ozwolf.raml.generator.media.json.JsonSchemaFactory;
 import net.ozwolf.raml.generator.util.RamlMediaRule;
 import net.ozwolf.raml.test.jackson.BigDecimalModule;
-import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.raml.v2.api.RamlModelBuilder;
@@ -16,7 +13,6 @@ import org.raml.v2.api.RamlModelResult;
 import org.raml.v2.api.model.common.ValidationResult;
 import org.raml.v2.api.model.v10.api.Api;
 
-import javax.ws.rs.core.MediaType;
 import java.math.BigDecimal;
 import java.util.List;
 

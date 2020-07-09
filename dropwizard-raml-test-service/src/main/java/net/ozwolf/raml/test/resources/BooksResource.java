@@ -40,7 +40,7 @@ public class BooksResource {
     @GET
     @Produces("application/json")
     @Timed
-    public BooksResponse getBooks(@QueryParam("genre") List<Genre> genre) {
+    public BooksResponse getBooks(@QueryParam("genre") List<? extends Genre> genre) {
         return new BooksResponse(
                 newArrayList(
                         new Book(1, "Supernova", Genre.SciFi, LocalDate.parse("2018-12-11"), 1, new BigDecimal("19.99")),
